@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: session-manager
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: session-manager
+    app.kubernetes.io/name: session-manager
+    app.kubernetes.io/part-of: dendenmushi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dendenmushi
+      component: session-manager
+  template:
+    metadata:
+      labels:
+        app: dendenmushi
+        component: session-manager
+    spec:
+      containers:
+        - name: session-manager
+          image: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager:dev
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8081
+          env:
+            - name: PORT
+              value: "8081"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: session-manager
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: session-manager
+spec:
+  type: ClusterIP
+  selector:
+    app: dendenmushi
+    component: session-manager
+  ports:
+    - name: http
+      port: 8081
+      targetPort: http

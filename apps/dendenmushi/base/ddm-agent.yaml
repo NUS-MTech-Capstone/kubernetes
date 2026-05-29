@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ddm-agent
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: ddm-agent
+    app.kubernetes.io/name: ddm-agent
+    app.kubernetes.io/part-of: dendenmushi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dendenmushi
+      component: ddm-agent
+  template:
+    metadata:
+      labels:
+        app: dendenmushi
+        component: ddm-agent
+    spec:
+      containers:
+        - name: ddm-agent
+          image: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/ddm-agent:dev
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8084
+          env:
+            - name: PORT
+              value: "8084"
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ddm-agent
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: ddm-agent
+spec:
+  type: ClusterIP
+  selector:
+    app: dendenmushi
+    component: ddm-agent
+  ports:
+    - name: http
+      port: 8084
+      targetPort: http

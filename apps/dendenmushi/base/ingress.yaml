@@ -1,0 +1,59 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: proxy-controlplane
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: proxy-controlplane
+  annotations:
+    alb.ingress.kubernetes.io/group.name: dendenmushi-dev
+    alb.ingress.kubernetes.io/load-balancer-name: dendenmushi-dev
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz
+    alb.ingress.kubernetes.io/success-codes: "200"
+spec:
+  ingressClassName: alb
+  rules:
+    - host: api.ddm.keiyam.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: proxy-controlplane
+                port:
+                  number: 8080
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: proxy-dataplane
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: proxy-dataplane
+  annotations:
+    alb.ingress.kubernetes.io/group.name: dendenmushi-dev
+    alb.ingress.kubernetes.io/load-balancer-name: dendenmushi-dev
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz
+    alb.ingress.kubernetes.io/success-codes: "200"
+spec:
+  ingressClassName: alb
+  rules:
+    - host: ws.ddm.keiyam.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: proxy-dataplane
+                port:
+                  number: 8083

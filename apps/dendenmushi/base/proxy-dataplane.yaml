@@ -1,0 +1,93 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxy-dataplane
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: proxy-dataplane
+    app.kubernetes.io/name: proxy-dataplane
+    app.kubernetes.io/part-of: dendenmushi
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dendenmushi
+      component: proxy-dataplane
+  template:
+    metadata:
+      labels:
+        app: dendenmushi
+        component: proxy-dataplane
+    spec:
+      containers:
+        - name: proxy-dataplane
+          image: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane:dev
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8083
+          env:
+            - name: PORT
+              value: "8083"
+            - name: POD_ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: SESSION_MANAGER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: SESSION_MANAGER_URL
+            - name: STS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: STS_URL
+            - name: PROXY_DATAPLANE_PUBLIC_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: PROXY_DATAPLANE_PUBLIC_URL
+            - name: MAX_SESSIONS
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: MAX_SESSIONS
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: proxy-dataplane
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: proxy-dataplane
+spec:
+  type: ClusterIP
+  selector:
+    app: dendenmushi
+    component: proxy-dataplane
+  ports:
+    - name: http
+      port: 8083
+      targetPort: http
