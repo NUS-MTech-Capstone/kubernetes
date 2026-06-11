@@ -30,6 +30,16 @@ spec:
           env:
             - name: PORT
               value: "8082"
+            - name: CHANGE_REQUEST_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: CHANGE_REQUEST_URL
+            - name: SERVER_INVENTORY_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: SERVER_INVENTORY_URL
           readinessProbe:
             httpGet:
               path: /healthz
