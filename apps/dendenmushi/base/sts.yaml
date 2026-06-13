@@ -40,6 +40,11 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: SERVER_INVENTORY_URL
+            - name: SERVER_INVENTORY_STATIC_JSON
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: SERVER_INVENTORY_STATIC_JSON
           readinessProbe:
             httpGet:
               path: /healthz

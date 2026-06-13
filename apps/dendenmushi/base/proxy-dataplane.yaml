@@ -58,6 +58,21 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: MAX_SESSIONS
+            - name: SSH_KEY_PROVIDER
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: SSH_KEY_PROVIDER
+            - name: AWS_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: AWS_REGION
+            - name: SSH_REJOIN_GRACE
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: SSH_REJOIN_GRACE
           readinessProbe:
             httpGet:
               path: /healthz
