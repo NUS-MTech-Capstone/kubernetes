@@ -1,71 +1,141 @@
 # Kubernetes
 
-Bare minimal EKS manifests for the DenDenMushi MVP.
+EKS manifests and deployment tooling for the DenDenMushi MVP.
 
-## Layout
+The AWS deployment runs these services:
 
-```text
-apps/dendenmushi/base
-apps/dendenmushi/overlays/dev
-```
+- Session Manager
+- STS
+- Proxy Control Plane
+- Proxy Dataplane
 
-This repository is the right place for manifests because it can become the
-ArgoCD GitOps source later. Service repositories should build and push images;
-this repository should decide what runs in the cluster.
+DDM Agent remains reserved and is not deployed in the SSH-only path.
 
-## Assumptions
+## AWS Prerequisites
 
-These manifests match the current Terraform direction:
-
-- EKS in `ap-southeast-1`
-- AWS Load Balancer Controller installed
-- `ingressClassName: alb`
-- ALB target type `ip`
-- public HTTP listener on port 80 for the MVP
-
-Before applying, replace the placeholder ECR account/repository names in the
-image fields or patch them through Kustomize:
-
-```text
-000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/<service>:dev
-```
-
-The default public hosts are:
-
-```text
-api.ddm.keiyam.me
-ws.ddm.keiyam.me
-```
-
-Create DNS records for those names pointing to the ALB created by the ingress,
-or patch the ingress hosts for your environment.
-
-## Apply
+Apply the main infrastructure and target host first:
 
 ```bash
-kubectl apply -k apps/dendenmushi/overlays/dev
+cd ../aws-terraform
+aws sts get-caller-identity
+terraform init -reconfigure
+terraform apply -var-file=secrets.tfvars
+
+cd ../target-hosts-setup
+./scripts/bootstrap.sh -auto-approve
 ```
 
-## ArgoCD Later
+The first infrastructure apply creates:
 
-An optional starter Application manifest is available at:
+- EKS and the AWS Load Balancer Controller
+- ECR repositories
+- GitHub Actions ECR push role
+- Proxy Dataplane IRSA role
+- Cognito user pool/client
+- Regional ACM certificate for `api.ddm.keiyam.me`
+
+If a GitHub OIDC provider already exists in the AWS account, set its ARN instead
+of creating another provider:
+
+```bash
+terraform apply \
+  -var-file=secrets.tfvars \
+  -var='github_oidc_provider_arn=arn:aws:iam::<account-id>:oidc-provider/token.actions.githubusercontent.com'
+```
+
+## Build and Push Images
+
+Get the role created for GitHub Actions:
+
+```bash
+cd ../aws-terraform
+terraform output -raw github_ecr_push_role_arn
+```
+
+Set that value as the `AWS_ROLE_ARN` Actions secret in these repositories:
 
 ```text
-argocd/dendenmushi-dev-application.yaml
+NUS-MTech-Capstone/sts
+NUS-MTech-Capstone/proxy-controlplane
+NUS-MTech-Capstone/session-manager
+NUS-MTech-Capstone/access-proxy
+NUS-MTech-Capstone/ddm-agent
 ```
 
-Apply it only after ArgoCD is installed. It is intentionally not referenced by
-the app Kustomization because clusters without ArgoCD will not have the
-`Application` CRD.
+With GitHub CLI:
 
-## MVP Notes
+```bash
+ROLE_ARN=$(terraform output -raw github_ecr_push_role_arn)
+for repo in sts proxy-controlplane session-manager access-proxy ddm-agent; do
+  gh secret set AWS_ROLE_ARN --repo "NUS-MTech-Capstone/${repo}" --body "${ROLE_ARN}"
+done
+```
 
-- `session-manager`, `sts`, and `proxy-dataplane` run as one replica because
-  their current MVP state is in-memory.
-- `proxy-dataplane` is also one replica so the public WebSocket service maps to
-  the single registered dataplane instance. Later, direct per-pod routing can be
-  implemented with pod-specific reachable URLs or a more deliberate ingress
-  design.
-- Control traffic uses `api.ddm.keiyam.me`.
-- WebSocket terminal traffic uses `ws.ddm.keiyam.me` and goes directly to the
-  proxy dataplane service, not through the control plane.
+Push each service’s `main` branch or run its `Image` workflow manually. Each
+workflow publishes both the immutable commit SHA and the `main` tag. Verify:
+
+```bash
+aws ecr describe-images \
+  --region ap-southeast-1 \
+  --repository-name dendenmushi/proxy-dataplane \
+  --query 'imageDetails[].imageTags'
+```
+
+## Deploy
+
+The deploy script:
+
+1. Configures `kubectl`.
+2. Creates or preserves the STS JWT signing secret.
+3. Reads the target details from Terraform outputs.
+4. Runs `ssh-keyscan` from an EKS pod.
+5. Builds trusted STS inventory.
+6. Renders AWS IDs and ARNs into the manifests.
+7. Deploys the four services and waits for the ALB.
+
+```bash
+cd ../kubernetes
+IMAGE_TAG=main ./scripts/deploy-aws.sh
+```
+
+To explicitly supply the JWT signing key:
+
+```bash
+JWT_SIGNING_KEY=$(openssl rand -base64 48) \
+IMAGE_TAG=main \
+./scripts/deploy-aws.sh
+```
+
+After the script prints the ALB DNS name, perform the second Terraform apply:
+
+```bash
+cd ../aws-terraform
+terraform apply \
+  -var-file=secrets.tfvars \
+  -var='application_alb_dns_name=<ALB DNS name>'
+```
+
+This creates the Route 53 ALB alias for `api.ddm.keiyam.me`.
+
+## Ingress
+
+Both API and WebSocket traffic use one Cognito-authenticated HTTPS ALB:
+
+```text
+https://api.ddm.keiyam.me/*             -> Proxy Control Plane
+wss://api.ddm.keiyam.me/sessions/*/ws   -> Proxy Dataplane
+```
+
+The WebSocket rule has higher ALB group priority. Sharing a hostname lets the
+browser send the Cognito ALB session cookie during the WebSocket upgrade.
+
+## Checks
+
+```bash
+kubectl get pods,ingress -n dendenmushi
+kubectl describe serviceaccount proxy-dataplane -n dendenmushi
+kubectl logs deployment/proxy-dataplane -n dendenmushi
+curl -I https://api.ddm.keiyam.me/healthz
+```
+
+The unauthenticated health request should redirect to Cognito.

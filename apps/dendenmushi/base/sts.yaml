@@ -30,6 +30,11 @@ spec:
           env:
             - name: PORT
               value: "8082"
+            - name: JWT_SIGNING_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: dendenmushi-runtime
+                  key: jwt-signing-key
             - name: CHANGE_REQUEST_URL
               valueFrom:
                 configMapKeyRef:

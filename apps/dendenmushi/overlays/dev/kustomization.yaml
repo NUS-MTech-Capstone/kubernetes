@@ -5,12 +5,14 @@ resources:
 
 images:
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager
-    newTag: dev
+    newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager
+    newTag: __IMAGE_TAG__
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
-    newTag: dev
+    newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
+    newTag: __IMAGE_TAG__
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane
-    newTag: dev
+    newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane
+    newTag: __IMAGE_TAG__
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
-    newTag: dev
-  - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/ddm-agent
-    newTag: dev
+    newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
+    newTag: __IMAGE_TAG__

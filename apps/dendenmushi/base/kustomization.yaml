@@ -2,10 +2,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - namespace.yaml
+  - serviceaccount.yaml
   - configmap.yaml
   - session-manager.yaml
   - sts.yaml
   - proxy-controlplane.yaml
   - proxy-dataplane.yaml
-  - ddm-agent.yaml
   - ingress.yaml
