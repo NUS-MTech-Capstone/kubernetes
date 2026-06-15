@@ -24,7 +24,7 @@ spec:
       containers:
         - name: proxy-dataplane
           image: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane:dev
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8083

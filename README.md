@@ -58,7 +58,7 @@ Set that value as the `AWS_ROLE_ARN` Actions secret in these repositories:
 NUS-MTech-Capstone/sts
 NUS-MTech-Capstone/proxy-controlplane
 NUS-MTech-Capstone/session-manager
-NUS-MTech-Capstone/access-proxy
+NUS-MTech-Capstone/proxy-dataplane
 NUS-MTech-Capstone/ddm-agent
 ```
 
@@ -66,7 +66,7 @@ With GitHub CLI:
 
 ```bash
 ROLE_ARN=$(terraform output -raw github_ecr_push_role_arn)
-for repo in sts proxy-controlplane session-manager access-proxy ddm-agent; do
+for repo in sts proxy-controlplane session-manager proxy-dataplane ddm-agent; do
   gh secret set AWS_ROLE_ARN --repo "NUS-MTech-Capstone/${repo}" --body "${ROLE_ARN}"
 done
 ```

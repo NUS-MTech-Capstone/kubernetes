@@ -23,7 +23,7 @@ spec:
       containers:
         - name: session-manager
           image: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager:dev
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8081

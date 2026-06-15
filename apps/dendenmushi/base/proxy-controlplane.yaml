@@ -23,7 +23,7 @@ spec:
       containers:
         - name: proxy-controlplane
           image: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane:dev
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8080

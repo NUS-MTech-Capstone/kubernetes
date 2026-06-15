@@ -23,7 +23,7 @@ spec:
       containers:
         - name: sts
           image: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts:dev
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - name: http
               containerPort: 8082
