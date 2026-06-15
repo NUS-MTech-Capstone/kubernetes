@@ -3,9 +3,11 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - serviceaccount.yaml
+  - tokenreview-rbac.yaml
   - configmap.yaml
   - session-manager.yaml
   - sts.yaml
   - proxy-controlplane.yaml
   - proxy-dataplane.yaml
+  - incident-agent.yaml
   - ingress.yaml

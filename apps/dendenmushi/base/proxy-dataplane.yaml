@@ -39,6 +39,10 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: status.podIP
+            - name: AUTOMATION_OPERATION_TIMEOUT
+              value: 30s
+            - name: AUTOMATION_MAX_OUTPUT_BYTES
+              value: "262144"
             - name: SESSION_MANAGER_URL
               valueFrom:
                 configMapKeyRef:

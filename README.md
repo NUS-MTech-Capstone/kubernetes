@@ -8,6 +8,7 @@ The AWS deployment runs these services:
 - STS
 - Proxy Control Plane
 - Proxy Dataplane
+- Incident Agent
 
 DDM Agent remains reserved and is not deployed in the SSH-only path.
 
@@ -60,13 +61,14 @@ NUS-MTech-Capstone/proxy-controlplane
 NUS-MTech-Capstone/session-manager
 NUS-MTech-Capstone/proxy-dataplane
 NUS-MTech-Capstone/ddm-agent
+NUS-MTech-Capstone/incident-agent
 ```
 
 With GitHub CLI:
 
 ```bash
 ROLE_ARN=$(terraform output -raw github_ecr_push_role_arn)
-for repo in sts proxy-controlplane session-manager proxy-dataplane ddm-agent; do
+for repo in sts proxy-controlplane session-manager proxy-dataplane ddm-agent incident-agent; do
   gh secret set AWS_ROLE_ARN --repo "NUS-MTech-Capstone/${repo}" --body "${ROLE_ARN}"
 done
 ```
@@ -98,6 +100,17 @@ cd ../kubernetes
 IMAGE_TAG=main ./scripts/deploy-aws.sh
 ```
 
+For immutable, independently promoted images, set:
+
+```bash
+SESSION_MANAGER_IMAGE_TAG=<sha> \
+STS_IMAGE_TAG=<sha> \
+PROXY_DATAPLANE_IMAGE_TAG=<sha> \
+PROXY_CONTROLPLANE_IMAGE_TAG=<sha> \
+INCIDENT_AGENT_IMAGE_TAG=<sha> \
+./scripts/deploy-aws.sh
+```
+
 To explicitly supply the JWT signing key:
 
 ```bash
@@ -124,6 +137,7 @@ Both API and WebSocket traffic use one Cognito-authenticated HTTPS ALB:
 ```text
 https://api.ddm.keiyam.me/*             -> Proxy Control Plane
 wss://api.ddm.keiyam.me/sessions/*/ws   -> Proxy Dataplane
+https://api.ddm.keiyam.me/incidents*    -> Incident Agent
 ```
 
 The WebSocket rule has higher ALB group priority. Sharing a hostname lets the

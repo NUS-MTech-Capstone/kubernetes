@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: incident-agent
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: incident-agent
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dendenmushi
+      component: incident-agent
+  template:
+    metadata:
+      labels:
+        app: dendenmushi
+        component: incident-agent
+    spec:
+      serviceAccountName: incident-agent
+      containers:
+        - name: incident-agent
+          image: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent:dev
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8091
+          env:
+            - name: PORT
+              value: "8091"
+            - name: AWS_REGION
+              value: ap-southeast-1
+            - name: INCIDENT_QUEUE_URL
+              value: __INCIDENT_ALERTS_QUEUE_URL__
+            - name: DATABASE_SECRET_ID
+              value: __INCIDENT_DATABASE_SECRET_ID__
+            - name: PROXY_CONTROLPLANE_URL
+              value: http://proxy-controlplane:8080
+            - name: BEDROCK_MODEL_ID
+              value: global.amazon.nova-2-lite-v1:0
+            - name: WORKLOAD_TOKEN_FILE
+              value: /var/run/secrets/tokens/incident-agent-token
+          volumeMounts:
+            - name: workload-token
+              mountPath: /var/run/secrets/tokens
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          resources:
+            requests:
+              cpu: 50m
+              memory: 96Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+      volumes:
+        - name: workload-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: dendenmushi-incident-agent
+                  expirationSeconds: 900
+                  path: incident-agent-token
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: incident-agent
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: incident-agent
+spec:
+  type: ClusterIP
+  selector:
+    app: dendenmushi
+    component: incident-agent
+  ports:
+    - name: http
+      port: 8091
+      targetPort: http

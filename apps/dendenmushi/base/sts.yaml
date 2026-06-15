@@ -20,6 +20,7 @@ spec:
         app: dendenmushi
         component: sts
     spec:
+      serviceAccountName: sts
       containers:
         - name: sts
           image: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts:dev
@@ -50,6 +51,14 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: SERVER_INVENTORY_STATIC_JSON
+            - name: AUTOMATION_WORKLOAD_AUDIENCE
+              value: dendenmushi-incident-agent
+            - name: AUTOMATION_WORKLOAD_NAMESPACE
+              value: dendenmushi
+            - name: AUTOMATION_WORKLOAD_SERVICE_ACCOUNT
+              value: incident-agent
+            - name: AUTOMATION_TOKEN_TTL_SECONDS
+              value: "600"
           readinessProbe:
             httpGet:
               path: /healthz

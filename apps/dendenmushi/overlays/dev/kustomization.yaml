@@ -6,13 +6,16 @@ resources:
 images:
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager
     newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager
-    newTag: __IMAGE_TAG__
+    newTag: __SESSION_MANAGER_IMAGE_TAG__
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
     newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
-    newTag: __IMAGE_TAG__
+    newTag: __STS_IMAGE_TAG__
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane
     newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane
-    newTag: __IMAGE_TAG__
+    newTag: __PROXY_CONTROLPLANE_IMAGE_TAG__
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
     newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
-    newTag: __IMAGE_TAG__
+    newTag: __PROXY_DATAPLANE_IMAGE_TAG__
+  - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent
+    newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent
+    newTag: __INCIDENT_AGENT_IMAGE_TAG__
