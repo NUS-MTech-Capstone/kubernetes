@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: angular
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: angular
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dendenmushi
+      component: angular
+  template:
+    metadata:
+      labels:
+        app: dendenmushi
+        component: angular
+    spec:
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: angular
+          image: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular:dev
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsNonRoot: true
+            runAsUser: 101
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: angular
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: angular
+spec:
+  type: ClusterIP
+  selector:
+    app: dendenmushi
+    component: angular
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http

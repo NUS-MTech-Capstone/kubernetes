@@ -12,6 +12,8 @@ STS_IMAGE_TAG=${STS_IMAGE_TAG:-${IMAGE_TAG}}
 PROXY_CONTROLPLANE_IMAGE_TAG=${PROXY_CONTROLPLANE_IMAGE_TAG:-${IMAGE_TAG}}
 PROXY_DATAPLANE_IMAGE_TAG=${PROXY_DATAPLANE_IMAGE_TAG:-${IMAGE_TAG}}
 INCIDENT_AGENT_IMAGE_TAG=${INCIDENT_AGENT_IMAGE_TAG:-${IMAGE_TAG}}
+NEST_BACKEND_IMAGE_TAG=${NEST_BACKEND_IMAGE_TAG:-${IMAGE_TAG}}
+ANGULAR_IMAGE_TAG=${ANGULAR_IMAGE_TAG:-${IMAGE_TAG}}
 NAMESPACE=dendenmushi
 KEYSCAN_POD=dendenmushi-ssh-keyscan
 
@@ -33,10 +35,26 @@ PROXY_DATAPLANE_ROLE_ARN=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw p
 INCIDENT_AGENT_ROLE_ARN=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw incident_agent_role_arn)
 INCIDENT_ALERTS_QUEUE_URL=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw incident_alerts_queue_url)
 INCIDENT_DATABASE_SECRET_ID=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw incident_database_secret_id)
+WEBAPP_DATABASE_SECRET_ID=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw webapp_database_secret_id)
+WEBAPP_DATABASE_BOOTSTRAP_SECRET_ID=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw webapp_database_bootstrap_secret_id)
+NEST_BACKEND_ROLE_ARN=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw nest_backend_role_arn)
 APPLICATION_CERTIFICATE_ARN=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw application_certificate_arn)
 COGNITO_USER_POOL_ARN=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw cognito_user_pool_arn)
+COGNITO_USER_POOL_ID=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw cognito_user_pool_id)
 COGNITO_CLIENT_ID=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw cognito_client_id)
 COGNITO_DOMAIN=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw cognito_domain)
+
+WEBAPP_ADMIN_COUNT=$(aws cognito-idp list-users-in-group \
+  --region "${AWS_REGION}" \
+  --user-pool-id "${COGNITO_USER_POOL_ID}" \
+  --group-name Admin \
+  --max-results 1 \
+  --query 'length(Users)' \
+  --output text)
+if [[ "${WEBAPP_ADMIN_COUNT}" == "0" ]]; then
+  echo "Cognito group Admin has no operator. Set cognito_admin_username and apply Terraform before deployment." >&2
+  exit 1
+fi
 
 HOST_ID=$(terraform -chdir="${TARGET_TERRAFORM_DIR}" output -raw host_id)
 TARGET_ADDRESS=$(terraform -chdir="${TARGET_TERRAFORM_DIR}" output -raw private_address)
@@ -77,6 +95,53 @@ kubectl create secret generic dendenmushi-database \
   --dry-run=client \
   -o yaml | kubectl apply -f -
 unset DATABASE_URL
+
+WEBAPP_DATABASE_URL=$(aws secretsmanager get-secret-value \
+  --region "${AWS_REGION}" \
+  --secret-id "${WEBAPP_DATABASE_SECRET_ID}" \
+  --query SecretString \
+  --output text)
+kubectl create secret generic dendenmushi-webapp-database \
+  -n "${NAMESPACE}" \
+  --from-literal=database-url="${WEBAPP_DATABASE_URL}" \
+  --dry-run=client \
+  -o yaml | kubectl apply -f -
+unset WEBAPP_DATABASE_URL
+
+WEBAPP_BOOTSTRAP=$(aws secretsmanager get-secret-value \
+  --region "${AWS_REGION}" \
+  --secret-id "${WEBAPP_DATABASE_BOOTSTRAP_SECRET_ID}" \
+  --query SecretString \
+  --output text)
+ADMIN_DATABASE_URL=$(aws secretsmanager get-secret-value \
+  --region "${AWS_REGION}" \
+  --secret-id "${INCIDENT_DATABASE_SECRET_ID}" \
+  --query SecretString \
+  --output text)
+kubectl create secret generic dendenmushi-webapp-bootstrap \
+  -n "${NAMESPACE}" \
+  --from-literal=admin-database-url="${ADMIN_DATABASE_URL}" \
+  --from-literal=database-name="$(jq -r .databaseName <<<"${WEBAPP_BOOTSTRAP}")" \
+  --from-literal=username="$(jq -r .username <<<"${WEBAPP_BOOTSTRAP}")" \
+  --from-literal=password="$(jq -r .password <<<"${WEBAPP_BOOTSTRAP}")" \
+  --dry-run=client \
+  -o yaml | kubectl apply -f -
+unset WEBAPP_BOOTSTRAP ADMIN_DATABASE_URL
+
+kubectl delete job webapp-database-bootstrap \
+  -n "${NAMESPACE}" \
+  --ignore-not-found \
+  --wait=true
+kubectl apply -f "${ROOT_DIR}/apps/dendenmushi/jobs/webapp-database-bootstrap.yaml"
+if ! kubectl wait \
+  --for=condition=complete \
+  job/webapp-database-bootstrap \
+  -n "${NAMESPACE}" \
+  --timeout=5m; then
+  kubectl logs job/webapp-database-bootstrap -n "${NAMESPACE}" >&2 || true
+  exit 1
+fi
+kubectl delete secret dendenmushi-webapp-bootstrap -n "${NAMESPACE}"
 
 kubectl delete pod "${KEYSCAN_POD}" \
   -n "${NAMESPACE}" \
@@ -151,24 +216,54 @@ MANIFEST=${MANIFEST//__STS_IMAGE_TAG__/${STS_IMAGE_TAG}}
 MANIFEST=${MANIFEST//__PROXY_CONTROLPLANE_IMAGE_TAG__/${PROXY_CONTROLPLANE_IMAGE_TAG}}
 MANIFEST=${MANIFEST//__PROXY_DATAPLANE_IMAGE_TAG__/${PROXY_DATAPLANE_IMAGE_TAG}}
 MANIFEST=${MANIFEST//__INCIDENT_AGENT_IMAGE_TAG__/${INCIDENT_AGENT_IMAGE_TAG}}
+MANIFEST=${MANIFEST//__NEST_BACKEND_IMAGE_TAG__/${NEST_BACKEND_IMAGE_TAG}}
+MANIFEST=${MANIFEST//__ANGULAR_IMAGE_TAG__/${ANGULAR_IMAGE_TAG}}
 MANIFEST=${MANIFEST//__PROXY_DATAPLANE_ROLE_ARN__/${PROXY_DATAPLANE_ROLE_ARN}}
 MANIFEST=${MANIFEST//__INCIDENT_AGENT_ROLE_ARN__/${INCIDENT_AGENT_ROLE_ARN}}
+MANIFEST=${MANIFEST//__NEST_BACKEND_ROLE_ARN__/${NEST_BACKEND_ROLE_ARN}}
 MANIFEST=${MANIFEST//__INCIDENT_ALERTS_QUEUE_URL__/${INCIDENT_ALERTS_QUEUE_URL}}
 MANIFEST=${MANIFEST//__INCIDENT_DATABASE_SECRET_ID__/${INCIDENT_DATABASE_SECRET_ID}}
 MANIFEST=${MANIFEST//__APPLICATION_CERTIFICATE_ARN__/${APPLICATION_CERTIFICATE_ARN}}
 MANIFEST=${MANIFEST//__COGNITO_USER_POOL_ARN__/${COGNITO_USER_POOL_ARN}}
+MANIFEST=${MANIFEST//__COGNITO_USER_POOL_ID__/${COGNITO_USER_POOL_ID}}
 MANIFEST=${MANIFEST//__COGNITO_CLIENT_ID__/${COGNITO_CLIENT_ID}}
 MANIFEST=${MANIFEST//__COGNITO_DOMAIN__/${COGNITO_DOMAIN}}
 MANIFEST=${MANIFEST//__SERVER_INVENTORY_STATIC_JSON__/${SERVER_INVENTORY_YAML}}
+
+APPLICATION_ALB_ARN=$(aws elbv2 describe-load-balancers \
+  --names dendenmushi-dev \
+  --query 'LoadBalancers[0].LoadBalancerArn' \
+  --output text 2>/dev/null || true)
+if [[ -z "${APPLICATION_ALB_ARN}" || "${APPLICATION_ALB_ARN}" == "None" ]]; then
+  APPLICATION_ALB_ARN="arn:aws:elasticloadbalancing:${AWS_REGION}:${AWS_ACCOUNT_ID}:loadbalancer/app/dendenmushi-dev/pending"
+fi
+MANIFEST=${MANIFEST//__APPLICATION_ALB_ARN__/${APPLICATION_ALB_ARN}}
 
 if grep -Eq '__[A-Z0-9_]+__|000000000000' <<<"${MANIFEST}"; then
   echo "Rendered manifests still contain unresolved placeholders." >&2
   exit 1
 fi
 
+NEST_BACKEND_IMAGE="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/dendenmushi/nest-backend:${NEST_BACKEND_IMAGE_TAG}"
+MIGRATION_MANIFEST=$(<"${ROOT_DIR}/apps/dendenmushi/jobs/nest-backend-migration.yaml")
+MIGRATION_MANIFEST=${MIGRATION_MANIFEST//__NEST_BACKEND_IMAGE__/${NEST_BACKEND_IMAGE}}
+MIGRATION_MANIFEST=${MIGRATION_MANIFEST//__APPLICATION_ALB_ARN__/${APPLICATION_ALB_ARN}}
+MIGRATION_MANIFEST=${MIGRATION_MANIFEST//__COGNITO_USER_POOL_ID__/${COGNITO_USER_POOL_ID}}
+MIGRATION_MANIFEST=${MIGRATION_MANIFEST//__COGNITO_CLIENT_ID__/${COGNITO_CLIENT_ID}}
+kubectl delete job nest-backend-migrate -n "${NAMESPACE}" --ignore-not-found --wait=true
+kubectl apply -f - <<<"${MIGRATION_MANIFEST}"
+if ! kubectl wait \
+  --for=condition=complete \
+  job/nest-backend-migrate \
+  -n "${NAMESPACE}" \
+  --timeout=5m; then
+  kubectl logs job/nest-backend-migrate -n "${NAMESPACE}" >&2 || true
+  exit 1
+fi
+
 kubectl apply -f - <<<"${MANIFEST}"
 
-for deployment in session-manager sts proxy-dataplane proxy-controlplane incident-agent; do
+for deployment in session-manager sts proxy-dataplane proxy-controlplane incident-agent nest-backend angular; do
   kubectl rollout status "deployment/${deployment}" -n "${NAMESPACE}" --timeout=5m
 done
 
@@ -186,6 +281,18 @@ done
 if [[ -z "${ALB_DNS_NAME}" ]]; then
   echo "Workloads deployed, but the ALB hostname is not available yet." >&2
   exit 1
+fi
+
+DISCOVERED_ALB_ARN=$(aws elbv2 describe-load-balancers \
+  --names dendenmushi-dev \
+  --query 'LoadBalancers[0].LoadBalancerArn' \
+  --output text)
+if [[ "${DISCOVERED_ALB_ARN}" != "${APPLICATION_ALB_ARN}" ]]; then
+  MANIFEST=${MANIFEST//${APPLICATION_ALB_ARN}/${DISCOVERED_ALB_ARN}}
+  kubectl apply -f - <<<"${MANIFEST}"
+  for deployment in proxy-controlplane nest-backend; do
+    kubectl rollout status "deployment/${deployment}" -n "${NAMESPACE}" --timeout=5m
+  done
 fi
 
 echo

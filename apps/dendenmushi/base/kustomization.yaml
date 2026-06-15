@@ -10,4 +10,6 @@ resources:
   - proxy-controlplane.yaml
   - proxy-dataplane.yaml
   - incident-agent.yaml
+  - nest-backend.yaml
+  - angular.yaml
   - ingress.yaml

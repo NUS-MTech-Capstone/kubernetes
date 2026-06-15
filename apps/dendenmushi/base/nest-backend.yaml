@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nest-backend
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: nest-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dendenmushi
+      component: nest-backend
+  template:
+    metadata:
+      labels:
+        app: dendenmushi
+        component: nest-backend
+    spec:
+      serviceAccountName: nest-backend
+      securityContext:
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: nest-backend
+          image: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend:dev
+          imagePullPolicy: Always
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            runAsNonRoot: true
+          ports:
+            - name: http
+              containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: PORT
+              value: "3000"
+            - name: AUTH_MODE
+              value: alb
+            - name: AWS_REGION
+              value: ap-southeast-1
+            - name: ALB_ARN
+              value: __APPLICATION_ALB_ARN__
+            - name: COGNITO_USER_POOL_ID
+              value: __COGNITO_USER_POOL_ID__
+            - name: COGNITO_CLIENT_ID
+              value: __COGNITO_CLIENT_ID__
+            - name: COGNITO_DOMAIN
+              value: __COGNITO_DOMAIN__.auth.ap-southeast-1.amazoncognito.com
+            - name: APP_LOGIN_REDIRECT
+              value: /access
+            - name: APP_LOGOUT_URI
+              value: https://api.ddm.keiyam.me/login
+            - name: CORS_ENABLED
+              value: "false"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: dendenmushi-webapp-database
+                  key: database-url
+            - name: DB_SSL
+              value: "true"
+            - name: DB_POOL_MAX
+              value: "10"
+            - name: DB_CONNECT_TIMEOUT_MS
+              value: "10000"
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: 100m
+              memory: 192Mi
+            limits:
+              cpu: 750m
+              memory: 512Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nest-backend
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: nest-backend
+spec:
+  type: ClusterIP
+  selector:
+    app: dendenmushi
+    component: nest-backend
+  ports:
+    - name: http
+      port: 3000
+      targetPort: http

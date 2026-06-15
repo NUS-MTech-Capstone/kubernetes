@@ -19,7 +19,7 @@ metadata:
     alb.ingress.kubernetes.io/auth-idp-cognito: '{"UserPoolArn":"__COGNITO_USER_POOL_ARN__","UserPoolClientId":"__COGNITO_CLIENT_ID__","UserPoolDomain":"__COGNITO_DOMAIN__"}'
     alb.ingress.kubernetes.io/auth-scope: openid email profile
     alb.ingress.kubernetes.io/auth-session-timeout: "3600"
-    alb.ingress.kubernetes.io/auth-on-unauthenticated-request: authenticate
+    alb.ingress.kubernetes.io/auth-on-unauthenticated-request: deny
     alb.ingress.kubernetes.io/healthcheck-path: /healthz
     alb.ingress.kubernetes.io/success-codes: "200"
 spec:
@@ -28,7 +28,7 @@ spec:
     - host: api.ddm.keiyam.me
       http:
         paths:
-          - path: /
+          - path: /sessions
             pathType: Prefix
             backend:
               service:
@@ -57,7 +57,7 @@ metadata:
     alb.ingress.kubernetes.io/auth-idp-cognito: '{"UserPoolArn":"__COGNITO_USER_POOL_ARN__","UserPoolClientId":"__COGNITO_CLIENT_ID__","UserPoolDomain":"__COGNITO_DOMAIN__"}'
     alb.ingress.kubernetes.io/auth-scope: openid email profile
     alb.ingress.kubernetes.io/auth-session-timeout: "3600"
-    alb.ingress.kubernetes.io/auth-on-unauthenticated-request: authenticate
+    alb.ingress.kubernetes.io/auth-on-unauthenticated-request: deny
     alb.ingress.kubernetes.io/healthcheck-path: /healthz
     alb.ingress.kubernetes.io/success-codes: "200"
 spec:
@@ -111,3 +111,114 @@ spec:
                 name: incident-agent
                 port:
                   number: 8091
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nest-backend-login
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: nest-backend
+  annotations:
+    alb.ingress.kubernetes.io/group.name: dendenmushi-dev
+    alb.ingress.kubernetes.io/group.order: "25"
+    alb.ingress.kubernetes.io/load-balancer-name: dendenmushi-dev
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/certificate-arn: __APPLICATION_CERTIFICATE_ARN__
+    alb.ingress.kubernetes.io/auth-type: cognito
+    alb.ingress.kubernetes.io/auth-idp-cognito: '{"UserPoolArn":"__COGNITO_USER_POOL_ARN__","UserPoolClientId":"__COGNITO_CLIENT_ID__","UserPoolDomain":"__COGNITO_DOMAIN__"}'
+    alb.ingress.kubernetes.io/auth-scope: openid email profile
+    alb.ingress.kubernetes.io/auth-session-cookie: AWSELBAuthSessionCookie
+    alb.ingress.kubernetes.io/auth-session-timeout: "3600"
+    alb.ingress.kubernetes.io/auth-on-unauthenticated-request: authenticate
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz
+    alb.ingress.kubernetes.io/success-codes: "200"
+spec:
+  ingressClassName: alb
+  rules:
+    - host: api.ddm.keiyam.me
+      http:
+        paths:
+          - path: /ddm/auth/login
+            pathType: Prefix
+            backend:
+              service:
+                name: nest-backend
+                port:
+                  number: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nest-backend
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: nest-backend
+  annotations:
+    alb.ingress.kubernetes.io/group.name: dendenmushi-dev
+    alb.ingress.kubernetes.io/group.order: "30"
+    alb.ingress.kubernetes.io/load-balancer-name: dendenmushi-dev
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/certificate-arn: __APPLICATION_CERTIFICATE_ARN__
+    alb.ingress.kubernetes.io/auth-type: cognito
+    alb.ingress.kubernetes.io/auth-idp-cognito: '{"UserPoolArn":"__COGNITO_USER_POOL_ARN__","UserPoolClientId":"__COGNITO_CLIENT_ID__","UserPoolDomain":"__COGNITO_DOMAIN__"}'
+    alb.ingress.kubernetes.io/auth-scope: openid email profile
+    alb.ingress.kubernetes.io/auth-session-cookie: AWSELBAuthSessionCookie
+    alb.ingress.kubernetes.io/auth-session-timeout: "3600"
+    alb.ingress.kubernetes.io/auth-on-unauthenticated-request: deny
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz
+    alb.ingress.kubernetes.io/success-codes: "200"
+spec:
+  ingressClassName: alb
+  rules:
+    - host: api.ddm.keiyam.me
+      http:
+        paths:
+          - path: /ddm
+            pathType: Prefix
+            backend:
+              service:
+                name: nest-backend
+                port:
+                  number: 3000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: angular
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: angular
+  annotations:
+    alb.ingress.kubernetes.io/group.name: dendenmushi-dev
+    alb.ingress.kubernetes.io/group.order: "100"
+    alb.ingress.kubernetes.io/load-balancer-name: dendenmushi-dev
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/certificate-arn: __APPLICATION_CERTIFICATE_ARN__
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz
+    alb.ingress.kubernetes.io/success-codes: "200"
+spec:
+  ingressClassName: alb
+  rules:
+    - host: api.ddm.keiyam.me
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: angular
+                port:
+                  number: 8080
