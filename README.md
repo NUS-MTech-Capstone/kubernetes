@@ -65,7 +65,6 @@ NUS-MTech-Capstone/proxy-controlplane
 NUS-MTech-Capstone/session-manager
 NUS-MTech-Capstone/proxy-dataplane
 NUS-MTech-Capstone/ddm-agent
-NUS-MTech-Capstone/incident-agent
 NUS-MTech-Capstone/nest-backend
 NUS-MTech-Capstone/angular
 ```
@@ -74,7 +73,7 @@ With GitHub CLI:
 
 ```bash
 ROLE_ARN=$(terraform output -raw github_ecr_push_role_arn)
-for repo in sts proxy-controlplane session-manager proxy-dataplane ddm-agent incident-agent nest-backend angular; do
+for repo in sts proxy-controlplane session-manager proxy-dataplane ddm-agent nest-backend angular; do
   gh secret set AWS_ROLE_ARN --repo "NUS-MTech-Capstone/${repo}" --body "${ROLE_ARN}"
 done
 ```
@@ -116,7 +115,6 @@ SESSION_MANAGER_IMAGE_TAG=<sha> \
 STS_IMAGE_TAG=<sha> \
 PROXY_DATAPLANE_IMAGE_TAG=<sha> \
 PROXY_CONTROLPLANE_IMAGE_TAG=<sha> \
-INCIDENT_AGENT_IMAGE_TAG=<sha> \
 NEST_BACKEND_IMAGE_TAG=<sha> \
 ANGULAR_IMAGE_TAG=<sha> \
 ./scripts/deploy-aws.sh

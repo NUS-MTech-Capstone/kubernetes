@@ -16,9 +16,6 @@ images:
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
     newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
     newTag: __PROXY_DATAPLANE_IMAGE_TAG__
-  - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent
-    newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent
-    newTag: __INCIDENT_AGENT_IMAGE_TAG__
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
     newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
     newTag: __NEST_BACKEND_IMAGE_TAG__

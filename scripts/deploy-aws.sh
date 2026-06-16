@@ -11,7 +11,6 @@ SESSION_MANAGER_IMAGE_TAG=${SESSION_MANAGER_IMAGE_TAG:-${IMAGE_TAG}}
 STS_IMAGE_TAG=${STS_IMAGE_TAG:-${IMAGE_TAG}}
 PROXY_CONTROLPLANE_IMAGE_TAG=${PROXY_CONTROLPLANE_IMAGE_TAG:-${IMAGE_TAG}}
 PROXY_DATAPLANE_IMAGE_TAG=${PROXY_DATAPLANE_IMAGE_TAG:-${IMAGE_TAG}}
-INCIDENT_AGENT_IMAGE_TAG=${INCIDENT_AGENT_IMAGE_TAG:-${IMAGE_TAG}}
 NEST_BACKEND_IMAGE_TAG=${NEST_BACKEND_IMAGE_TAG:-${IMAGE_TAG}}
 ANGULAR_IMAGE_TAG=${ANGULAR_IMAGE_TAG:-${IMAGE_TAG}}
 NAMESPACE=dendenmushi
@@ -49,7 +48,6 @@ require_ecr_image dendenmushi/session-manager "${SESSION_MANAGER_IMAGE_TAG}"
 require_ecr_image dendenmushi/sts "${STS_IMAGE_TAG}"
 require_ecr_image dendenmushi/proxy-controlplane "${PROXY_CONTROLPLANE_IMAGE_TAG}"
 require_ecr_image dendenmushi/proxy-dataplane "${PROXY_DATAPLANE_IMAGE_TAG}"
-require_ecr_image dendenmushi/incident-agent "${INCIDENT_AGENT_IMAGE_TAG}"
 require_ecr_image dendenmushi/nest-backend "${NEST_BACKEND_IMAGE_TAG}"
 require_ecr_image dendenmushi/angular "${ANGULAR_IMAGE_TAG}"
 
@@ -239,7 +237,6 @@ MANIFEST=${MANIFEST//__SESSION_MANAGER_IMAGE_TAG__/${SESSION_MANAGER_IMAGE_TAG}}
 MANIFEST=${MANIFEST//__STS_IMAGE_TAG__/${STS_IMAGE_TAG}}
 MANIFEST=${MANIFEST//__PROXY_CONTROLPLANE_IMAGE_TAG__/${PROXY_CONTROLPLANE_IMAGE_TAG}}
 MANIFEST=${MANIFEST//__PROXY_DATAPLANE_IMAGE_TAG__/${PROXY_DATAPLANE_IMAGE_TAG}}
-MANIFEST=${MANIFEST//__INCIDENT_AGENT_IMAGE_TAG__/${INCIDENT_AGENT_IMAGE_TAG}}
 MANIFEST=${MANIFEST//__NEST_BACKEND_IMAGE_TAG__/${NEST_BACKEND_IMAGE_TAG}}
 MANIFEST=${MANIFEST//__ANGULAR_IMAGE_TAG__/${ANGULAR_IMAGE_TAG}}
 MANIFEST=${MANIFEST//__PROXY_DATAPLANE_ROLE_ARN__/${PROXY_DATAPLANE_ROLE_ARN}}
@@ -287,7 +284,7 @@ fi
 
 kubectl apply -f - <<<"${MANIFEST}"
 
-for deployment in session-manager sts proxy-dataplane proxy-controlplane incident-agent nest-backend angular; do
+for deployment in session-manager sts proxy-dataplane proxy-controlplane nest-backend angular; do
   kubectl rollout status "deployment/${deployment}" -n "${NAMESPACE}" --timeout=5m
 done
 
