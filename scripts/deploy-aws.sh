@@ -101,6 +101,7 @@ WEBAPP_DATABASE_URL=$(aws secretsmanager get-secret-value \
   --secret-id "${WEBAPP_DATABASE_SECRET_ID}" \
   --query SecretString \
   --output text)
+WEBAPP_DATABASE_URL=${WEBAPP_DATABASE_URL/sslmode=require/sslmode=no-verify}
 kubectl create secret generic dendenmushi-webapp-database \
   -n "${NAMESPACE}" \
   --from-literal=database-url="${WEBAPP_DATABASE_URL}" \
