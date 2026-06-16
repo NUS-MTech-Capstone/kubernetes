@@ -64,6 +64,8 @@ spec:
                   key: database-url
             - name: DB_SSL
               value: "true"
+            - name: DB_SSL_REJECT_UNAUTHORIZED
+              value: "false"
             - name: DB_POOL_MAX
               value: "10"
             - name: DB_CONNECT_TIMEOUT_MS
