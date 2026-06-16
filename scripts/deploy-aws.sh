@@ -30,6 +30,29 @@ cleanup() {
 trap cleanup EXIT
 
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+
+require_ecr_image() {
+  local repository=$1
+  local tag=$2
+
+  if ! aws ecr describe-images \
+    --region "${AWS_REGION}" \
+    --repository-name "${repository}" \
+    --image-ids "imageTag=${tag}" >/dev/null 2>&1; then
+    echo "Missing ECR image: ${repository}:${tag}" >&2
+    echo "Publish the image workflow for this repository, or pass a tag that exists." >&2
+    exit 1
+  fi
+}
+
+require_ecr_image dendenmushi/session-manager "${SESSION_MANAGER_IMAGE_TAG}"
+require_ecr_image dendenmushi/sts "${STS_IMAGE_TAG}"
+require_ecr_image dendenmushi/proxy-controlplane "${PROXY_CONTROLPLANE_IMAGE_TAG}"
+require_ecr_image dendenmushi/proxy-dataplane "${PROXY_DATAPLANE_IMAGE_TAG}"
+require_ecr_image dendenmushi/incident-agent "${INCIDENT_AGENT_IMAGE_TAG}"
+require_ecr_image dendenmushi/nest-backend "${NEST_BACKEND_IMAGE_TAG}"
+require_ecr_image dendenmushi/angular "${ANGULAR_IMAGE_TAG}"
+
 CLUSTER_NAME=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw cluster_name)
 PROXY_DATAPLANE_ROLE_ARN=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw proxy_dataplane_role_arn)
 INCIDENT_AGENT_ROLE_ARN=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw incident_agent_role_arn)

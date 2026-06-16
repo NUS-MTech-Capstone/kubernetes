@@ -8,6 +8,8 @@ metadata:
     component: nest-backend
 spec:
   replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app: dendenmushi
