@@ -48,7 +48,7 @@ WEBAPP_ADMIN_COUNT=$(aws cognito-idp list-users-in-group \
   --region "${AWS_REGION}" \
   --user-pool-id "${COGNITO_USER_POOL_ID}" \
   --group-name Admin \
-  --max-results 1 \
+  --limit 1 \
   --query 'length(Users)' \
   --output text)
 if [[ "${WEBAPP_ADMIN_COUNT}" == "0" ]]; then
