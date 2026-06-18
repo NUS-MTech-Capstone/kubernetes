@@ -17,3 +17,10 @@ data:
   SSH_KEY_PROVIDER: aws
   AWS_REGION: ap-southeast-1
   SSH_REJOIN_GRACE: 5m
+  LOG_FORMAT: json
+  OTEL_TRACES_EXPORTER: none
+  OTEL_METRICS_EXPORTER: none
+  OTEL_LOGS_EXPORTER: none
+  CLOUDWATCH_LOG_GROUP: /aws/containerinsights/dendenmushi-cluster-dev/application
+  CLOUDWATCH_SESSION_LOG_GROUP: /aws/containerinsights/dendenmushi-cluster-dev/application
+  CLOUDWATCH_NAMESPACE: DenDenMushi

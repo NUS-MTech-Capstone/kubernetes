@@ -43,6 +43,46 @@ spec:
               value: production
             - name: PORT
               value: "3000"
+            - name: LOG_FORMAT
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: LOG_FORMAT
+            - name: OTEL_TRACES_EXPORTER
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: OTEL_TRACES_EXPORTER
+            - name: OTEL_METRICS_EXPORTER
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: OTEL_METRICS_EXPORTER
+            - name: OTEL_LOGS_EXPORTER
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: OTEL_LOGS_EXPORTER
+            - name: CLOUDWATCH_REGION
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: AWS_REGION
+            - name: CLOUDWATCH_LOG_GROUP
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: CLOUDWATCH_LOG_GROUP
+            - name: CLOUDWATCH_SESSION_LOG_GROUP
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: CLOUDWATCH_SESSION_LOG_GROUP
+            - name: CLOUDWATCH_NAMESPACE
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: CLOUDWATCH_NAMESPACE
             - name: AUTH_MODE
               value: alb
             - name: AWS_REGION

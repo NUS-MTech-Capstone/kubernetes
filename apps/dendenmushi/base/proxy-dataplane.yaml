@@ -33,6 +33,26 @@ spec:
           env:
             - name: PORT
               value: "8083"
+            - name: LOG_FORMAT
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: LOG_FORMAT
+            - name: OTEL_TRACES_EXPORTER
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: OTEL_TRACES_EXPORTER
+            - name: OTEL_METRICS_EXPORTER
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: OTEL_METRICS_EXPORTER
+            - name: OTEL_LOGS_EXPORTER
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: OTEL_LOGS_EXPORTER
             - name: POD_ID
               valueFrom:
                 fieldRef:

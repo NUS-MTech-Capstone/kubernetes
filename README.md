@@ -183,6 +183,34 @@ https://api.ddm.keiyam.me/incidents*          -> Incident Agent
 The WebSocket rule has higher ALB group priority. Sharing a hostname lets the
 browser send the Cognito ALB session cookie during the WebSocket upgrade.
 
+## Observability Defaults
+
+The AWS deployment is tuned for a low-cost school project:
+
+- Application containers emit JSON logs to stdout.
+- `LOG_FORMAT=json` is set for services that support it.
+- `OTEL_TRACES_EXPORTER=none`, `OTEL_METRICS_EXPORTER=none`, and
+  `OTEL_LOGS_EXPORTER=none` are the default ConfigMap values.
+- Nest Backend monitoring reads from
+  `/aws/containerinsights/dendenmushi-cluster-dev/application`, which Terraform
+  pre-creates with one-day retention.
+- Logs should contain only metadata such as `requestId`, `sessionId`, `userId`,
+  `hostId`, `crId`, `podId`, `instanceId`, `action`, `mode`, `status`, and
+  `durationMs`. Do not log STS tokens, private keys, passwords, command bodies,
+  or terminal streams.
+
+Verification after Terraform and Argo CD sync:
+
+```bash
+aws logs describe-log-groups \
+  --region ap-southeast-1 \
+  --log-group-name-prefix /aws/containerinsights/dendenmushi-cluster-dev \
+  --query 'logGroups[].{name:logGroupName,retention:retentionInDays}'
+
+kubectl exec -n dendenmushi deploy/sts -- printenv OTEL_TRACES_EXPORTER
+kubectl logs deployment/proxy-controlplane -n dendenmushi | head
+```
+
 ## Checks
 
 ```bash
