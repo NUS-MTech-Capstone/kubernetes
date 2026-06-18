@@ -2,23 +2,103 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ../../base
+  - nest-backend-migration.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+  - name: dendenmushi-env
+    namespace: dendenmushi
+    envs:
+      - env.properties
+    files:
+      - SERVER_INVENTORY_STATIC_JSON=server-inventory.static.json
 
 images:
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager
-    newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager
-    newTag: __SESSION_MANAGER_IMAGE_TAG__
+    newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager
+    newTag: main
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
-    newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
-    newTag: __STS_IMAGE_TAG__
+    newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
+    newTag: main
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane
-    newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane
-    newTag: __PROXY_CONTROLPLANE_IMAGE_TAG__
+    newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane
+    newTag: main
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
-    newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
-    newTag: __PROXY_DATAPLANE_IMAGE_TAG__
+    newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
+    newTag: main
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
-    newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
-    newTag: __NEST_BACKEND_IMAGE_TAG__
+    newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
+    newTag: main
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular
-    newName: __AWS_ACCOUNT_ID__.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular
-    newTag: __ANGULAR_IMAGE_TAG__
+    newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular
+    newTag: main
+
+replacements:
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.PROXY_DATAPLANE_ROLE_ARN }
+    targets:
+      - select: { kind: ServiceAccount, name: proxy-dataplane }
+        fieldPaths: ["metadata.annotations.[eks.amazonaws.com/role-arn]"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.NEST_BACKEND_ROLE_ARN }
+    targets:
+      - select: { kind: ServiceAccount, name: nest-backend }
+        fieldPaths: ["metadata.annotations.[eks.amazonaws.com/role-arn]"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.INCIDENT_AGENT_ROLE_ARN }
+    targets:
+      - select: { kind: ServiceAccount, name: incident-agent }
+        fieldPaths: ["metadata.annotations.[eks.amazonaws.com/role-arn]"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.APPLICATION_CERTIFICATE_ARN }
+    targets:
+      - select: { kind: Ingress }
+        fieldPaths: ["metadata.annotations.[alb.ingress.kubernetes.io/certificate-arn]"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.ALB_AUTH_IDP_COGNITO }
+    targets:
+      - select: { kind: Ingress, name: proxy-controlplane }
+        fieldPaths: ["metadata.annotations.[alb.ingress.kubernetes.io/auth-idp-cognito]"]
+      - select: { kind: Ingress, name: proxy-dataplane }
+        fieldPaths: ["metadata.annotations.[alb.ingress.kubernetes.io/auth-idp-cognito]"]
+      - select: { kind: Ingress, name: nest-backend-login }
+        fieldPaths: ["metadata.annotations.[alb.ingress.kubernetes.io/auth-idp-cognito]"]
+      - select: { kind: Ingress, name: nest-backend }
+        fieldPaths: ["metadata.annotations.[alb.ingress.kubernetes.io/auth-idp-cognito]"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.APPLICATION_ALB_ARN }
+    targets:
+      - select: { kind: Deployment, name: proxy-controlplane }
+        fieldPaths: ["spec.template.spec.containers.[name=proxy-controlplane].env.[name=ALB_ARN].value"]
+      - select: { kind: Deployment, name: nest-backend }
+        fieldPaths: ["spec.template.spec.containers.[name=nest-backend].env.[name=ALB_ARN].value"]
+      - select: { kind: Job, name: nest-backend-migrate }
+        fieldPaths: ["spec.template.spec.containers.[name=migrate].env.[name=ALB_ARN].value"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.COGNITO_USER_POOL_ID }
+    targets:
+      - select: { kind: Deployment, name: proxy-controlplane }
+        fieldPaths: ["spec.template.spec.containers.[name=proxy-controlplane].env.[name=COGNITO_USER_POOL_ID].value"]
+      - select: { kind: Deployment, name: nest-backend }
+        fieldPaths: ["spec.template.spec.containers.[name=nest-backend].env.[name=COGNITO_USER_POOL_ID].value"]
+      - select: { kind: Job, name: nest-backend-migrate }
+        fieldPaths: ["spec.template.spec.containers.[name=migrate].env.[name=COGNITO_USER_POOL_ID].value"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.COGNITO_CLIENT_ID }
+    targets:
+      - select: { kind: Deployment, name: proxy-controlplane }
+        fieldPaths: ["spec.template.spec.containers.[name=proxy-controlplane].env.[name=COGNITO_CLIENT_ID].value"]
+      - select: { kind: Deployment, name: nest-backend }
+        fieldPaths: ["spec.template.spec.containers.[name=nest-backend].env.[name=COGNITO_CLIENT_ID].value"]
+      - select: { kind: Job, name: nest-backend-migrate }
+        fieldPaths: ["spec.template.spec.containers.[name=migrate].env.[name=COGNITO_CLIENT_ID].value"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.COGNITO_DOMAIN_URL }
+    targets:
+      - select: { kind: Deployment, name: nest-backend }
+        fieldPaths: ["spec.template.spec.containers.[name=nest-backend].env.[name=COGNITO_DOMAIN].value"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.INCIDENT_ALERTS_QUEUE_URL }
+    targets:
+      - select: { kind: Deployment, name: incident-agent }
+        fieldPaths: ["spec.template.spec.containers.[name=incident-agent].env.[name=INCIDENT_QUEUE_URL].value"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.INCIDENT_DATABASE_SECRET_ID }
+    targets:
+      - select: { kind: Deployment, name: incident-agent }
+        fieldPaths: ["spec.template.spec.containers.[name=incident-agent].env.[name=DATABASE_SECRET_ID].value"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.SERVER_INVENTORY_STATIC_JSON }
+    targets:
+      - select: { kind: ConfigMap, name: dendenmushi-config }
+        fieldPaths: ["data.SERVER_INVENTORY_STATIC_JSON"]

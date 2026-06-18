@@ -1,6 +1,6 @@
 # Kubernetes
 
-EKS manifests and deployment tooling for the DenDenMushi MVP.
+EKS manifests and deployment tooling for the DenDenMushi SSH access platform.
 
 The AWS deployment runs these services:
 
@@ -88,47 +88,53 @@ aws ecr describe-images \
   --query 'imageDetails[].imageTags'
 ```
 
-## Deploy
+## GitOps Deploy
 
-The deploy script:
+Argo CD owns normal workload reconciliation from this repository. Service
+repositories publish immutable ECR image tags, then open promotion PRs that
+update `apps/dendenmushi/overlays/dev/kustomization.yaml`. Merging a promotion
+PR to `main` is the deployment approval because the Argo CD Application tracks
+this repository and branch.
+
+The bootstrap script performs the cluster-side and environment-discovery work
+that should not happen inside every Argo sync:
 
 1. Configures `kubectl`.
 2. Creates or preserves the STS JWT signing secret.
 3. Bootstraps the `ddm_webapp` database and least-privilege login.
 4. Reads the target details from Terraform outputs.
 5. Runs `ssh-keyscan` from an EKS pod.
-6. Builds trusted STS inventory.
-7. Discovers the Kubernetes-created ALB ARN for JWT verification.
-8. Runs the Nest migration Job before the backend rollout.
-9. Renders AWS IDs, ARNs, and explicit image tags into the manifests.
-10. Deploys all services and waits for each rollout.
+6. Builds trusted STS inventory in the dev overlay.
+7. Refreshes non-secret AWS and Cognito identifiers in the dev overlay.
+8. Applies the Argo CD Application manifest.
 
 ```bash
 cd ../kubernetes
-IMAGE_TAG=main ./scripts/deploy-aws.sh
+./scripts/bootstrap-aws.sh
 ```
 
-For immutable, independently promoted images, set:
+Review and commit the generated changes to these files when bootstrap discovers
+new environment values:
 
-```bash
-SESSION_MANAGER_IMAGE_TAG=<sha> \
-STS_IMAGE_TAG=<sha> \
-PROXY_DATAPLANE_IMAGE_TAG=<sha> \
-PROXY_CONTROLPLANE_IMAGE_TAG=<sha> \
-NEST_BACKEND_IMAGE_TAG=<sha> \
-ANGULAR_IMAGE_TAG=<sha> \
-./scripts/deploy-aws.sh
+```text
+apps/dendenmushi/overlays/dev/env.properties
+apps/dendenmushi/overlays/dev/server-inventory.static.json
 ```
 
 To explicitly supply the JWT signing key:
 
 ```bash
 JWT_SIGNING_KEY=$(openssl rand -base64 48) \
-IMAGE_TAG=main \
-./scripts/deploy-aws.sh
+./scripts/bootstrap-aws.sh
 ```
 
-After the script prints the ALB DNS name, perform the second Terraform apply:
+After Argo CD syncs, verify the deployed workloads:
+
+```bash
+./scripts/verify-aws.sh
+```
+
+After verification prints the ALB DNS name, perform the second Terraform apply:
 
 ```bash
 cd ../aws-terraform
@@ -138,6 +144,28 @@ terraform apply \
 ```
 
 This creates the Route 53 ALB alias for `api.ddm.keiyam.me`.
+
+`scripts/deploy-aws.sh` remains as a compatibility wrapper that runs bootstrap
+and verification, but it no longer applies workload manifests directly.
+
+## Promotion Workflow
+
+The six active SSH-path services promote images through shared GitHub Actions:
+
+```text
+sts
+session-manager
+proxy-controlplane
+proxy-dataplane
+nest-backend
+angular
+```
+
+Set `GITOPS_TOKEN` in each of those repositories to a fine-scoped GitHub App
+token or equivalent credential that can push a branch and open a PR in
+`NUS-MTech-Capstone/kubernetes`. The promotion workflow updates exactly one
+image tag, renders the dev overlay, and opens or updates a PR. Argo CD deploys
+only after that PR is merged.
 
 ## Ingress
 
@@ -158,6 +186,7 @@ browser send the Cognito ALB session cookie during the WebSocket upgrade.
 ## Checks
 
 ```bash
+kubectl get application dendenmushi-dev -n argocd
 kubectl get pods,ingress -n dendenmushi
 kubectl describe serviceaccount proxy-dataplane -n dendenmushi
 kubectl logs deployment/proxy-dataplane -n dendenmushi
