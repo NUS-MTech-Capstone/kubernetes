@@ -27,7 +27,7 @@ images:
     newTag: 4c8d5fe3303276a53605955d1dd11a43f83ec7ba
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
-    newTag: 2295e78bcf2e2253017e18c4fdb1ae6d388ab01d
+    newTag: cb289d67c25dc2cdd626ed05954cbf01ea352759
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
     newTag: d9f16577537142464e2204ec49d412abf7ca8fe8
