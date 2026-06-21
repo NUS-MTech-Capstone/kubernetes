@@ -83,6 +83,11 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: CLOUDWATCH_NAMESPACE
+            - name: SERVER_INVENTORY_STATIC_JSON
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: SERVER_INVENTORY_STATIC_JSON
             - name: AUTH_MODE
               value: alb
             - name: AWS_REGION
