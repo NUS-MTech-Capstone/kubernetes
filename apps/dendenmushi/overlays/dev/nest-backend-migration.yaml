@@ -37,6 +37,8 @@ spec:
               value: pending
             - name: COGNITO_CLIENT_ID
               value: pending
+            - name: SSH_GATEWAY_URL
+              value: "http://proxy-controlplane:8080"
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:

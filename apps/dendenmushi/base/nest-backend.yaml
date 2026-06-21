@@ -106,6 +106,8 @@ spec:
               value: https://api.ddm.keiyam.me/login
             - name: CORS_ENABLED
               value: "false"
+            - name: SSH_GATEWAY_URL
+              value: "http://proxy-controlplane:8080"
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
