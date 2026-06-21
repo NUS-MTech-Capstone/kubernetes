@@ -30,7 +30,7 @@ images:
     newTag: c9898628560fd39bf9de2c8b414a33759f701727
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
-    newTag: 3344209a459246b7fdf52b235adec8caca17fbc0
+    newTag: 542800c28bb37da906198a5f58a36471ec3a9bd4
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular
     newTag: 75ae28322711f4393d9f83e64a16f7f58df62d30
