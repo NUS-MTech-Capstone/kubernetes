@@ -33,7 +33,7 @@ images:
     newTag: c02d5895941c6555f4dbb3504d853ac1ffa32d61
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular
-    newTag: 75ae28322711f4393d9f83e64a16f7f58df62d30
+    newTag: 007820f2ca2d9b74d6d474c20de89ecce1c64171
 
 replacements:
   - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.PROXY_DATAPLANE_ROLE_ARN }
