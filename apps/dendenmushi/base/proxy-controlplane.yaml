@@ -52,6 +52,11 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: OTEL_LOGS_EXPORTER
+            - name: CLOUDWATCH_NAMESPACE
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: CLOUDWATCH_NAMESPACE
             - name: SESSION_MANAGER_URL
               valueFrom:
                 configMapKeyRef:

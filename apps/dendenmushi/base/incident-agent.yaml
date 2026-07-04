@@ -51,6 +51,11 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: OTEL_LOGS_EXPORTER
+            - name: CLOUDWATCH_NAMESPACE
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: CLOUDWATCH_NAMESPACE
             - name: AWS_REGION
               value: ap-southeast-1
             - name: INCIDENT_QUEUE_URL
