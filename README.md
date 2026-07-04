@@ -189,8 +189,19 @@ The AWS deployment is tuned for a low-cost school project:
 
 - Application containers emit JSON logs to stdout.
 - `LOG_FORMAT=json` is set for services that support it.
+- `CLOUDWATCH_NAMESPACE=DenDenMushi` is set for services that emit EMF metrics.
+- HTTP services propagate `X-Request-ID` across synchronous calls. Browser
+  WebSocket clients cannot set custom headers, so the Angular terminal app also
+  appends a correlation-only `requestId` query parameter to dataplane WebSocket
+  URLs. Authorization still comes only from ALB identity and STS tokens.
 - `OTEL_TRACES_EXPORTER=none`, `OTEL_METRICS_EXPORTER=none`, and
   `OTEL_LOGS_EXPORTER=none` are the default ConfigMap values.
+- Custom EMF metrics include `AuthFailures`, `STSRequestLatencyMs`,
+  `STSErrors`, `SessionStartFailures`, `AssignmentFailures`, `StaleProxyPods`,
+  `HeartbeatMisses`, `WebSocketDisconnects`, `SSHFailures`, `ActiveSessions`,
+  `ProxyPodCapacity`, and `AvailableProxyPods`. Use low-cardinality dimensions
+  only: `Service`, `Environment`, and optional component/reason fields in the
+  log payload.
 - Nest Backend monitoring reads from
   `/aws/containerinsights/dendenmushi-cluster-dev/application`, which Terraform
   pre-creates with one-day retention.
