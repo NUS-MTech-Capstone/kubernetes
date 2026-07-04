@@ -64,7 +64,7 @@ NUS-MTech-Capstone/sts
 NUS-MTech-Capstone/proxy-controlplane
 NUS-MTech-Capstone/session-manager
 NUS-MTech-Capstone/proxy-dataplane
-NUS-MTech-Capstone/ddm-agent
+NUS-MTech-Capstone/incident-agent
 NUS-MTech-Capstone/nest-backend
 NUS-MTech-Capstone/angular
 ```
@@ -73,7 +73,7 @@ With GitHub CLI:
 
 ```bash
 ROLE_ARN=$(terraform output -raw github_ecr_push_role_arn)
-for repo in sts proxy-controlplane session-manager proxy-dataplane ddm-agent nest-backend angular; do
+for repo in sts proxy-controlplane session-manager proxy-dataplane incident-agent nest-backend angular; do
   gh secret set AWS_ROLE_ARN --repo "NUS-MTech-Capstone/${repo}" --body "${ROLE_ARN}"
 done
 ```
@@ -150,13 +150,14 @@ and verification, but it no longer applies workload manifests directly.
 
 ## Promotion Workflow
 
-The six active SSH-path services promote images through shared GitHub Actions:
+The active EKS services promote images through shared GitHub Actions:
 
 ```text
 sts
 session-manager
 proxy-controlplane
 proxy-dataplane
+incident-agent
 nest-backend
 angular
 ```
@@ -206,9 +207,10 @@ The AWS deployment is tuned for a low-cost school project:
   `/aws/containerinsights/dendenmushi-cluster-dev/application`, which Terraform
   pre-creates with one-day retention.
 - Logs should contain only metadata such as `requestId`, `sessionId`, `userId`,
-  `hostId`, `crId`, `podId`, `instanceId`, `action`, `mode`, `status`, and
-  `durationMs`. Do not log STS tokens, private keys, passwords, command bodies,
-  or terminal streams.
+  `hostId`, `crId`, `podId`, `instanceId`, `incidentId`, `runId`, `action`,
+  `mode`, `operation`, `planHash`, `status`, and `durationMs`. Do not log STS
+  tokens, private keys, passwords, model prompts containing sensitive data,
+  command bodies, or terminal streams.
 
 Verification after Terraform and Argo CD sync:
 
