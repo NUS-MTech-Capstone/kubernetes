@@ -18,13 +18,13 @@ configMapGenerator:
 images:
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager
-    newTag: a89143915ced5780ef91878b825f41ed5745d292
+    newTag: c4912451a48e6263fcd424482f83c09da132aa38
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
-    newTag: 2a6c7bcd455ef93db03b592d7a624d52060b1fd8
+    newTag: 5a1b0c1d0af96f847e3830e5da25007825e9403b
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane
-    newTag: 04bcd97cc1291bfa270c7939f3c18295f1bb5a17
+    newTag: f4c4af0abd070f2b8564e3a8f2ee8e86be640caa
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
     newTag: c4fc7d3d864feae7628dc28c7a7da58fb2d807d5
@@ -33,10 +33,10 @@ images:
     newTag: e35a18fae554c59c75b5115c0c1d38e58067a993
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
-    newTag: ad760f159ba09b62517b5d3a968611a220352ad0
+    newTag: 18856ee120dcad5252e3ff5ca574398171126596
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular
-    newTag: 30ecf448a1fb1d5a3228aedc43d49a38123e424b
+    newTag: ae0427a3812c484b78961c26d0562a4ade914376
 
 replacements:
   - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.PROXY_DATAPLANE_ROLE_ARN }
