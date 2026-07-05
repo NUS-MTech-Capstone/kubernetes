@@ -56,6 +56,11 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: CLOUDWATCH_NAMESPACE
+            - name: ENVIRONMENT
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: ENVIRONMENT
             - name: AWS_REGION
               value: ap-southeast-1
             - name: INCIDENT_QUEUE_URL
@@ -68,13 +73,15 @@ spec:
               value: global.amazon.nova-2-lite-v1:0
             - name: WORKLOAD_TOKEN_FILE
               value: /var/run/secrets/tokens/incident-agent-token
+            - name: TRANSIENT_RETRY_ATTEMPTS
+              value: "2"
           volumeMounts:
             - name: workload-token
               mountPath: /var/run/secrets/tokens
               readOnly: true
           readinessProbe:
             httpGet:
-              path: /healthz
+              path: /readyz
               port: http
           livenessProbe:
             httpGet:

@@ -16,6 +16,7 @@ data:
   MAX_SESSIONS: "50"
   SSH_KEY_PROVIDER: aws
   AWS_REGION: ap-southeast-1
+  ENVIRONMENT: dev
   SSH_REJOIN_GRACE: 5m
   LOG_FORMAT: json
   OTEL_TRACES_EXPORTER: none
