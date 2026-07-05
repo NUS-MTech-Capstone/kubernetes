@@ -155,6 +155,45 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: incident-agent
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: incident-agent
+  annotations:
+    alb.ingress.kubernetes.io/group.name: dendenmushi-dev
+    alb.ingress.kubernetes.io/group.order: "40"
+    alb.ingress.kubernetes.io/load-balancer-name: dendenmushi-dev
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/certificate-arn: __APPLICATION_CERTIFICATE_ARN__
+    alb.ingress.kubernetes.io/auth-type: cognito
+    alb.ingress.kubernetes.io/auth-idp-cognito: '{"UserPoolArn":"__COGNITO_USER_POOL_ARN__","UserPoolClientId":"__COGNITO_CLIENT_ID__","UserPoolDomain":"__COGNITO_DOMAIN__"}'
+    alb.ingress.kubernetes.io/auth-scope: openid email profile
+    alb.ingress.kubernetes.io/auth-session-cookie: AWSELBAuthSessionCookie
+    alb.ingress.kubernetes.io/auth-session-timeout: "3600"
+    alb.ingress.kubernetes.io/auth-on-unauthenticated-request: deny
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz
+    alb.ingress.kubernetes.io/success-codes: "200"
+spec:
+  ingressClassName: alb
+  rules:
+    - host: api.ddm.keiyam.me
+      http:
+        paths:
+          - path: /incidents
+            pathType: Prefix
+            backend:
+              service:
+                name: incident-agent
+                port:
+                  number: 8091
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
   name: angular
   namespace: dendenmushi
   labels:

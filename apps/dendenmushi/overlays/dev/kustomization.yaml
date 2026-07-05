@@ -65,6 +65,8 @@ replacements:
         fieldPaths: ["metadata.annotations.[alb.ingress.kubernetes.io/auth-idp-cognito]"]
       - select: { kind: Ingress, name: nest-backend }
         fieldPaths: ["metadata.annotations.[alb.ingress.kubernetes.io/auth-idp-cognito]"]
+      - select: { kind: Ingress, name: incident-agent }
+        fieldPaths: ["metadata.annotations.[alb.ingress.kubernetes.io/auth-idp-cognito]"]
   - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.APPLICATION_ALB_ARN }
     targets:
       - select: { kind: Deployment, name: proxy-controlplane }
