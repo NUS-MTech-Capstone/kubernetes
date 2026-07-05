@@ -200,9 +200,13 @@ The AWS deployment is tuned for a low-cost school project:
 - Custom EMF metrics include `AuthFailures`, `STSRequestLatencyMs`,
   `STSErrors`, `SessionStartFailures`, `AssignmentFailures`, `StaleProxyPods`,
   `HeartbeatMisses`, `WebSocketDisconnects`, `SSHFailures`, `ActiveSessions`,
-  `ProxyPodCapacity`, and `AvailableProxyPods`. Use low-cardinality dimensions
-  only: `Service`, `Environment`, and optional component/reason fields in the
-  log payload.
+  `ProxyPodCapacity`, `AvailableProxyPods`, `IncidentReceived`,
+  `IncidentTriaged`, `EvidenceCollected`, `PlanProposed`, `PlanApproved`,
+  `PlanRejected`, `RemediationExecuted`, `RemediationFailed`,
+  `BedrockRequestLatencyMs`, `BedrockErrors`, `DDMOperationLatencyMs`,
+  `DDMOperationErrors`, and `SQSMessageFailures`. Use low-cardinality
+  dimensions only: `Service`, `Environment`, and optional component/reason
+  fields in the log payload.
 - Nest Backend monitoring reads from
   `/aws/containerinsights/dendenmushi-cluster-dev/application`, which Terraform
   pre-creates with one-day retention.
