@@ -66,6 +66,16 @@ spec:
                   key: database-url
             - name: AUTOMATION_RUN_TTL_SECONDS
               value: "3600"
+            - name: SESSION_AUDIT_RETENTION_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: SESSION_AUDIT_RETENTION_SECONDS
+            - name: SESSION_AUDIT_MAX_BYTES_PER_SESSION
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: SESSION_AUDIT_MAX_BYTES_PER_SESSION
           readinessProbe:
             httpGet:
               path: /healthz
