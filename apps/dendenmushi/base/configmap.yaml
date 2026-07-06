@@ -8,6 +8,7 @@ metadata:
     app.kubernetes.io/part-of: dendenmushi
 data:
   SESSION_MANAGER_URL: http://session-manager:8081
+  SESSION_AUDIT_URL: http://audit-service:8085
   STS_URL: http://sts:8082
   CHANGE_REQUEST_URL: http://nest-backend:3000/sts
   SERVER_INVENTORY_URL: http://nest-backend:3000

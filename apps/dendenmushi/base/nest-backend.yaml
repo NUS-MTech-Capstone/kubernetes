@@ -108,11 +108,11 @@ spec:
               value: "false"
             - name: SSH_GATEWAY_URL
               value: "http://proxy-controlplane:8080"
-            - name: SESSION_MANAGER_URL
+            - name: SESSION_AUDIT_URL
               valueFrom:
                 configMapKeyRef:
                   name: dendenmushi-config
-                  key: SESSION_MANAGER_URL
+                  key: SESSION_AUDIT_URL
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:

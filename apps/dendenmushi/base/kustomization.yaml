@@ -6,6 +6,7 @@ resources:
   - tokenreview-rbac.yaml
   - configmap.yaml
   - session-manager.yaml
+  - audit-service.yaml
   - sts.yaml
   - agent-controlplane.yaml
   - proxy-controlplane.yaml

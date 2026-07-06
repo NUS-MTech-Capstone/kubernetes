@@ -5,6 +5,7 @@ EKS manifests and deployment tooling for the DenDenMushi SSH access platform.
 The AWS deployment runs these services:
 
 - Session Manager
+- Audit Service
 - STS
 - Proxy Control Plane
 - Proxy Dataplane
@@ -64,6 +65,7 @@ Set that value as the `AWS_ROLE_ARN` Actions secret in these repositories:
 NUS-MTech-Capstone/sts
 NUS-MTech-Capstone/proxy-controlplane
 NUS-MTech-Capstone/session-manager
+NUS-MTech-Capstone/audit-service
 NUS-MTech-Capstone/proxy-dataplane
 NUS-MTech-Capstone/agent-controlplane
 NUS-MTech-Capstone/incident-agent
@@ -75,7 +77,7 @@ With GitHub CLI:
 
 ```bash
 ROLE_ARN=$(terraform output -raw github_ecr_push_role_arn)
-for repo in sts proxy-controlplane session-manager proxy-dataplane agent-controlplane incident-agent nest-backend angular; do
+for repo in sts proxy-controlplane session-manager audit-service proxy-dataplane agent-controlplane incident-agent nest-backend angular; do
   gh secret set AWS_ROLE_ARN --repo "NUS-MTech-Capstone/${repo}" --body "${ROLE_ARN}"
 done
 ```
@@ -157,6 +159,7 @@ The active EKS services promote images through shared GitHub Actions:
 ```text
 sts
 session-manager
+audit-service
 agent-controlplane
 proxy-controlplane
 proxy-dataplane
@@ -208,7 +211,8 @@ The AWS deployment is tuned for a low-cost school project:
   `ProxyPodCapacity`, `AvailableProxyPods`, `IncidentReceived`,
   `IncidentTriaged`, `EvidenceCollected`, `PlanProposed`, `PlanApproved`,
   `PlanRejected`, `RemediationExecuted`, `RemediationFailed`,
-  `BedrockRequestLatencyMs`, `BedrockErrors`, `DDMOperationLatencyMs`,
+  `BedrockRequestLatencyMs`, `BedrockErrors`, `SessionAuditAppendFailures`,
+  `SessionAuditDropped`, `SessionAuditTruncated`, `DDMOperationLatencyMs`,
   `DDMOperationErrors`, and `SQSMessageFailures`. Use low-cardinality
   dimensions only: `Service`, `Environment`, and optional component/reason
   fields in the log payload.

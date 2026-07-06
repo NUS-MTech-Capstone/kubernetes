@@ -19,6 +19,9 @@ images:
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager
     newTag: c4912451a48e6263fcd424482f83c09da132aa38
+  - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/audit-service
+    newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/audit-service
+    newTag: dev
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
     newTag: 5a1b0c1d0af96f847e3830e5da25007825e9403b
