@@ -183,6 +183,13 @@ spec:
     - host: api.ddm.keiyam.me
       http:
         paths:
+          - path: /agentic-ai/health
+            pathType: Prefix
+            backend:
+              service:
+                name: incident-agent
+                port:
+                  number: 8091
           - path: /alerts
             pathType: Prefix
             backend:
