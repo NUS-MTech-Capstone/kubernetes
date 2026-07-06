@@ -58,6 +58,12 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: CLOUDWATCH_NAMESPACE
+            - name: AWS_REGION
+              value: ap-southeast-1
+            - name: EVENT_PUBLISHER_ENABLED
+              value: "true"
+            - name: EVENTS_TOPIC_ARN
+              value: __EVENTS_TOPIC_ARN__
             - name: JWT_SIGNING_KEY
               valueFrom:
                 secretKeyRef:

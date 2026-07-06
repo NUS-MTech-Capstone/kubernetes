@@ -60,6 +60,10 @@ spec:
                   key: CLOUDWATCH_NAMESPACE
             - name: AWS_REGION
               value: ap-southeast-1
+            - name: EVENT_PUBLISHER_ENABLED
+              value: "true"
+            - name: EVENTS_TOPIC_ARN
+              value: __EVENTS_TOPIC_ARN__
             - name: DATABASE_SECRET_ID
               value: __INCIDENT_DATABASE_SECRET_ID__
             - name: STS_URL
@@ -129,4 +133,3 @@ spec:
     - name: http
       port: 8092
       targetPort: http
-
