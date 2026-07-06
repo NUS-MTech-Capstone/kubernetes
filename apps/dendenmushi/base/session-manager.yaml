@@ -22,6 +22,7 @@ spec:
         app: dendenmushi
         component: session-manager
     spec:
+      serviceAccountName: session-manager
       containers:
         - name: session-manager
           image: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager:dev
@@ -57,6 +58,12 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: CLOUDWATCH_NAMESPACE
+            - name: AWS_REGION
+              value: ap-southeast-1
+            - name: EVENT_PUBLISHER_ENABLED
+              value: "true"
+            - name: EVENTS_TOPIC_ARN
+              value: __EVENTS_TOPIC_ARN__
             - name: STORE_DRIVER
               value: postgres
             - name: DATABASE_URL

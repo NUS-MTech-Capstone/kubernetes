@@ -49,6 +49,22 @@ replacements:
     targets:
       - select: { kind: ServiceAccount, name: proxy-dataplane }
         fieldPaths: ["metadata.annotations.[eks.amazonaws.com/role-arn]"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.STS_ROLE_ARN }
+    targets:
+      - select: { kind: ServiceAccount, name: sts }
+        fieldPaths: ["metadata.annotations.[eks.amazonaws.com/role-arn]"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.PROXY_CONTROLPLANE_ROLE_ARN }
+    targets:
+      - select: { kind: ServiceAccount, name: proxy-controlplane }
+        fieldPaths: ["metadata.annotations.[eks.amazonaws.com/role-arn]"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.SESSION_MANAGER_ROLE_ARN }
+    targets:
+      - select: { kind: ServiceAccount, name: session-manager }
+        fieldPaths: ["metadata.annotations.[eks.amazonaws.com/role-arn]"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.AUDIT_SERVICE_ROLE_ARN }
+    targets:
+      - select: { kind: ServiceAccount, name: audit-service }
+        fieldPaths: ["metadata.annotations.[eks.amazonaws.com/role-arn]"]
   - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.NEST_BACKEND_ROLE_ARN }
     targets:
       - select: { kind: ServiceAccount, name: nest-backend }
@@ -115,6 +131,20 @@ replacements:
     targets:
       - select: { kind: Deployment, name: incident-agent }
         fieldPaths: ["spec.template.spec.containers.[name=incident-agent].env.[name=INCIDENT_QUEUE_URL].value"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.EVENTS_TOPIC_ARN }
+    targets:
+      - select: { kind: Deployment, name: sts }
+        fieldPaths: ["spec.template.spec.containers.[name=sts].env.[name=EVENTS_TOPIC_ARN].value"]
+      - select: { kind: Deployment, name: proxy-controlplane }
+        fieldPaths: ["spec.template.spec.containers.[name=proxy-controlplane].env.[name=EVENTS_TOPIC_ARN].value"]
+      - select: { kind: Deployment, name: session-manager }
+        fieldPaths: ["spec.template.spec.containers.[name=session-manager].env.[name=EVENTS_TOPIC_ARN].value"]
+      - select: { kind: Deployment, name: agent-controlplane }
+        fieldPaths: ["spec.template.spec.containers.[name=agent-controlplane].env.[name=EVENTS_TOPIC_ARN].value"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.AUDIT_EVENTS_QUEUE_URL }
+    targets:
+      - select: { kind: Deployment, name: audit-service }
+        fieldPaths: ["spec.template.spec.containers.[name=audit-service].env.[name=AUDIT_EVENTS_QUEUE_URL].value"]
   - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.INCIDENT_DATABASE_SECRET_ID }
     targets:
       - select: { kind: Deployment, name: incident-agent }

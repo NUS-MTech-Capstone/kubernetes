@@ -22,6 +22,7 @@ spec:
         app: dendenmushi
         component: audit-service
     spec:
+      serviceAccountName: audit-service
       containers:
         - name: audit-service
           image: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/audit-service:dev
@@ -57,6 +58,12 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: CLOUDWATCH_NAMESPACE
+            - name: AWS_REGION
+              value: ap-southeast-1
+            - name: AUDIT_EVENT_CONSUMER_ENABLED
+              value: "true"
+            - name: AUDIT_EVENTS_QUEUE_URL
+              value: __AUDIT_EVENTS_QUEUE_URL__
             - name: STORE_DRIVER
               value: postgres
             - name: DATABASE_URL

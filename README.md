@@ -37,6 +37,10 @@ The first infrastructure apply creates:
 - GitHub Actions ECR push role
 - Proxy Dataplane IRSA role
 - Nest Backend IRSA role
+- STS, Proxy Control Plane, Session Manager, Audit Service, and Agent Control
+  Plane event-lane IRSA permissions
+- SNS topic, Audit Service SQS queue, and audit event DLQ for sanitized
+  lifecycle metadata
 - Cognito user pool/client
 - Dedicated web application database credentials
 - Regional ACM certificate for `api.ddm.keiyam.me`
@@ -109,7 +113,8 @@ that should not happen inside every Argo sync:
 4. Reads the target details from Terraform outputs.
 5. Runs `ssh-keyscan` from an EKS pod.
 6. Builds trusted STS inventory in the dev overlay.
-7. Refreshes non-secret AWS and Cognito identifiers in the dev overlay.
+7. Refreshes non-secret AWS, Cognito, IRSA, SNS, and SQS identifiers in the dev
+   overlay.
 8. Applies the Argo CD Application manifest.
 
 ```bash
@@ -224,6 +229,13 @@ The AWS deployment is tuned for a low-cost school project:
   `mode`, `operation`, `planHash`, `status`, and `durationMs`. Do not log STS
   tokens, private keys, passwords, model prompts containing sensitive data,
   command bodies, or terminal streams.
+
+STS, Proxy Control Plane, Session Manager, and Agent Control Plane publish
+non-blocking sanitized lifecycle events when `EVENT_PUBLISHER_ENABLED=true` and
+`EVENTS_TOPIC_ARN` is present. Audit Service consumes the subscribed SQS queue
+when `AUDIT_EVENT_CONSUMER_ENABLED=true` and `AUDIT_EVENTS_QUEUE_URL` is
+present. These settings are enabled in the AWS dev overlay and remain inert for
+local runs unless explicitly configured.
 
 Verification after Terraform and Argo CD sync:
 
