@@ -1,0 +1,132 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-controlplane
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: agent-controlplane
+    app.kubernetes.io/name: agent-controlplane
+    app.kubernetes.io/part-of: dendenmushi
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: dendenmushi
+      component: agent-controlplane
+  template:
+    metadata:
+      labels:
+        app: dendenmushi
+        component: agent-controlplane
+    spec:
+      serviceAccountName: agent-controlplane
+      containers:
+        - name: agent-controlplane
+          image: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/agent-controlplane:dev
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8092
+          env:
+            - name: PORT
+              value: "8092"
+            - name: LOG_FORMAT
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: LOG_FORMAT
+            - name: OTEL_TRACES_EXPORTER
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: OTEL_TRACES_EXPORTER
+            - name: OTEL_METRICS_EXPORTER
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: OTEL_METRICS_EXPORTER
+            - name: OTEL_LOGS_EXPORTER
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: OTEL_LOGS_EXPORTER
+            - name: CLOUDWATCH_NAMESPACE
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: CLOUDWATCH_NAMESPACE
+            - name: AWS_REGION
+              value: ap-southeast-1
+            - name: DATABASE_SECRET_ID
+              value: __INCIDENT_DATABASE_SECRET_ID__
+            - name: STS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: STS_URL
+            - name: SESSION_MANAGER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: SESSION_MANAGER_URL
+            - name: INCIDENT_AGENT_URL
+              value: http://incident-agent:8091
+            - name: WORKLOAD_TOKEN_FILE
+              value: /var/run/secrets/tokens/agent-controlplane-token
+            - name: ALB_ARN
+              value: __APPLICATION_ALB_ARN__
+            - name: COGNITO_USER_POOL_ID
+              value: __COGNITO_USER_POOL_ID__
+            - name: COGNITO_CLIENT_ID
+              value: __COGNITO_CLIENT_ID__
+            - name: TRANSIENT_RETRY_ATTEMPTS
+              value: "2"
+          volumeMounts:
+            - name: workload-token
+              mountPath: /var/run/secrets/tokens
+              readOnly: true
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: http
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+      volumes:
+        - name: workload-token
+          projected:
+            sources:
+              - serviceAccountToken:
+                  audience: dendenmushi-incident-agent
+                  expirationSeconds: 900
+                  path: agent-controlplane-token
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agent-controlplane
+  namespace: dendenmushi
+  labels:
+    app: dendenmushi
+    component: agent-controlplane
+spec:
+  type: ClusterIP
+  selector:
+    app: dendenmushi
+    component: agent-controlplane
+  ports:
+    - name: http
+      port: 8092
+      targetPort: http
+

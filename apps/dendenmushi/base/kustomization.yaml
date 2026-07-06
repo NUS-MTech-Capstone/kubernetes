@@ -7,6 +7,7 @@ resources:
   - configmap.yaml
   - session-manager.yaml
   - sts.yaml
+  - agent-controlplane.yaml
   - proxy-controlplane.yaml
   - proxy-dataplane.yaml
   - incident-agent.yaml

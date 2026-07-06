@@ -23,7 +23,7 @@ if kubectl get application dendenmushi-dev -n argocd >/dev/null 2>&1; then
   kubectl get application dendenmushi-dev -n argocd
 fi
 
-for deployment in session-manager sts proxy-dataplane proxy-controlplane nest-backend angular; do
+for deployment in session-manager sts agent-controlplane proxy-dataplane proxy-controlplane incident-agent nest-backend angular; do
   kubectl rollout status "deployment/${deployment}" -n "${NAMESPACE}" --timeout=5m
 done
 
