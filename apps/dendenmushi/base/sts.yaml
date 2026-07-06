@@ -84,6 +84,8 @@ spec:
               value: dendenmushi
             - name: AUTOMATION_WORKLOAD_SERVICE_ACCOUNT
               value: incident-agent
+            - name: AUTOMATION_WORKLOAD_SERVICE_ACCOUNTS
+              value: incident-agent,agent-controlplane
             - name: AUTOMATION_TOKEN_TTL_SECONDS
               value: "600"
           readinessProbe:

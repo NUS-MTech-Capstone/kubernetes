@@ -155,11 +155,11 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: incident-agent
+  name: agent-controlplane
   namespace: dendenmushi
   labels:
     app: dendenmushi
-    component: incident-agent
+    component: agent-controlplane
   annotations:
     alb.ingress.kubernetes.io/group.name: dendenmushi-dev
     alb.ingress.kubernetes.io/group.order: "40"
@@ -187,23 +187,23 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: incident-agent
+                name: agent-controlplane
                 port:
-                  number: 8091
+                  number: 8092
           - path: /alerts
             pathType: Prefix
             backend:
               service:
-                name: incident-agent
+                name: agent-controlplane
                 port:
-                  number: 8091
+                  number: 8092
           - path: /incidents
             pathType: Prefix
             backend:
               service:
-                name: incident-agent
+                name: agent-controlplane
                 port:
-                  number: 8091
+                  number: 8092
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress

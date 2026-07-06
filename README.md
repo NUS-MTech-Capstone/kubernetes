@@ -8,6 +8,7 @@ The AWS deployment runs these services:
 - STS
 - Proxy Control Plane
 - Proxy Dataplane
+- Agent Control Plane
 - Incident Agent
 - Nest Backend
 - Angular
@@ -64,6 +65,7 @@ NUS-MTech-Capstone/sts
 NUS-MTech-Capstone/proxy-controlplane
 NUS-MTech-Capstone/session-manager
 NUS-MTech-Capstone/proxy-dataplane
+NUS-MTech-Capstone/agent-controlplane
 NUS-MTech-Capstone/incident-agent
 NUS-MTech-Capstone/nest-backend
 NUS-MTech-Capstone/angular
@@ -73,7 +75,7 @@ With GitHub CLI:
 
 ```bash
 ROLE_ARN=$(terraform output -raw github_ecr_push_role_arn)
-for repo in sts proxy-controlplane session-manager proxy-dataplane incident-agent nest-backend angular; do
+for repo in sts proxy-controlplane session-manager proxy-dataplane agent-controlplane incident-agent nest-backend angular; do
   gh secret set AWS_ROLE_ARN --repo "NUS-MTech-Capstone/${repo}" --body "${ROLE_ARN}"
 done
 ```
@@ -155,6 +157,7 @@ The active EKS services promote images through shared GitHub Actions:
 ```text
 sts
 session-manager
+agent-controlplane
 proxy-controlplane
 proxy-dataplane
 incident-agent
@@ -178,7 +181,9 @@ https://api.ddm.keiyam.me/ddm/auth/login      -> Nest Backend with ALB login
 https://api.ddm.keiyam.me/ddm/*               -> Nest Backend
 https://api.ddm.keiyam.me/sessions/*          -> Proxy Control Plane
 wss://api.ddm.keiyam.me/sessions/*/ws         -> Proxy Dataplane
-https://api.ddm.keiyam.me/incidents*          -> Incident Agent
+https://api.ddm.keiyam.me/agentic-ai/health   -> Agent Control Plane
+https://api.ddm.keiyam.me/alerts*             -> Agent Control Plane
+https://api.ddm.keiyam.me/incidents*          -> Agent Control Plane
 ```
 
 The WebSocket rule has higher ALB group priority. Sharing a hostname lets the

@@ -22,6 +22,9 @@ images:
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
     newTag: 5a1b0c1d0af96f847e3830e5da25007825e9403b
+  - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/agent-controlplane
+    newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/agent-controlplane
+    newTag: dev
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane
     newTag: f4c4af0abd070f2b8564e3a8f2ee8e86be640caa
@@ -51,6 +54,10 @@ replacements:
     targets:
       - select: { kind: ServiceAccount, name: incident-agent }
         fieldPaths: ["metadata.annotations.[eks.amazonaws.com/role-arn]"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.AGENT_CONTROLPLANE_ROLE_ARN }
+    targets:
+      - select: { kind: ServiceAccount, name: agent-controlplane }
+        fieldPaths: ["metadata.annotations.[eks.amazonaws.com/role-arn]"]
   - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.APPLICATION_CERTIFICATE_ARN }
     targets:
       - select: { kind: Ingress }
@@ -65,12 +72,14 @@ replacements:
         fieldPaths: ["metadata.annotations.[alb.ingress.kubernetes.io/auth-idp-cognito]"]
       - select: { kind: Ingress, name: nest-backend }
         fieldPaths: ["metadata.annotations.[alb.ingress.kubernetes.io/auth-idp-cognito]"]
-      - select: { kind: Ingress, name: incident-agent }
+      - select: { kind: Ingress, name: agent-controlplane }
         fieldPaths: ["metadata.annotations.[alb.ingress.kubernetes.io/auth-idp-cognito]"]
   - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.APPLICATION_ALB_ARN }
     targets:
       - select: { kind: Deployment, name: proxy-controlplane }
         fieldPaths: ["spec.template.spec.containers.[name=proxy-controlplane].env.[name=ALB_ARN].value"]
+      - select: { kind: Deployment, name: agent-controlplane }
+        fieldPaths: ["spec.template.spec.containers.[name=agent-controlplane].env.[name=ALB_ARN].value"]
       - select: { kind: Deployment, name: nest-backend }
         fieldPaths: ["spec.template.spec.containers.[name=nest-backend].env.[name=ALB_ARN].value"]
       - select: { kind: Job, name: nest-backend-migrate }
@@ -79,6 +88,8 @@ replacements:
     targets:
       - select: { kind: Deployment, name: proxy-controlplane }
         fieldPaths: ["spec.template.spec.containers.[name=proxy-controlplane].env.[name=COGNITO_USER_POOL_ID].value"]
+      - select: { kind: Deployment, name: agent-controlplane }
+        fieldPaths: ["spec.template.spec.containers.[name=agent-controlplane].env.[name=COGNITO_USER_POOL_ID].value"]
       - select: { kind: Deployment, name: nest-backend }
         fieldPaths: ["spec.template.spec.containers.[name=nest-backend].env.[name=COGNITO_USER_POOL_ID].value"]
       - select: { kind: Job, name: nest-backend-migrate }
@@ -87,6 +98,8 @@ replacements:
     targets:
       - select: { kind: Deployment, name: proxy-controlplane }
         fieldPaths: ["spec.template.spec.containers.[name=proxy-controlplane].env.[name=COGNITO_CLIENT_ID].value"]
+      - select: { kind: Deployment, name: agent-controlplane }
+        fieldPaths: ["spec.template.spec.containers.[name=agent-controlplane].env.[name=COGNITO_CLIENT_ID].value"]
       - select: { kind: Deployment, name: nest-backend }
         fieldPaths: ["spec.template.spec.containers.[name=nest-backend].env.[name=COGNITO_CLIENT_ID].value"]
       - select: { kind: Job, name: nest-backend-migrate }
@@ -103,6 +116,8 @@ replacements:
     targets:
       - select: { kind: Deployment, name: incident-agent }
         fieldPaths: ["spec.template.spec.containers.[name=incident-agent].env.[name=DATABASE_SECRET_ID].value"]
+      - select: { kind: Deployment, name: agent-controlplane }
+        fieldPaths: ["spec.template.spec.containers.[name=agent-controlplane].env.[name=DATABASE_SECRET_ID].value"]
   - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.SERVER_INVENTORY_STATIC_JSON }
     targets:
       - select: { kind: ConfigMap, name: dendenmushi-config }

@@ -69,6 +69,8 @@ spec:
               value: __INCIDENT_DATABASE_SECRET_ID__
             - name: PROXY_CONTROLPLANE_URL
               value: http://proxy-controlplane:8080
+            - name: AGENT_CONTROLPLANE_URL
+              value: http://agent-controlplane:8092
             - name: BEDROCK_MODEL_ID
               value: global.amazon.nova-2-lite-v1:0
             - name: WORKLOAD_TOKEN_FILE
