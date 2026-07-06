@@ -113,8 +113,8 @@ that should not happen inside every Argo sync:
 4. Reads the target details from Terraform outputs.
 5. Runs `ssh-keyscan` from an EKS pod.
 6. Builds trusted STS inventory in the dev overlay.
-7. Refreshes non-secret AWS, Cognito, IRSA, SNS, and SQS identifiers in the dev
-   overlay.
+7. Refreshes non-secret AWS, Cognito, IRSA, SNS, SQS, and Incident Agent
+   LangSmith identifiers in the dev overlay.
 8. Applies the Argo CD Application manifest.
 
 ```bash
@@ -210,6 +210,10 @@ The AWS deployment is tuned for a low-cost school project:
   URLs. Authorization still comes only from ALB identity and STS tokens.
 - `OTEL_TRACES_EXPORTER=none`, `OTEL_METRICS_EXPORTER=none`, and
   `OTEL_LOGS_EXPORTER=none` are the default ConfigMap values.
+- The dev overlay sets `LANGSMITH_TRACING=true` for Incident Agent and passes
+  only the Terraform-created Secrets Manager secret ID plus optional project,
+  endpoint, and workspace settings. The LangSmith API key itself is not written
+  to Kubernetes YAML or ConfigMaps.
 - Custom EMF metrics include `AuthFailures`, `STSRequestLatencyMs`,
   `STSErrors`, `SessionStartFailures`, `AssignmentFailures`, `StaleProxyPods`,
   `HeartbeatMisses`, `WebSocketDisconnects`, `SSHFailures`, `ActiveSessions`,
