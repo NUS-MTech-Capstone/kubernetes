@@ -67,6 +67,16 @@ spec:
               value: __INCIDENT_ALERTS_QUEUE_URL__
             - name: DATABASE_SECRET_ID
               value: __INCIDENT_DATABASE_SECRET_ID__
+            - name: LANGSMITH_TRACING
+              value: "false"
+            - name: LANGSMITH_API_KEY_SECRET_ID
+              value: __INCIDENT_AGENT_LANGSMITH_API_KEY_SECRET_ID__
+            - name: LANGSMITH_PROJECT
+              value: __INCIDENT_AGENT_LANGSMITH_PROJECT__
+            - name: LANGSMITH_ENDPOINT
+              value: __INCIDENT_AGENT_LANGSMITH_ENDPOINT__
+            - name: LANGSMITH_WORKSPACE_ID
+              value: __INCIDENT_AGENT_LANGSMITH_WORKSPACE_ID__
             - name: PROXY_CONTROLPLANE_URL
               value: http://proxy-controlplane:8080
             - name: AGENT_CONTROLPLANE_URL
