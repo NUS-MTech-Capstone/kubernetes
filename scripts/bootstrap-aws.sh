@@ -208,6 +208,7 @@ SERVER_INVENTORY_STATIC_JSON=$(jq -cn \
     credentialSecretId: $credential_secret_id,
     hostPublicKey: $host_public_key,
     automation: {
+      catalogVersion: "v1",
       serviceName: $automation_service_name,
       healthUrl: $automation_health_url,
       helperPath: $automation_helper_path,
@@ -219,7 +220,10 @@ SERVER_INVENTORY_STATIC_JSON=$(jq -cn \
         "service_status",
         "service_logs",
         "health_check",
-        "restart_service"
+        "target_probe",
+        "restart_service",
+        "recover_demo_app",
+        "reload_service"
       ]
     }
   }}')
