@@ -33,7 +33,7 @@ images:
     newTag: 8d61edfdc75fec93a6dd7c76d45859522de24eda
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
-    newTag: c4fc7d3d864feae7628dc28c7a7da58fb2d807d5
+    newTag: de56a9243c8a4e03550167d2f75a3b9c044828ea
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent
     newTag: ae33d4ece02f50f798a7855c4bd78e27e204b949
