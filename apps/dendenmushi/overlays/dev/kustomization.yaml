@@ -33,7 +33,7 @@ images:
     newTag: c4fc7d3d864feae7628dc28c7a7da58fb2d807d5
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent
-    newTag: ae33d4ece02f50f798a7855c4bd78e27e204b949
+    newTag: 8e55fa393732b7634eda457d8d57cd302f1c79d2
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
     newTag: 34dc4d9fa44d0e92427bae7b31033aa8c7437437
