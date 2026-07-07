@@ -18,28 +18,31 @@ configMapGenerator:
 images:
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager
-    newTag: c4912451a48e6263fcd424482f83c09da132aa38
+    newTag: b5d06571d0d863aa2e0405b81391303bbe040356
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/audit-service
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/audit-service
     newTag: 480fa60404ef6249d9c0dcb567b32c1e4494f54b
+  - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/agent-controlplane
+    newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/agent-controlplane
+    newTag: 3cb16fdcc19c3991898c671c4c923b251492e275
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
-    newTag: 24080e0f4392544ceaee2741cf3ad2ea51b3ecfa
+    newTag: 2b1d20299c424512fe158041e508620242653f77
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane
-    newTag: 8d61edfdc75fec93a6dd7c76d45859522de24eda
+    newTag: 6373bce5dbdf50c0a4d88392c5d7660bfbd9f403
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
-    newTag: c4fc7d3d864feae7628dc28c7a7da58fb2d807d5
+    newTag: de56a9243c8a4e03550167d2f75a3b9c044828ea
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent
-    newTag: ae33d4ece02f50f798a7855c4bd78e27e204b949
+    newTag: 8e55fa393732b7634eda457d8d57cd302f1c79d2
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
-    newTag: 34dc4d9fa44d0e92427bae7b31033aa8c7437437
+    newTag: 1ecf78a753d1f21cd61a15ffca2a9342d74075cc
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular
-    newTag: ece850993f9011167ce25cbaf036dfe3eeb5bc5c
+    newTag: 518e21c08d14a25fd65a3eec07e4b91ebbabb6b4
 
 replacements:
   - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.PROXY_DATAPLANE_ROLE_ARN }
