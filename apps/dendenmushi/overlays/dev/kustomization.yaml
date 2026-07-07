@@ -18,7 +18,7 @@ configMapGenerator:
 images:
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager
-    newTag: c4912451a48e6263fcd424482f83c09da132aa38
+    newTag: b5d06571d0d863aa2e0405b81391303bbe040356
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/audit-service
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/audit-service
     newTag: dev
