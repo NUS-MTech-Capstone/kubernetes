@@ -21,7 +21,7 @@ images:
     newTag: b5d06571d0d863aa2e0405b81391303bbe040356
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/audit-service
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/audit-service
-    newTag: ea0a8bba5a994ce7b9a013c76e118e36e4f890a0
+    newTag: 5a850b4a4fcd4f662c53c2f514dfaba5ec48703e
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/agent-controlplane
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/agent-controlplane
     newTag: 0cf16dd9db82e6f9bf72c93e87ef70648d9a9133
