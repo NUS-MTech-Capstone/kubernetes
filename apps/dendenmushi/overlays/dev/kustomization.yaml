@@ -24,7 +24,7 @@ images:
     newTag: 5a850b4a4fcd4f662c53c2f514dfaba5ec48703e
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/agent-controlplane
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/agent-controlplane
-    newTag: 0cf16dd9db82e6f9bf72c93e87ef70648d9a9133
+    newTag: f44d2e0930b4c593f0df0b4383c2f71c0754e40e
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
     newTag: 5f9328ba4cf20dacbbc1378b043218bd01bdc940
