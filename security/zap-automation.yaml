@@ -1,0 +1,96 @@
+env:
+  contexts:
+    - name: DenDenMushi public ingress
+      urls:
+        - ${TARGET_URL}
+  parameters:
+    failOnError: true
+    failOnWarning: false
+    continueOnFailure: true
+    progressToStdout: true
+
+jobs:
+  - type: passiveScan-config
+    parameters:
+      scanOnlyInScope: true
+      maxAlertsPerRule: 20
+      maxBodySizeInBytesToScan: 1048576
+
+  - type: requestor
+    requests:
+      - name: Angular application
+        url: ${TARGET_URL}/
+        method: GET
+      - name: Public liveness endpoint
+        url: ${TARGET_URL}/healthz
+        method: GET
+      - name: Public readiness endpoint
+        url: ${TARGET_URL}/readyz
+        method: GET
+      - name: Nest Backend boundary
+        url: ${TARGET_URL}/ddm
+        method: GET
+      - name: Proxy Control Plane boundary
+        url: ${TARGET_URL}/sessions
+        method: GET
+      - name: Proxy Dataplane WebSocket boundary
+        url: ${TARGET_URL}/sessions/dast-placeholder/ws
+        method: GET
+      - name: Agent Control Plane health boundary
+        url: ${TARGET_URL}/agentic-ai/health
+        method: GET
+      - name: Agent Control Plane alerts boundary
+        url: ${TARGET_URL}/alerts
+        method: GET
+      - name: Agent Control Plane incidents boundary
+        url: ${TARGET_URL}/incidents
+        method: GET
+
+  - type: spiderClient
+    parameters:
+      context: DenDenMushi public ingress
+      url: ${TARGET_URL}/
+      maxDuration: 3
+      maxCrawlDepth: 5
+      maxChildren: 100
+      numberOfBrowsers: 1
+      scopeCheck: Flexible
+
+  - type: passiveScan-wait
+    parameters:
+      maxDuration: 5
+
+  - type: report
+    parameters:
+      template: modern
+      reportDir: /zap/wrk/reports
+      reportFile: zap-report.html
+      reportTitle: DenDenMushi Public Ingress DAST Report
+      reportDescription: >-
+        Safe unauthenticated passive scan of the DenDenMushi public ingress.
+        The scan crawls the Angular application at / and seeds GET requests for
+        /healthz, /readyz, /ddm, /sessions,
+        /sessions/dast-placeholder/ws, /agentic-ai/health, /alerts, and
+        /incidents. These cover the externally reachable Nest Backend, Proxy
+        Control Plane, Proxy Dataplane, and Agent Control Plane boundaries.
+        Cognito-protected application behavior and internal-only services are
+        intentionally not authenticated or actively attacked.
+      displayReport: false
+    risks:
+      - high
+      - medium
+      - low
+      - info
+    confidences:
+      - high
+      - medium
+      - low
+      - falsepositive
+    alwaysRun: true
+
+  - type: exitStatus
+    parameters:
+      okExitValue: 0
+      errorExitValue: 1
+      warnExitValue: 0
+    alwaysRun: true
