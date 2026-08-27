@@ -1,0 +1,62 @@
+name: ZAP DAST
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zap-dast-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TARGET_URL: https://api.ddm.keiyam.me
+  REPORT_DIR: dast-results
+
+jobs:
+  dast:
+    name: Passive scan deployed ingress
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Check out Kubernetes configuration
+        uses: actions/checkout@v7
+
+      - name: Wait for Argo CD reconciliation
+        if: ${{ github.event_name == 'push' }}
+        run: sleep 180
+
+      - name: Wait for the public application
+        shell: bash
+        run: |
+          for attempt in $(seq 1 12); do
+            if curl --fail --silent --show-error --max-time 10 "${TARGET_URL}/healthz" >/dev/null \
+              && curl --fail --silent --show-error --max-time 10 "${TARGET_URL}/readyz" >/dev/null; then
+              echo "The public application is ready for DAST."
+              exit 0
+            fi
+
+            if [[ "${attempt}" -lt 12 ]]; then
+              echo "The public application is not ready (attempt ${attempt}/12); retrying in 10 seconds."
+              sleep 10
+            fi
+          done
+
+          echo "The public application did not become ready in time." >&2
+          exit 1
+
+      - name: Run OWASP ZAP passive scan
+        run: ./scripts/run-zap-dast.sh
+
+      - name: Upload ZAP HTML report
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: zap-dast-html-${{ github.run_id }}
+          path: ${{ env.REPORT_DIR }}/zap-report.html
+          if-no-files-found: error
+          retention-days: 30

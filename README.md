@@ -197,6 +197,55 @@ https://api.ddm.keiyam.me/incidents*          -> Agent Control Plane
 The WebSocket rule has higher ALB group priority. Sharing a hostname lets the
 browser send the Cognito ALB session cookie during the WebSocket upgrade.
 
+## Post-Deployment DAST
+
+The `ZAP DAST` GitHub Actions workflow performs a safe, unauthenticated passive
+scan of the deployed public ingress after every merge to `main`. A manual
+`workflow_dispatch` trigger is also available for reruns. Push-triggered scans
+wait three minutes for the normal Argo CD reconciliation window, then require
+the public `/healthz` and `/readyz` endpoints to respond before starting ZAP.
+
+The scan uses the ZAP client spider for the Angular application and seeds only
+`GET` requests for the externally reachable Nest Backend, Proxy Control Plane,
+Proxy Dataplane WebSocket route, and Agent Control Plane boundaries. It does
+not perform an active scan, submit forms, create test data, or use AWS or
+Cognito credentials. Findings are evidence for manual review and do not fail
+the workflow; target unavailability, a ZAP execution error, or a missing report
+does fail it.
+
+Each workflow run uploads `zap-report.html` in the
+`zap-dast-html-<run-id>` artifact for 30 days. Review high and medium findings,
+record false-positive reasoning, and rerun the workflow after remediating a
+confirmed issue.
+
+To run the same scan locally, start Docker and run:
+
+```bash
+./scripts/run-zap-dast.sh
+```
+
+The default report is `dast-results/zap-report.html`. The origin, image, and
+output directory can be overridden without changing the checked-in plan:
+
+```bash
+TARGET_URL=https://api.ddm.keiyam.me \
+ZAP_IMAGE=ghcr.io/zaproxy/zaproxy:stable \
+REPORT_DIR=/tmp/dendenmushi-zap \
+./scripts/run-zap-dast.sh
+```
+
+This public scan validates Angular content and the external ALB/Cognito denial
+boundary for protected routes. It does not exercise authenticated behavior
+behind Cognito. STS, Session Manager, Audit Service, and Incident Agent remain
+internal-only and are intentionally not exposed or scanned through the public
+ingress. An authenticated or active DAST stage would require a dedicated test
+identity, isolated test data, and additional safety controls.
+
+The three-minute delay is pragmatic rather than an exact deployment
+attestation: the report describes the revision live at scan time. If Argo CD
+takes longer to reconcile, verify the rollout and use the manual trigger to
+produce a report for the final revision.
+
 ## Observability Defaults
 
 The AWS deployment is tuned for a low-cost school project:

@@ -81,8 +81,14 @@ spec:
               value: http://proxy-controlplane:8080
             - name: AGENT_CONTROLPLANE_URL
               value: http://agent-controlplane:8092
+            - name: PLANNER_MODE
+              value: bedrock_with_fallback
+            - name: BEDROCK_REGION
+              value: us-east-1
             - name: BEDROCK_MODEL_ID
               value: global.amazon.nova-2-lite-v1:0
+            - name: BEDROCK_FALLBACK_ENABLED
+              value: "true"
             - name: WORKLOAD_TOKEN_FILE
               value: /var/run/secrets/tokens/incident-agent-token
             - name: TRANSIENT_RETRY_ATTEMPTS
