@@ -180,12 +180,15 @@ image tag, renders the dev overlay, and opens or updates a PR. Argo CD deploys
 only after that PR is merged.
 
 The incident-agent image also drives the `incident-agent-migrate` PreSync hook.
-Argo CD runs Alembic with the `DATABASE_URL` from the pre-bootstrapped
-`dendenmushi-database` Kubernetes Secret before rolling out the worker. The
-hook does not depend on the application service account existing before the
-normal sync phase. A migration failure, including detection of duplicate active
-incident group keys, blocks the sync instead of starting code against an
-incompatible schema.
+Argo CD uses the `DATABASE_URL` from the pre-bootstrapped
+`dendenmushi-database` Kubernetes Secret before rolling out the worker. Images
+that include `incident_agent.migrate` run Alembic. Older restorable images that
+predate that entrypoint run a read-only compatibility check against their own
+SQLAlchemy metadata instead. The hook does not depend on the application
+service account existing before the normal sync phase. A migration or schema
+compatibility failure, including detection of duplicate active incident group
+keys by the current migration, blocks the sync instead of starting code against
+an incompatible schema.
 
 ## Ingress
 

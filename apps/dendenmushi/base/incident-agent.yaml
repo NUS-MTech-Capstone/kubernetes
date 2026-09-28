@@ -149,7 +149,47 @@ spec:
         - name: migrate
           image: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent:dev
           imagePullPolicy: Always
-          command: ["python", "-m", "incident_agent.migrate"]
+          command: ["/bin/sh", "-ec"]
+          args:
+            - |
+              if python -c 'import incident_agent.migrate' >/dev/null 2>&1; then
+                exec python -m incident_agent.migrate
+              fi
+
+              exec python - <<'PY'
+              import os
+
+              from sqlalchemy import create_engine, inspect
+
+              from incident_agent.persistence.store import metadata, normalize_database_url
+
+              database_url = os.environ.get("DATABASE_URL", "")
+              if not database_url:
+                  raise RuntimeError("DATABASE_URL is required")
+
+              engine = create_engine(normalize_database_url(database_url))
+              try:
+                  inspector = inspect(engine)
+                  existing_tables = set(inspector.get_table_names())
+                  expected_tables = {table.name for table in metadata.sorted_tables}
+                  missing_tables = sorted(expected_tables - existing_tables)
+                  missing_columns = []
+                  for table in metadata.sorted_tables:
+                      if table.name not in existing_tables:
+                          continue
+                      existing_columns = {column["name"] for column in inspector.get_columns(table.name)}
+                      missing_columns.extend(
+                          f"{table.name}.{column.name}"
+                          for column in table.columns
+                          if column.name not in existing_columns
+                      )
+                  if missing_tables or missing_columns:
+                      details = ", ".join(missing_tables + missing_columns)
+                      raise RuntimeError(f"legacy incident database schema is incompatible: {details}")
+                  print("Legacy incident database schema is compatible; no migration entrypoint is present.")
+              finally:
+                  engine.dispose()
+              PY
           env:
             - name: DATABASE_URL
               valueFrom:
