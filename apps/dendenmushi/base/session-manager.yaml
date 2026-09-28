@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: session-manager
-  namespace: dendenmushi
+  namespace: dendenmushi-ssh
   labels:
     app: dendenmushi
     component: session-manager
@@ -93,7 +93,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: session-manager
-  namespace: dendenmushi
+  namespace: dendenmushi-ssh
   labels:
     app: dendenmushi
     component: session-manager

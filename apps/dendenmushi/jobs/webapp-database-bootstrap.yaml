@@ -2,11 +2,18 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: webapp-database-bootstrap
-  namespace: dendenmushi
+  namespace: dendenmushi-webapp
+  labels:
+    app: dendenmushi
+    component: webapp-database-bootstrap
 spec:
   backoffLimit: 3
   ttlSecondsAfterFinished: 600
   template:
+    metadata:
+      labels:
+        app: dendenmushi
+        component: webapp-database-bootstrap
     spec:
       restartPolicy: Never
       containers:
@@ -47,3 +54,10 @@ spec:
               SELECT format('CREATE DATABASE %I OWNER %I', :'app_db', :'app_user')
               WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = :'app_db') \gexec
               SQL
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi

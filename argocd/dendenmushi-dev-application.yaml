@@ -1,20 +1,45 @@
 apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: dendenmushi
+  namespace: argocd
+spec:
+  description: DenDenMushi workloads in the three application namespaces
+  sourceRepos:
+    - https://github.com/NUS-MTech-Capstone/kubernetes.git
+  destinations:
+    - namespace: dendenmushi-ssh
+      server: https://kubernetes.default.svc
+    - namespace: dendenmushi-agentic
+      server: https://kubernetes.default.svc
+    - namespace: dendenmushi-webapp
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRoleBinding
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+---
+apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: dendenmushi-dev
   namespace: argocd
 spec:
-  project: default
+  project: dendenmushi
   source:
     repoURL: https://github.com/NUS-MTech-Capstone/kubernetes.git
     targetRevision: main
     path: apps/dendenmushi/overlays/dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: dendenmushi
+    namespace: dendenmushi-ssh
   syncPolicy:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=true

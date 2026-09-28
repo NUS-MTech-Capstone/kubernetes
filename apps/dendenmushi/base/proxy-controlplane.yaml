@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: proxy-controlplane
-  namespace: dendenmushi
+  namespace: dendenmushi-ssh
   labels:
     app: dendenmushi
     component: proxy-controlplane
@@ -100,7 +100,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: proxy-controlplane
-  namespace: dendenmushi
+  namespace: dendenmushi-ssh
   labels:
     app: dendenmushi
     component: proxy-controlplane

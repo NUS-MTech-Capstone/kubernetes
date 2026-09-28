@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: angular
-  namespace: dendenmushi
+  namespace: dendenmushi-webapp
   labels:
     app: dendenmushi
     component: angular
@@ -56,7 +56,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: angular
-  namespace: dendenmushi
+  namespace: dendenmushi-webapp
   labels:
     app: dendenmushi
     component: angular

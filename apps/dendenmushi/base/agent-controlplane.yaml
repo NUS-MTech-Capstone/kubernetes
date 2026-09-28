@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: agent-controlplane
-  namespace: dendenmushi
+  namespace: dendenmushi-agentic
   labels:
     app: dendenmushi
     component: agent-controlplane
@@ -77,7 +77,10 @@ spec:
                   name: dendenmushi-config
                   key: SESSION_MANAGER_URL
             - name: INCIDENT_AGENT_URL
-              value: http://incident-agent:8091
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: INCIDENT_AGENT_URL
             - name: WORKLOAD_TOKEN_FILE
               value: /var/run/secrets/tokens/agent-controlplane-token
             - name: ALB_ARN
@@ -120,7 +123,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: agent-controlplane
-  namespace: dendenmushi
+  namespace: dendenmushi-agentic
   labels:
     app: dendenmushi
     component: agent-controlplane

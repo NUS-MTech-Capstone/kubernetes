@@ -2,16 +2,16 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: dendenmushi-config
-  namespace: dendenmushi
+  namespace: dendenmushi-ssh
   labels:
     app.kubernetes.io/name: dendenmushi
     app.kubernetes.io/part-of: dendenmushi
 data:
-  SESSION_MANAGER_URL: http://session-manager:8081
-  SESSION_AUDIT_URL: http://audit-service:8085
-  STS_URL: http://sts:8082
-  CHANGE_REQUEST_URL: http://nest-backend:3000/sts
-  SERVER_INVENTORY_URL: http://nest-backend:3000
+  SESSION_MANAGER_URL: http://session-manager.dendenmushi-ssh.svc.cluster.local:8081
+  SESSION_AUDIT_URL: http://audit-service.dendenmushi-ssh.svc.cluster.local:8085
+  STS_URL: http://sts.dendenmushi-ssh.svc.cluster.local:8082
+  CHANGE_REQUEST_URL: http://nest-backend.dendenmushi-webapp.svc.cluster.local:3000/sts
+  SERVER_INVENTORY_URL: http://nest-backend.dendenmushi-webapp.svc.cluster.local:3000
   SERVER_INVENTORY_STATIC_JSON: '__SERVER_INVENTORY_STATIC_JSON__'
   PROXY_DATAPLANE_PUBLIC_URL: wss://api.ddm.keiyam.me
   WEBSOCKET_ALLOWED_ORIGINS: https://api.ddm.keiyam.me
@@ -22,6 +22,49 @@ data:
   AWS_REGION: ap-southeast-1
   ENVIRONMENT: dev
   SSH_REJOIN_GRACE: 5m
+  LOG_FORMAT: json
+  OTEL_TRACES_EXPORTER: none
+  OTEL_METRICS_EXPORTER: none
+  OTEL_LOGS_EXPORTER: none
+  CLOUDWATCH_LOG_GROUP: /aws/containerinsights/dendenmushi-cluster-dev/application
+  CLOUDWATCH_SESSION_LOG_GROUP: /aws/containerinsights/dendenmushi-cluster-dev/application
+  CLOUDWATCH_NAMESPACE: DenDenMushi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dendenmushi-config
+  namespace: dendenmushi-agentic
+  labels:
+    app.kubernetes.io/name: dendenmushi
+    app.kubernetes.io/part-of: dendenmushi
+data:
+  SESSION_MANAGER_URL: http://session-manager.dendenmushi-ssh.svc.cluster.local:8081
+  STS_URL: http://sts.dendenmushi-ssh.svc.cluster.local:8082
+  PROXY_DATAPLANE_URL: http://proxy-dataplane.dendenmushi-ssh.svc.cluster.local:8083
+  PROXY_CONTROLPLANE_URL: http://proxy-controlplane.dendenmushi-ssh.svc.cluster.local:8080
+  INCIDENT_AGENT_URL: http://incident-agent.dendenmushi-agentic.svc.cluster.local:8091
+  AWS_REGION: ap-southeast-1
+  ENVIRONMENT: dev
+  LOG_FORMAT: json
+  OTEL_TRACES_EXPORTER: none
+  OTEL_METRICS_EXPORTER: none
+  OTEL_LOGS_EXPORTER: none
+  CLOUDWATCH_NAMESPACE: DenDenMushi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dendenmushi-config
+  namespace: dendenmushi-webapp
+  labels:
+    app.kubernetes.io/name: dendenmushi
+    app.kubernetes.io/part-of: dendenmushi
+data:
+  SESSION_AUDIT_URL: http://audit-service.dendenmushi-ssh.svc.cluster.local:8085
+  PROXY_CONTROLPLANE_URL: http://proxy-controlplane.dendenmushi-ssh.svc.cluster.local:8080
+  AWS_REGION: ap-southeast-1
+  ENVIRONMENT: dev
   LOG_FORMAT: json
   OTEL_TRACES_EXPORTER: none
   OTEL_METRICS_EXPORTER: none

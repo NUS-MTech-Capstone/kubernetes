@@ -1,7 +1,44 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: dendenmushi
+  name: dendenmushi-ssh
   labels:
-    app.kubernetes.io/name: dendenmushi
+    app.kubernetes.io/name: dendenmushi-ssh
     app.kubernetes.io/part-of: dendenmushi
+    dendenmushi.io/tier: ssh
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/enforce-version: v1.35
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/audit-version: v1.35
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: v1.35
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dendenmushi-agentic
+  labels:
+    app.kubernetes.io/name: dendenmushi-agentic
+    app.kubernetes.io/part-of: dendenmushi
+    dendenmushi.io/tier: agentic
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/enforce-version: v1.35
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/audit-version: v1.35
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: v1.35
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dendenmushi-webapp
+  labels:
+    app.kubernetes.io/name: dendenmushi-webapp
+    app.kubernetes.io/part-of: dendenmushi
+    dendenmushi.io/tier: webapp
+    pod-security.kubernetes.io/enforce: baseline
+    pod-security.kubernetes.io/enforce-version: v1.35
+    pod-security.kubernetes.io/audit: restricted
+    pod-security.kubernetes.io/audit-version: v1.35
+    pod-security.kubernetes.io/warn: restricted
+    pod-security.kubernetes.io/warn-version: v1.35

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: incident-agent
-  namespace: dendenmushi
+  namespace: dendenmushi-agentic
   labels:
     app: dendenmushi
     component: incident-agent
@@ -82,9 +82,12 @@ spec:
             - name: LANGSMITH_WORKSPACE_ID
               value: __INCIDENT_AGENT_LANGSMITH_WORKSPACE_ID__
             - name: PROXY_CONTROLPLANE_URL
-              value: http://proxy-controlplane:8080
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: PROXY_CONTROLPLANE_URL
             - name: AGENT_CONTROLPLANE_URL
-              value: http://agent-controlplane:8092
+              value: http://agent-controlplane.dendenmushi-agentic.svc.cluster.local:8092
             - name: PLANNER_MODE
               value: bedrock_with_fallback
             - name: BEDROCK_REGION
@@ -129,7 +132,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: incident-agent-migrate
-  namespace: dendenmushi
+  namespace: dendenmushi-agentic
   labels:
     app: dendenmushi
     component: incident-agent-migrate
@@ -208,7 +211,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: incident-agent
-  namespace: dendenmushi
+  namespace: dendenmushi-agentic
   labels:
     app: dendenmushi
     component: incident-agent

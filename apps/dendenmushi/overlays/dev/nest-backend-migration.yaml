@@ -2,7 +2,10 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: nest-backend-migrate
-  namespace: dendenmushi
+  namespace: dendenmushi-webapp
+  labels:
+    app: dendenmushi
+    component: nest-backend-migrate
   annotations:
     argocd.argoproj.io/hook: PreSync
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
@@ -11,6 +14,10 @@ spec:
   backoffLimit: 3
   ttlSecondsAfterFinished: 600
   template:
+    metadata:
+      labels:
+        app: dendenmushi
+        component: nest-backend-migrate
     spec:
       restartPolicy: Never
       containers:
@@ -38,7 +45,7 @@ spec:
             - name: COGNITO_CLIENT_ID
               value: pending
             - name: SSH_GATEWAY_URL
-              value: "http://proxy-controlplane:8080"
+              value: "http://proxy-controlplane.dendenmushi-ssh.svc.cluster.local:8080"
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -48,3 +55,10 @@ spec:
               value: "true"
             - name: DB_SSL_REJECT_UNAUTHORIZED
               value: "false"
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi

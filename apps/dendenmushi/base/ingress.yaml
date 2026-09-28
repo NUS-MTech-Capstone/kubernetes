@@ -2,7 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: proxy-controlplane
-  namespace: dendenmushi
+  namespace: dendenmushi-ssh
   labels:
     app: dendenmushi
     component: proxy-controlplane
@@ -40,7 +40,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: proxy-dataplane
-  namespace: dendenmushi
+  namespace: dendenmushi-ssh
   labels:
     app: dendenmushi
     component: proxy-dataplane
@@ -78,7 +78,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: nest-backend-login
-  namespace: dendenmushi
+  namespace: dendenmushi-webapp
   labels:
     app: dendenmushi
     component: nest-backend
@@ -117,7 +117,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: nest-backend
-  namespace: dendenmushi
+  namespace: dendenmushi-webapp
   labels:
     app: dendenmushi
     component: nest-backend
@@ -156,7 +156,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: agent-controlplane
-  namespace: dendenmushi
+  namespace: dendenmushi-agentic
   labels:
     app: dendenmushi
     component: agent-controlplane
@@ -209,7 +209,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: angular
-  namespace: dendenmushi
+  namespace: dendenmushi-webapp
   labels:
     app: dendenmushi
     component: angular
