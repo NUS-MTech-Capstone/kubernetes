@@ -83,6 +83,21 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: CLOUDWATCH_NAMESPACE
+            - name: REDIS_CACHE_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: REDIS_CACHE_ENABLED
+            - name: REDIS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: REDIS_URL
+            - name: MONITORING_CACHE_TTL_SECONDS
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: MONITORING_CACHE_TTL_SECONDS
             - name: AUTH_MODE
               value: alb
             - name: AWS_REGION

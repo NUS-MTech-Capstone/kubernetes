@@ -11,6 +11,7 @@ The AWS deployment runs these services:
 - Proxy Dataplane
 - Agent Control Plane
 - Incident Agent
+- Redis monitoring cache
 - Nest Backend
 - Angular
 
@@ -309,6 +310,11 @@ The AWS deployment is tuned for a low-cost school project:
 - Nest Backend monitoring reads from
   `/aws/containerinsights/dendenmushi-cluster-dev/application`, which Terraform
   pre-creates with one-day retention.
+- Successful Nest Backend CloudWatch alarm and metric reads are cached for 60
+  seconds by one internal Redis pod in `dendenmushi-webapp`. Redis is capped at
+  64 MiB with all-keys LRU eviction, has no persistent volume or ingress, and
+  accepts traffic only from Nest Backend through NetworkPolicy. Redis failures
+  fall back to CloudWatch and do not affect Nest readiness.
 - Logs should contain only metadata such as `requestId`, `sessionId`, `userId`,
   `hostId`, `crId`, `podId`, `instanceId`, `incidentId`, `runId`, `action`,
   `mode`, `operation`, `planHash`, `status`, and `durationMs`. Do not log STS
