@@ -27,9 +27,10 @@ for deployment in session-manager audit-service sts agent-controlplane proxy-dat
   kubectl rollout status "deployment/${deployment}" -n "${NAMESPACE}" --timeout=5m
 done
 
-ALB_DNS_NAME=$(kubectl get ingress proxy-controlplane \
+ALB_DNS_NAME=$(kubectl get ingress \
   -n "${NAMESPACE}" \
-  -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null || true)
+  -o jsonpath='{range .items[*].status.loadBalancer.ingress[*]}{.hostname}{"\n"}{end}' \
+  2>/dev/null | sed -n '1p' || true)
 if [[ -z "${ALB_DNS_NAME}" ]]; then
   echo "The application ALB hostname is not available yet." >&2
   exit 1
