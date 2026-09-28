@@ -235,6 +235,17 @@ spec:
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
+metadata: { name: allow-redis-ingress, namespace: dendenmushi-webapp }
+spec:
+  podSelector: { matchLabels: { component: redis } }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector: { matchLabels: { component: nest-backend } }
+      ports: [{ protocol: TCP, port: 6379 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
 metadata: { name: proxy-controlplane-egress, namespace: dendenmushi-ssh }
 spec:
   podSelector: { matchLabels: { component: proxy-controlplane } }
@@ -348,6 +359,9 @@ spec:
         - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
           podSelector: { matchLabels: { component: audit-service } }
       ports: [{ protocol: TCP, port: 8085 }]
+    - to:
+        - podSelector: { matchLabels: { component: redis } }
+      ports: [{ protocol: TCP, port: 6379 }]
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy

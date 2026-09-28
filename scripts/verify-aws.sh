@@ -31,7 +31,7 @@ done
 for deployment in agent-controlplane incident-agent; do
   kubectl rollout status "deployment/${deployment}" -n "${AGENTIC_NAMESPACE}" --timeout=5m
 done
-for deployment in nest-backend angular; do
+for deployment in redis nest-backend angular; do
   kubectl rollout status "deployment/${deployment}" -n "${WEBAPP_NAMESPACE}" --timeout=5m
 done
 

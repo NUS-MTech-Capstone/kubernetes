@@ -5,6 +5,7 @@ SSH_NAMESPACE=${SSH_NAMESPACE:-dendenmushi-ssh}
 AGENTIC_NAMESPACE=${AGENTIC_NAMESPACE:-dendenmushi-agentic}
 WEBAPP_NAMESPACE=${WEBAPP_NAMESPACE:-dendenmushi-webapp}
 PROBE_IMAGE=${PROBE_IMAGE:-curlimages/curl:8.12.1}
+REDIS_PROBE_IMAGE=${REDIS_PROBE_IMAGE:-redis:8-alpine@sha256:2d3814be5e9b06a30a0be54770b7e12052e7e79ec85271aefd34875c1f393b23}
 
 for command in kubectl jq; do
   if ! command -v "${command}" >/dev/null 2>&1; then
@@ -25,24 +26,26 @@ run_probe() {
   local namespace=$2
   local component=$3
   local expected=$4
-  local url=$5
+  local image=$5
+  local run_as_user=$6
+  local command=$7
 
   kubectl delete pod "${name}" -n "${namespace}" --ignore-not-found --wait=true >/dev/null
   kubectl run "${name}" \
     -n "${namespace}" \
     --restart=Never \
-    --image="${PROBE_IMAGE}" \
+    --image="${image}" \
     --labels="component=${component},network-policy-probe=true" \
     --dry-run=client \
     -o json \
-    --command -- sh -ec "curl --connect-timeout 3 --max-time 5 -fsS '${url}' >/dev/null" |
-    jq '
+    --command -- sh -ec "${command}" |
+    jq --argjson run_as_user "${run_as_user}" '
       .spec.securityContext.seccompProfile.type = "RuntimeDefault" |
       .spec.containers[0].securityContext = {
         "allowPrivilegeEscalation": false,
         "capabilities": {"drop": ["ALL"]},
         "runAsNonRoot": true,
-        "runAsUser": 100
+        "runAsUser": $run_as_user
       } |
       .spec.containers[0].resources = {
         "requests": {"cpu": "10m", "memory": "16Mi"},
@@ -68,24 +71,28 @@ run_probe() {
 
   if [[ "${expected}" == "allow" && "${phase}" != "Succeeded" ]]; then
     kubectl logs "${name}" -n "${namespace}" >&2 || true
-    echo "Expected allowed path failed: ${namespace}/${component} -> ${url}" >&2
+    echo "Expected allowed path failed: ${namespace}/${component}: ${command}" >&2
     exit 1
   fi
   if [[ "${expected}" == "deny" && "${phase}" != "Failed" ]]; then
-    echo "Expected denied path succeeded: ${namespace}/${component} -> ${url}" >&2
+    echo "Expected denied path succeeded: ${namespace}/${component}: ${command}" >&2
     exit 1
   fi
 }
 
-run_probe np-proxy-to-session "${SSH_NAMESPACE}" proxy-controlplane allow \
-  "http://session-manager.${SSH_NAMESPACE}.svc.cluster.local:8081/healthz"
-run_probe np-agent-to-sts "${AGENTIC_NAMESPACE}" agent-controlplane allow \
-  "http://sts.${SSH_NAMESPACE}.svc.cluster.local:8082/healthz"
-run_probe np-nest-to-audit "${WEBAPP_NAMESPACE}" nest-backend allow \
-  "http://audit-service.${SSH_NAMESPACE}.svc.cluster.local:8085/healthz"
-run_probe np-angular-to-sts "${WEBAPP_NAMESPACE}" angular deny \
-  "http://sts.${SSH_NAMESPACE}.svc.cluster.local:8082/healthz"
-run_probe np-incident-to-session "${AGENTIC_NAMESPACE}" incident-agent deny \
-  "http://session-manager.${SSH_NAMESPACE}.svc.cluster.local:8081/healthz"
+run_probe np-proxy-to-session "${SSH_NAMESPACE}" proxy-controlplane allow "${PROBE_IMAGE}" 100 \
+  "curl --connect-timeout 3 --max-time 5 -fsS 'http://session-manager.${SSH_NAMESPACE}.svc.cluster.local:8081/healthz' >/dev/null"
+run_probe np-agent-to-sts "${AGENTIC_NAMESPACE}" agent-controlplane allow "${PROBE_IMAGE}" 100 \
+  "curl --connect-timeout 3 --max-time 5 -fsS 'http://sts.${SSH_NAMESPACE}.svc.cluster.local:8082/healthz' >/dev/null"
+run_probe np-nest-to-audit "${WEBAPP_NAMESPACE}" nest-backend allow "${PROBE_IMAGE}" 100 \
+  "curl --connect-timeout 3 --max-time 5 -fsS 'http://audit-service.${SSH_NAMESPACE}.svc.cluster.local:8085/healthz' >/dev/null"
+run_probe np-angular-to-sts "${WEBAPP_NAMESPACE}" angular deny "${PROBE_IMAGE}" 100 \
+  "curl --connect-timeout 3 --max-time 5 -fsS 'http://sts.${SSH_NAMESPACE}.svc.cluster.local:8082/healthz' >/dev/null"
+run_probe np-incident-to-session "${AGENTIC_NAMESPACE}" incident-agent deny "${PROBE_IMAGE}" 100 \
+  "curl --connect-timeout 3 --max-time 5 -fsS 'http://session-manager.${SSH_NAMESPACE}.svc.cluster.local:8081/healthz' >/dev/null"
+run_probe np-nest-to-redis "${WEBAPP_NAMESPACE}" nest-backend allow "${REDIS_PROBE_IMAGE}" 999 \
+  "timeout 5 redis-cli -h redis.${WEBAPP_NAMESPACE}.svc.cluster.local -p 6379 ping | grep -qx PONG"
+run_probe np-angular-to-redis "${WEBAPP_NAMESPACE}" angular deny "${REDIS_PROBE_IMAGE}" 999 \
+  "timeout 5 redis-cli -h redis.${WEBAPP_NAMESPACE}.svc.cluster.local -p 6379 ping | grep -qx PONG"
 
 echo "NetworkPolicy allow and deny probes passed."

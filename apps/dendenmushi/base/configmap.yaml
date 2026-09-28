@@ -72,3 +72,6 @@ data:
   CLOUDWATCH_LOG_GROUP: /aws/containerinsights/dendenmushi-cluster-dev/application
   CLOUDWATCH_SESSION_LOG_GROUP: /aws/containerinsights/dendenmushi-cluster-dev/application
   CLOUDWATCH_NAMESPACE: DenDenMushi
+  REDIS_CACHE_ENABLED: "true"
+  REDIS_URL: redis://redis.dendenmushi-webapp.svc.cluster.local:6379
+  MONITORING_CACHE_TTL_SECONDS: "60"
