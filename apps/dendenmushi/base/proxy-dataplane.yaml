@@ -90,6 +90,11 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: PROXY_DATAPLANE_PUBLIC_URL
+            - name: WEBSOCKET_ALLOWED_ORIGINS
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: WEBSOCKET_ALLOWED_ORIGINS
             - name: MAX_SESSIONS
               valueFrom:
                 configMapKeyRef:

@@ -52,12 +52,6 @@ COGNITO_USER_POOL_ARN=$(tf_output "${AWS_TERRAFORM_DIR}" cognito_user_pool_arn)
 COGNITO_USER_POOL_ID=$(tf_output "${AWS_TERRAFORM_DIR}" cognito_user_pool_id)
 COGNITO_CLIENT_ID=$(tf_output "${AWS_TERRAFORM_DIR}" cognito_client_id)
 COGNITO_DOMAIN=$(tf_output "${AWS_TERRAFORM_DIR}" cognito_domain)
-COGNITO_CLIENT_SECRET=$(aws cognito-idp describe-user-pool-client \
-  --region "${AWS_REGION}" \
-  --user-pool-id "${COGNITO_USER_POOL_ID}" \
-  --client-id "${COGNITO_CLIENT_ID}" \
-  --query 'UserPoolClient.ClientSecret' \
-  --output text)
 
 WEBAPP_ADMIN_COUNT=$(aws cognito-idp list-users-in-group \
   --region "${AWS_REGION}" \
@@ -240,9 +234,8 @@ fi
 ALB_AUTH_IDP_COGNITO=$(jq -cn \
   --arg user_pool_arn "${COGNITO_USER_POOL_ARN}" \
   --arg client_id "${COGNITO_CLIENT_ID}" \
-  --arg client_secret "${COGNITO_CLIENT_SECRET}" \
   --arg domain "${COGNITO_DOMAIN}" \
-  '{UserPoolArn: $user_pool_arn, UserPoolClientId: $client_id, UserPoolClientSecret: $client_secret, UserPoolDomain: $domain}')
+  '{userPoolARN: $user_pool_arn, userPoolClientID: $client_id, userPoolDomain: $domain}')
 
 cat >"${OVERLAY_DIR}/env.properties" <<EOF
 AWS_ACCOUNT_ID=${AWS_ACCOUNT_ID}

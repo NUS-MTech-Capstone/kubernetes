@@ -38,6 +38,38 @@ fi
 curl -fsS "${APPLICATION_URL}/healthz" >/dev/null
 curl -fsS "${APPLICATION_URL}/readyz" >/dev/null
 
+ROOT_HEADERS=$(mktemp)
+AUTH_HEADERS=$(mktemp)
+trap 'rm -f -- "${ROOT_HEADERS}" "${AUTH_HEADERS}"' EXIT
+
+assert_response_header() {
+  local file=$1
+  local name=$2
+  local expected=$3
+  local value
+  value=$(grep -i -m 1 "^${name}:" "${file}" | tr -d '\r' || true)
+  if [[ "${value}" != *"${expected}"* ]]; then
+    echo "Expected ${name} to contain '${expected}', got '${value}'" >&2
+    exit 1
+  fi
+}
+
+curl -fsS -D "${ROOT_HEADERS}" -o /dev/null "${APPLICATION_URL}/"
+assert_response_header "${ROOT_HEADERS}" "Strict-Transport-Security" "max-age=31536000"
+assert_response_header "${ROOT_HEADERS}" "X-Content-Type-Options" "nosniff"
+assert_response_header "${ROOT_HEADERS}" "X-Frame-Options" "DENY"
+assert_response_header "${ROOT_HEADERS}" "Referrer-Policy" "strict-origin-when-cross-origin"
+assert_response_header "${ROOT_HEADERS}" "Permissions-Policy" "camera=(), microphone=(), geolocation=()"
+assert_response_header "${ROOT_HEADERS}" "Content-Security-Policy" "default-src 'self'"
+assert_response_header "${ROOT_HEADERS}" "Cache-Control" "no-store"
+
+# This protected request is expected to be denied by Cognito at the ALB. Its
+# response still needs the listener-level headers even though no pod handles it.
+curl -sS -D "${AUTH_HEADERS}" -o /dev/null "${APPLICATION_URL}/sessions"
+assert_response_header "${AUTH_HEADERS}" "Strict-Transport-Security" "max-age=31536000"
+assert_response_header "${AUTH_HEADERS}" "X-Content-Type-Options" "nosniff"
+assert_response_header "${AUTH_HEADERS}" "X-Frame-Options" "DENY"
+
 echo "ALB DNS name: ${ALB_DNS_NAME}"
 echo "Create/update api.ddm.keiyam.me with:"
 echo "terraform -chdir=${AWS_TERRAFORM_DIR} apply -var-file=secrets.tfvars -var application_alb_dns_name=${ALB_DNS_NAME}"
