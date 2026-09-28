@@ -1,0 +1,396 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: default-deny, namespace: dendenmushi-ssh }
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: default-deny, namespace: dendenmushi-agentic }
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: default-deny, namespace: dendenmushi-webapp }
+spec:
+  podSelector: {}
+  policyTypes: [Ingress, Egress]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-dns, namespace: dendenmushi-ssh }
+spec:
+  podSelector: {}
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: kube-system } }
+          podSelector: { matchLabels: { k8s-app: kube-dns } }
+      ports: [{ protocol: UDP, port: 53 }, { protocol: TCP, port: 53 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-dns, namespace: dendenmushi-agentic }
+spec:
+  podSelector: {}
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: kube-system } }
+          podSelector: { matchLabels: { k8s-app: kube-dns } }
+      ports: [{ protocol: UDP, port: 53 }, { protocol: TCP, port: 53 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-dns, namespace: dendenmushi-webapp }
+spec:
+  podSelector: {}
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: kube-system } }
+          podSelector: { matchLabels: { k8s-app: kube-dns } }
+      ports: [{ protocol: UDP, port: 53 }, { protocol: TCP, port: 53 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-alb, namespace: dendenmushi-ssh }
+spec:
+  podSelector:
+    matchExpressions:
+      - { key: component, operator: In, values: [proxy-controlplane, proxy-dataplane] }
+  policyTypes: [Ingress]
+  ingress:
+    - from: [{ ipBlock: { cidr: 10.0.0.0/16 } }]
+      ports: [{ protocol: TCP, port: http }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-alb, namespace: dendenmushi-agentic }
+spec:
+  podSelector: { matchLabels: { component: agent-controlplane } }
+  policyTypes: [Ingress]
+  ingress:
+    - from: [{ ipBlock: { cidr: 10.0.0.0/16 } }]
+      ports: [{ protocol: TCP, port: 8092 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-alb, namespace: dendenmushi-webapp }
+spec:
+  podSelector:
+    matchExpressions:
+      - { key: component, operator: In, values: [angular, nest-backend] }
+  policyTypes: [Ingress]
+  ingress:
+    - from: [{ ipBlock: { cidr: 10.0.0.0/16 } }]
+      ports: [{ protocol: TCP, port: http }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-session-manager-ingress, namespace: dendenmushi-ssh }
+spec:
+  podSelector: { matchLabels: { component: session-manager } }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector:
+            matchExpressions:
+              - { key: component, operator: In, values: [proxy-controlplane, proxy-dataplane, audit-service] }
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: agentic } }
+          podSelector: { matchLabels: { component: agent-controlplane } }
+      ports: [{ protocol: TCP, port: 8081 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-sts-ingress, namespace: dendenmushi-ssh }
+spec:
+  podSelector: { matchLabels: { component: sts } }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector:
+            matchExpressions:
+              - { key: component, operator: In, values: [proxy-controlplane, proxy-dataplane] }
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: agentic } }
+          podSelector: { matchLabels: { component: agent-controlplane } }
+      ports: [{ protocol: TCP, port: 8082 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-audit-service-ingress, namespace: dendenmushi-ssh }
+spec:
+  podSelector: { matchLabels: { component: audit-service } }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector: { matchLabels: { component: proxy-dataplane } }
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: webapp } }
+          podSelector: { matchLabels: { component: nest-backend } }
+      ports: [{ protocol: TCP, port: 8085 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-proxy-controlplane-ingress, namespace: dendenmushi-ssh }
+spec:
+  podSelector: { matchLabels: { component: proxy-controlplane } }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: agentic } }
+          podSelector: { matchLabels: { component: incident-agent } }
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: webapp } }
+          podSelector: { matchLabels: { component: nest-backend } }
+      ports: [{ protocol: TCP, port: 8080 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-proxy-dataplane-ingress, namespace: dendenmushi-ssh }
+spec:
+  podSelector: { matchLabels: { component: proxy-dataplane } }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: agentic } }
+          podSelector: { matchLabels: { component: agent-controlplane } }
+      ports: [{ protocol: TCP, port: 8083 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-agent-controlplane-ingress, namespace: dendenmushi-agentic }
+spec:
+  podSelector: { matchLabels: { component: agent-controlplane } }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: agentic } }
+          podSelector: { matchLabels: { component: incident-agent } }
+      ports: [{ protocol: TCP, port: 8092 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-incident-agent-ingress, namespace: dendenmushi-agentic }
+spec:
+  podSelector: { matchLabels: { component: incident-agent } }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: agentic } }
+          podSelector: { matchLabels: { component: agent-controlplane } }
+      ports: [{ protocol: TCP, port: 8091 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-nest-backend-ingress, namespace: dendenmushi-webapp }
+spec:
+  podSelector: { matchLabels: { component: nest-backend } }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector: { matchLabels: { component: sts } }
+      ports: [{ protocol: TCP, port: 3000 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: proxy-controlplane-egress, namespace: dendenmushi-ssh }
+spec:
+  podSelector: { matchLabels: { component: proxy-controlplane } }
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector: { matchLabels: { component: session-manager } }
+      ports: [{ protocol: TCP, port: 8081 }]
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector: { matchLabels: { component: sts } }
+      ports: [{ protocol: TCP, port: 8082 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: proxy-dataplane-egress, namespace: dendenmushi-ssh }
+spec:
+  podSelector: { matchLabels: { component: proxy-dataplane } }
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector: { matchLabels: { component: session-manager } }
+      ports: [{ protocol: TCP, port: 8081 }]
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector: { matchLabels: { component: sts } }
+      ports: [{ protocol: TCP, port: 8082 }]
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector: { matchLabels: { component: audit-service } }
+      ports: [{ protocol: TCP, port: 8085 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: audit-service-egress, namespace: dendenmushi-ssh }
+spec:
+  podSelector: { matchLabels: { component: audit-service } }
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector: { matchLabels: { component: session-manager } }
+      ports: [{ protocol: TCP, port: 8081 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: sts-egress, namespace: dendenmushi-ssh }
+spec:
+  podSelector: { matchLabels: { component: sts } }
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: webapp } }
+          podSelector: { matchLabels: { component: nest-backend } }
+      ports: [{ protocol: TCP, port: 3000 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: agent-controlplane-egress, namespace: dendenmushi-agentic }
+spec:
+  podSelector: { matchLabels: { component: agent-controlplane } }
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector: { matchLabels: { component: sts } }
+      ports: [{ protocol: TCP, port: 8082 }]
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector: { matchLabels: { component: session-manager } }
+      ports: [{ protocol: TCP, port: 8081 }]
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector: { matchLabels: { component: proxy-dataplane } }
+      ports: [{ protocol: TCP, port: 8083 }]
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: agentic } }
+          podSelector: { matchLabels: { component: incident-agent } }
+      ports: [{ protocol: TCP, port: 8091 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: incident-agent-egress, namespace: dendenmushi-agentic }
+spec:
+  podSelector: { matchLabels: { component: incident-agent } }
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: agentic } }
+          podSelector: { matchLabels: { component: agent-controlplane } }
+      ports: [{ protocol: TCP, port: 8092 }]
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector: { matchLabels: { component: proxy-controlplane } }
+      ports: [{ protocol: TCP, port: 8080 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: nest-backend-egress, namespace: dendenmushi-webapp }
+spec:
+  podSelector: { matchLabels: { component: nest-backend } }
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector: { matchLabels: { component: proxy-controlplane } }
+      ports: [{ protocol: TCP, port: 8080 }]
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector: { matchLabels: { component: audit-service } }
+      ports: [{ protocol: TCP, port: 8085 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-database, namespace: dendenmushi-ssh }
+spec:
+  podSelector:
+    matchExpressions:
+      - { key: component, operator: In, values: [session-manager, audit-service, database-maintenance] }
+  policyTypes: [Egress]
+  egress:
+    - to: [{ ipBlock: { cidr: 10.0.0.0/16 } }]
+      ports: [{ protocol: TCP, port: 5432 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-target-ssh, namespace: dendenmushi-ssh }
+spec:
+  podSelector:
+    matchExpressions:
+      - { key: component, operator: In, values: [proxy-dataplane, ssh-keyscan] }
+  policyTypes: [Egress]
+  egress:
+    - to: [{ ipBlock: { cidr: 10.0.0.0/16 } }]
+      ports: [{ protocol: TCP, port: 22 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-database, namespace: dendenmushi-agentic }
+spec:
+  podSelector:
+    matchExpressions:
+      - { key: component, operator: In, values: [agent-controlplane, incident-agent, incident-agent-migrate, database-maintenance] }
+  policyTypes: [Egress]
+  egress:
+    - to: [{ ipBlock: { cidr: 10.0.0.0/16 } }]
+      ports: [{ protocol: TCP, port: 5432 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-database, namespace: dendenmushi-webapp }
+spec:
+  podSelector:
+    matchExpressions:
+      - { key: component, operator: In, values: [nest-backend, nest-backend-migrate, webapp-database-bootstrap, database-maintenance] }
+  policyTypes: [Egress]
+  egress:
+    - to: [{ ipBlock: { cidr: 10.0.0.0/16 } }]
+      ports: [{ protocol: TCP, port: 5432 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-external-https, namespace: dendenmushi-ssh }
+spec:
+  podSelector:
+    matchExpressions:
+      - { key: component, operator: In, values: [sts, session-manager, audit-service, proxy-controlplane, proxy-dataplane, ssh-keyscan] }
+  policyTypes: [Egress]
+  egress:
+    - to: [{ ipBlock: { cidr: 0.0.0.0/0 } }]
+      ports: [{ protocol: TCP, port: 443 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-external-https, namespace: dendenmushi-agentic }
+spec:
+  podSelector:
+    matchExpressions:
+      - { key: component, operator: In, values: [agent-controlplane, incident-agent] }
+  policyTypes: [Egress]
+  egress:
+    - to: [{ ipBlock: { cidr: 0.0.0.0/0 } }]
+      ports: [{ protocol: TCP, port: 443 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-external-https, namespace: dendenmushi-webapp }
+spec:
+  podSelector: { matchLabels: { component: nest-backend } }
+  policyTypes: [Egress]
+  egress:
+    - to: [{ ipBlock: { cidr: 0.0.0.0/0 } }]
+      ports: [{ protocol: TCP, port: 443 }]

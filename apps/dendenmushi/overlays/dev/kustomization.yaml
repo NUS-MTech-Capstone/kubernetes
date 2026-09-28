@@ -9,7 +9,7 @@ generatorOptions:
 
 configMapGenerator:
   - name: dendenmushi-env
-    namespace: dendenmushi
+    namespace: dendenmushi-ssh
     envs:
       - env.properties
     files:
@@ -173,5 +173,5 @@ replacements:
         fieldPaths: ["spec.template.spec.containers.[name=incident-agent].env.[name=LANGSMITH_WORKSPACE_ID].value"]
   - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.SERVER_INVENTORY_STATIC_JSON }
     targets:
-      - select: { kind: ConfigMap, name: dendenmushi-config }
+      - select: { kind: ConfigMap, name: dendenmushi-config, namespace: dendenmushi-ssh }
         fieldPaths: ["data.SERVER_INVENTORY_STATIC_JSON"]

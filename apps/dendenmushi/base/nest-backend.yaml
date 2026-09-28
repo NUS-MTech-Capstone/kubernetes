@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: nest-backend
-  namespace: dendenmushi
+  namespace: dendenmushi-webapp
   labels:
     app: dendenmushi
     component: nest-backend
@@ -83,11 +83,6 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: CLOUDWATCH_NAMESPACE
-            - name: SERVER_INVENTORY_STATIC_JSON
-              valueFrom:
-                configMapKeyRef:
-                  name: dendenmushi-config
-                  key: SERVER_INVENTORY_STATIC_JSON
             - name: AUTH_MODE
               value: alb
             - name: AWS_REGION
@@ -107,7 +102,10 @@ spec:
             - name: CORS_ENABLED
               value: "false"
             - name: SSH_GATEWAY_URL
-              value: "http://proxy-controlplane:8080"
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: PROXY_CONTROLPLANE_URL
             - name: SESSION_AUDIT_URL
               valueFrom:
                 configMapKeyRef:
@@ -150,7 +148,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nest-backend
-  namespace: dendenmushi
+  namespace: dendenmushi-webapp
   labels:
     app: dendenmushi
     component: nest-backend

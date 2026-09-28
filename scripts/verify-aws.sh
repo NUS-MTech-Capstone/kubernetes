@@ -2,7 +2,9 @@
 set -euo pipefail
 
 AWS_REGION=${AWS_REGION:-ap-southeast-1}
-NAMESPACE=${NAMESPACE:-dendenmushi}
+SSH_NAMESPACE=${SSH_NAMESPACE:-dendenmushi-ssh}
+AGENTIC_NAMESPACE=${AGENTIC_NAMESPACE:-dendenmushi-agentic}
+WEBAPP_NAMESPACE=${WEBAPP_NAMESPACE:-dendenmushi-webapp}
 APPLICATION_URL=${APPLICATION_URL:-https://api.ddm.keiyam.me}
 
 for command in aws terraform kubectl curl; do
@@ -23,12 +25,19 @@ if kubectl get application dendenmushi-dev -n argocd >/dev/null 2>&1; then
   kubectl get application dendenmushi-dev -n argocd
 fi
 
-for deployment in session-manager audit-service sts agent-controlplane proxy-dataplane proxy-controlplane incident-agent nest-backend angular; do
-  kubectl rollout status "deployment/${deployment}" -n "${NAMESPACE}" --timeout=5m
+for deployment in session-manager audit-service sts proxy-dataplane proxy-controlplane; do
+  kubectl rollout status "deployment/${deployment}" -n "${SSH_NAMESPACE}" --timeout=5m
+done
+for deployment in agent-controlplane incident-agent; do
+  kubectl rollout status "deployment/${deployment}" -n "${AGENTIC_NAMESPACE}" --timeout=5m
+done
+for deployment in nest-backend angular; do
+  kubectl rollout status "deployment/${deployment}" -n "${WEBAPP_NAMESPACE}" --timeout=5m
 done
 
 ALB_DNS_NAME=$(kubectl get ingress \
-  -n "${NAMESPACE}" \
+  --all-namespaces \
+  -l app=dendenmushi \
   -o jsonpath='{range .items[*].status.loadBalancer.ingress[*]}{.hostname}{"\n"}{end}' \
   2>/dev/null | sed -n '1p' || true)
 if [[ -z "${ALB_DNS_NAME}" ]]; then
@@ -69,6 +78,17 @@ curl -sS -D "${AUTH_HEADERS}" -o /dev/null "${APPLICATION_URL}/sessions"
 assert_response_header "${AUTH_HEADERS}" "Strict-Transport-Security" "max-age=31536000"
 assert_response_header "${AUTH_HEADERS}" "X-Content-Type-Options" "nosniff"
 assert_response_header "${AUTH_HEADERS}" "X-Frame-Options" "DENY"
+
+for namespace in "${SSH_NAMESPACE}" "${AGENTIC_NAMESPACE}" "${WEBAPP_NAMESPACE}"; do
+  kubectl get resourcequota,limitrange,networkpolicy -n "${namespace}"
+done
+
+if [[ "$(kubectl get daemonset aws-node -n kube-system -o jsonpath='{.spec.template.spec.containers[?(@.name=="aws-node")].env[?(@.name=="ENABLE_NETWORK_POLICY")].value}')" != "true" ]]; then
+  echo "AWS VPC CNI NetworkPolicy support is not enabled." >&2
+  exit 1
+fi
+
+"${ROOT_DIR}/scripts/verify-network-policies.sh"
 
 echo "ALB DNS name: ${ALB_DNS_NAME}"
 echo "Create/update api.ddm.keiyam.me with:"

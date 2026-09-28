@@ -16,6 +16,12 @@ The AWS deployment runs these services:
 
 DDM Agent remains reserved and is not deployed in the SSH-only path.
 
+Workloads are isolated into `dendenmushi-ssh`, `dendenmushi-agentic`, and
+`dendenmushi-webapp`. See
+[`KUBERNETES_ARCHITECTURE_AND_OPERATIONS.md`](../documentation/KUBERNETES_ARCHITECTURE_AND_OPERATIONS.md)
+for ownership, service DNS, NetworkPolicy, quota, GitOps, rollback, and
+suspend/restore procedures.
+
 ## AWS Prerequisites
 
 Apply the main infrastructure and target host first:
@@ -324,17 +330,20 @@ aws logs describe-log-groups \
   --log-group-name-prefix /aws/containerinsights/dendenmushi-cluster-dev \
   --query 'logGroups[].{name:logGroupName,retention:retentionInDays}'
 
-kubectl exec -n dendenmushi deploy/sts -- printenv OTEL_TRACES_EXPORTER
-kubectl logs deployment/proxy-controlplane -n dendenmushi | head
+kubectl exec -n dendenmushi-ssh deploy/sts -- printenv OTEL_TRACES_EXPORTER
+kubectl logs deployment/proxy-controlplane -n dendenmushi-ssh | head
 ```
 
 ## Checks
 
 ```bash
 kubectl get application dendenmushi-dev -n argocd
-kubectl get pods,ingress -n dendenmushi
-kubectl describe serviceaccount proxy-dataplane -n dendenmushi
-kubectl logs deployment/proxy-dataplane -n dendenmushi
+kubectl get pods,ingress -n dendenmushi-ssh
+kubectl get pods,ingress -n dendenmushi-agentic
+kubectl get pods,ingress -n dendenmushi-webapp
+kubectl describe serviceaccount proxy-dataplane -n dendenmushi-ssh
+kubectl logs deployment/proxy-dataplane -n dendenmushi-ssh
+./scripts/verify-network-policies.sh
 curl -fsS https://api.ddm.keiyam.me/healthz
 ```
 

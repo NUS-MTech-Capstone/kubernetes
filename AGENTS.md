@@ -20,7 +20,8 @@ Use this repository as the Argo CD GitOps source.
 
 The Phase 1 deployment should stay explicit and reviewable:
 
-- One namespace: `dendenmushi`.
+- Three workload namespaces: `dendenmushi-ssh`, `dendenmushi-agentic`, and
+  `dendenmushi-webapp`.
 - Internal services use `ClusterIP`.
 - Public control traffic enters through ALB ingress.
 - Public WebSocket terminal traffic enters through ALB ingress and goes directly

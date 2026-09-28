@@ -6,7 +6,9 @@ WORKSPACE_DIR=$(cd "${ROOT_DIR}/.." && pwd)
 AWS_TERRAFORM_DIR=${AWS_TERRAFORM_DIR:-"${WORKSPACE_DIR}/aws-terraform"}
 TARGET_TERRAFORM_DIR=${TARGET_TERRAFORM_DIR:-"${WORKSPACE_DIR}/target-hosts-setup"}
 AWS_REGION=${AWS_REGION:-ap-southeast-1}
-NAMESPACE=dendenmushi
+SSH_NAMESPACE=dendenmushi-ssh
+AGENTIC_NAMESPACE=dendenmushi-agentic
+WEBAPP_NAMESPACE=dendenmushi-webapp
 KEYSCAN_POD=dendenmushi-ssh-keyscan
 OVERLAY_DIR="${ROOT_DIR}/apps/dendenmushi/overlays/dev"
 
@@ -18,7 +20,7 @@ for command in aws terraform kubectl jq openssl awk; do
 done
 
 cleanup() {
-  kubectl delete pod "${KEYSCAN_POD}" -n "${NAMESPACE}" --ignore-not-found --wait=false >/dev/null 2>&1 || true
+  kubectl delete pod "${KEYSCAN_POD}" -n "${SSH_NAMESPACE}" --ignore-not-found --wait=false >/dev/null 2>&1 || true
 }
 trap cleanup EXIT
 
@@ -79,14 +81,14 @@ kubectl apply -f "${ROOT_DIR}/apps/dendenmushi/base/namespace.yaml"
 
 if [[ -n "${JWT_SIGNING_KEY:-}" ]]; then
   kubectl create secret generic dendenmushi-runtime \
-    -n "${NAMESPACE}" \
+    -n "${SSH_NAMESPACE}" \
     --from-literal=jwt-signing-key="${JWT_SIGNING_KEY}" \
     --dry-run=client \
     -o yaml | kubectl apply -f -
-elif ! kubectl get secret dendenmushi-runtime -n "${NAMESPACE}" >/dev/null 2>&1; then
+elif ! kubectl get secret dendenmushi-runtime -n "${SSH_NAMESPACE}" >/dev/null 2>&1; then
   GENERATED_JWT_SIGNING_KEY=$(openssl rand -base64 48)
   kubectl create secret generic dendenmushi-runtime \
-    -n "${NAMESPACE}" \
+    -n "${SSH_NAMESPACE}" \
     --from-literal=jwt-signing-key="${GENERATED_JWT_SIGNING_KEY}"
   echo "Created Kubernetes JWT signing secret."
 else
@@ -98,11 +100,13 @@ DATABASE_URL=$(aws secretsmanager get-secret-value \
   --secret-id "${INCIDENT_DATABASE_SECRET_ID}" \
   --query SecretString \
   --output text)
-kubectl create secret generic dendenmushi-database \
-  -n "${NAMESPACE}" \
-  --from-literal=database-url="${DATABASE_URL}" \
-  --dry-run=client \
-  -o yaml | kubectl apply -f -
+for namespace in "${SSH_NAMESPACE}" "${AGENTIC_NAMESPACE}"; do
+  kubectl create secret generic dendenmushi-database \
+    -n "${namespace}" \
+    --from-literal=database-url="${DATABASE_URL}" \
+    --dry-run=client \
+    -o yaml | kubectl apply -f -
+done
 unset DATABASE_URL
 
 WEBAPP_DATABASE_URL=$(aws secretsmanager get-secret-value \
@@ -112,7 +116,7 @@ WEBAPP_DATABASE_URL=$(aws secretsmanager get-secret-value \
   --output text)
 WEBAPP_DATABASE_URL=${WEBAPP_DATABASE_URL/sslmode=require/sslmode=no-verify}
 kubectl create secret generic dendenmushi-webapp-database \
-  -n "${NAMESPACE}" \
+  -n "${WEBAPP_NAMESPACE}" \
   --from-literal=database-url="${WEBAPP_DATABASE_URL}" \
   --dry-run=client \
   -o yaml | kubectl apply -f -
@@ -129,7 +133,7 @@ ADMIN_DATABASE_URL=$(aws secretsmanager get-secret-value \
   --query SecretString \
   --output text)
 kubectl create secret generic dendenmushi-webapp-bootstrap \
-  -n "${NAMESPACE}" \
+  -n "${WEBAPP_NAMESPACE}" \
   --from-literal=admin-database-url="${ADMIN_DATABASE_URL}" \
   --from-literal=database-name="$(jq -r .databaseName <<<"${WEBAPP_BOOTSTRAP}")" \
   --from-literal=username="$(jq -r .username <<<"${WEBAPP_BOOTSTRAP}")" \
@@ -139,33 +143,38 @@ kubectl create secret generic dendenmushi-webapp-bootstrap \
 unset WEBAPP_BOOTSTRAP ADMIN_DATABASE_URL
 
 kubectl delete job webapp-database-bootstrap \
-  -n "${NAMESPACE}" \
+  -n "${WEBAPP_NAMESPACE}" \
   --ignore-not-found \
   --wait=true
 kubectl apply -f "${ROOT_DIR}/apps/dendenmushi/jobs/webapp-database-bootstrap.yaml"
 if ! kubectl wait \
   --for=condition=complete \
   job/webapp-database-bootstrap \
-  -n "${NAMESPACE}" \
+  -n "${WEBAPP_NAMESPACE}" \
   --timeout=5m; then
-  kubectl logs job/webapp-database-bootstrap -n "${NAMESPACE}" >&2 || true
+  kubectl logs job/webapp-database-bootstrap -n "${WEBAPP_NAMESPACE}" >&2 || true
   exit 1
 fi
-kubectl delete secret dendenmushi-webapp-bootstrap -n "${NAMESPACE}"
+kubectl delete secret dendenmushi-webapp-bootstrap -n "${WEBAPP_NAMESPACE}"
 
 kubectl delete pod "${KEYSCAN_POD}" \
-  -n "${NAMESPACE}" \
+  -n "${SSH_NAMESPACE}" \
   --ignore-not-found \
   --wait=true >/dev/null
 kubectl run "${KEYSCAN_POD}" \
-  -n "${NAMESPACE}" \
+  -n "${SSH_NAMESPACE}" \
   --restart=Never \
   --image=alpine:3.21 \
+  --labels=component=ssh-keyscan \
+  --dry-run=client \
+  -o json \
   --command -- sh -c \
-  "apk add --no-cache openssh-client >/dev/null && ssh-keyscan -T 10 -t ed25519 -p 22 '${TARGET_ADDRESS}'"
+  "apk add --no-cache openssh-client >/dev/null && ssh-keyscan -T 10 -t ed25519 -p 22 '${TARGET_ADDRESS}'" |
+  jq '.metadata.labels.app = "dendenmushi" | .spec.containers[0].resources = {"requests":{"cpu":"25m","memory":"32Mi"},"limits":{"cpu":"250m","memory":"128Mi"}}' |
+  kubectl apply -f -
 
 for _ in $(seq 1 60); do
-  POD_PHASE=$(kubectl get pod "${KEYSCAN_POD}" -n "${NAMESPACE}" -o jsonpath='{.status.phase}' 2>/dev/null || true)
+  POD_PHASE=$(kubectl get pod "${KEYSCAN_POD}" -n "${SSH_NAMESPACE}" -o jsonpath='{.status.phase}' 2>/dev/null || true)
   if [[ "${POD_PHASE}" == "Succeeded" || "${POD_PHASE}" == "Failed" ]]; then
     break
   fi
@@ -173,12 +182,12 @@ for _ in $(seq 1 60); do
 done
 
 if [[ "${POD_PHASE:-}" != "Succeeded" ]]; then
-  kubectl logs "${KEYSCAN_POD}" -n "${NAMESPACE}" >&2 || true
+  kubectl logs "${KEYSCAN_POD}" -n "${SSH_NAMESPACE}" >&2 || true
   echo "Unable to read the target SSH host key from inside EKS." >&2
   exit 1
 fi
 
-HOST_PUBLIC_KEY=$(kubectl logs "${KEYSCAN_POD}" -n "${NAMESPACE}" 2>/dev/null |
+HOST_PUBLIC_KEY=$(kubectl logs "${KEYSCAN_POD}" -n "${SSH_NAMESPACE}" 2>/dev/null |
   awk '$2 == "ssh-ed25519" { print $2 " " $3; exit }')
 if [[ -z "${HOST_PUBLIC_KEY}" ]]; then
   echo "The target did not return an ED25519 SSH host key." >&2
