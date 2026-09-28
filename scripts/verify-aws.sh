@@ -83,8 +83,12 @@ for namespace in "${SSH_NAMESPACE}" "${AGENTIC_NAMESPACE}" "${WEBAPP_NAMESPACE}"
   kubectl get resourcequota,limitrange,networkpolicy -n "${namespace}"
 done
 
-if [[ "$(kubectl get daemonset aws-node -n kube-system -o jsonpath='{.spec.template.spec.containers[?(@.name=="aws-node")].env[?(@.name=="ENABLE_NETWORK_POLICY")].value}')" != "true" ]]; then
-  echo "AWS VPC CNI NetworkPolicy support is not enabled." >&2
+NETWORK_POLICY_AGENT=$(kubectl get daemonset aws-node -n kube-system \
+  -o jsonpath='{.spec.template.spec.containers[?(@.name=="aws-eks-nodeagent")].name}')
+NETWORK_POLICY_MODE=$(kubectl get daemonset aws-node -n kube-system \
+  -o jsonpath='{.spec.template.spec.containers[?(@.name=="aws-node")].env[?(@.name=="NETWORK_POLICY_ENFORCING_MODE")].value}')
+if [[ "${NETWORK_POLICY_AGENT}" != "aws-eks-nodeagent" || "${NETWORK_POLICY_MODE}" != "standard" ]]; then
+  echo "AWS VPC CNI NetworkPolicy support is not ready in standard mode." >&2
   exit 1
 fi
 

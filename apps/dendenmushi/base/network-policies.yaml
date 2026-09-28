@@ -57,6 +57,42 @@ spec:
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
+metadata: { name: allow-cloudwatch-agent, namespace: dendenmushi-ssh }
+spec:
+  podSelector: {}
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: amazon-cloudwatch } }
+          podSelector: { matchLabels: { app.kubernetes.io/component: amazon-cloudwatch-agent } }
+      ports: [{ protocol: TCP, port: 4316 }, { protocol: TCP, port: 2000 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-cloudwatch-agent, namespace: dendenmushi-agentic }
+spec:
+  podSelector: {}
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: amazon-cloudwatch } }
+          podSelector: { matchLabels: { app.kubernetes.io/component: amazon-cloudwatch-agent } }
+      ports: [{ protocol: TCP, port: 4316 }, { protocol: TCP, port: 2000 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-cloudwatch-agent, namespace: dendenmushi-webapp }
+spec:
+  podSelector: {}
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector: { matchLabels: { kubernetes.io/metadata.name: amazon-cloudwatch } }
+          podSelector: { matchLabels: { app.kubernetes.io/component: amazon-cloudwatch-agent } }
+      ports: [{ protocol: TCP, port: 4316 }, { protocol: TCP, port: 2000 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
 metadata: { name: allow-alb, namespace: dendenmushi-ssh }
 spec:
   podSelector:
