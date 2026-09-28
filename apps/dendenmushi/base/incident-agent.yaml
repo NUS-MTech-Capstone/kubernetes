@@ -145,17 +145,17 @@ spec:
         component: incident-agent-migrate
     spec:
       restartPolicy: OnFailure
-      serviceAccountName: incident-agent
       containers:
         - name: migrate
           image: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent:dev
           imagePullPolicy: Always
           command: ["python", "-m", "incident_agent.migrate"]
           env:
-            - name: AWS_REGION
-              value: ap-southeast-1
-            - name: DATABASE_SECRET_ID
-              value: __INCIDENT_DATABASE_SECRET_ID__
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: dendenmushi-database
+                  key: database-url
           resources:
             requests:
               cpu: 25m
