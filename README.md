@@ -19,7 +19,7 @@ DDM Agent remains reserved and is not deployed in the SSH-only path.
 
 Workloads are isolated into `dendenmushi-ssh`, `dendenmushi-agentic`, and
 `dendenmushi-webapp`. See
-[`KUBERNETES_ARCHITECTURE_AND_OPERATIONS.md`](../documentation/KUBERNETES_ARCHITECTURE_AND_OPERATIONS.md)
+[`KUBERNETES_ARCHITECTURE_AND_OPERATIONS.md`](documentation/KUBERNETES_ARCHITECTURE_AND_OPERATIONS.md)
 for ownership, service DNS, NetworkPolicy, quota, GitOps, rollback, and
 suspend/restore procedures.
 
