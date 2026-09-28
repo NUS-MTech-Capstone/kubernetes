@@ -149,8 +149,6 @@ replacements:
     targets:
       - select: { kind: Deployment, name: incident-agent }
         fieldPaths: ["spec.template.spec.containers.[name=incident-agent].env.[name=DATABASE_SECRET_ID].value"]
-      - select: { kind: Job, name: incident-agent-migrate }
-        fieldPaths: ["spec.template.spec.containers.[name=migrate].env.[name=DATABASE_SECRET_ID].value"]
       - select: { kind: Deployment, name: agent-controlplane }
         fieldPaths: ["spec.template.spec.containers.[name=agent-controlplane].env.[name=DATABASE_SECRET_ID].value"]
   - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.INCIDENT_AGENT_LANGSMITH_TRACING }
