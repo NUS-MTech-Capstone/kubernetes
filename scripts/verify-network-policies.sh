@@ -36,7 +36,19 @@ run_probe() {
     --dry-run=client \
     -o json \
     --command -- sh -ec "curl --connect-timeout 3 --max-time 5 -fsS '${url}' >/dev/null" |
-    jq '.spec.containers[0].resources = {"requests":{"cpu":"10m","memory":"16Mi"},"limits":{"cpu":"100m","memory":"64Mi"}}' |
+    jq '
+      .spec.securityContext.seccompProfile.type = "RuntimeDefault" |
+      .spec.containers[0].securityContext = {
+        "allowPrivilegeEscalation": false,
+        "capabilities": {"drop": ["ALL"]},
+        "runAsNonRoot": true,
+        "runAsUser": 100
+      } |
+      .spec.containers[0].resources = {
+        "requests": {"cpu": "10m", "memory": "16Mi"},
+        "limits": {"cpu": "100m", "memory": "64Mi"}
+      }
+    ' |
     kubectl apply -f - >/dev/null
 
   local phase=""
