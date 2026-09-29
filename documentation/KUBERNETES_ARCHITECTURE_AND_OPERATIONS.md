@@ -131,13 +131,18 @@ Allowed application paths are:
 | Database clients and labeled migration/maintenance jobs | RDS in `10.0.0.0/16` on 5432 |
 | AWS-integrated workloads and SSH keyscan | External TCP 443 |
 | Every pod | CoreDNS TCP/UDP 53 |
-| Every pod | Injected CloudWatch agent in `amazon-cloudwatch` on TCP 4316 and 2000 |
+| Instrumented application pods | CloudWatch agent in `amazon-cloudwatch` on TCP 4316 and 2000 |
 
 NetworkPolicy is additive: both source egress and destination ingress must
 permit an internal path. `scripts/verify-network-policies.sh` creates temporary
 pods carrying a source component label, checks representative allowed paths,
 and confirms representative denied paths time out. Its Redis checks require
 Nest-to-Redis access to succeed and Angular-to-Redis access to fail.
+
+The metadata-only Agent Tool Gateway is intentionally excluded from CloudWatch
+Application Signals auto-instrumentation. Container Insights and structured
+application logs remain enabled, while the exclusion prevents four unused
+language runtimes from exhausting its bounded `128Mi` container limit.
 
 Troubleshooting order:
 

@@ -298,6 +298,10 @@ The AWS deployment is tuned for a low-cost school project:
   URLs. Authorization still comes only from ALB identity and STS tokens.
 - `OTEL_TRACES_EXPORTER=none`, `OTEL_METRICS_EXPORTER=none`, and
   `OTEL_LOGS_EXPORTER=none` are the default ConfigMap values.
+- The CloudWatch add-on excludes the metadata-only Agent Tool Gateway from
+  Application Signals auto-instrumentation. Container Insights and structured
+  logs still cover it without injecting four unused language runtimes into its
+  bounded `128Mi` container.
 - The dev overlay sets `LANGSMITH_TRACING=true` only for Incident Reasoning Agent and passes
   only the Terraform-created Secrets Manager secret ID plus optional project,
   endpoint, and workspace settings. The LangSmith API key itself is not written
