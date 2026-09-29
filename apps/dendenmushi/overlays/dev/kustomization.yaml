@@ -27,7 +27,7 @@ images:
     newTag: 8769b767097cf4353fa3faa45a6795d22b690b21
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
-    newTag: 5f9328ba4cf20dacbbc1378b043218bd01bdc940
+    newTag: fc6099e9bacd10af49bc775309737e347a95a506
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane
     newTag: 793c1148238397a606505e65bdb8dc31adc2f48b
