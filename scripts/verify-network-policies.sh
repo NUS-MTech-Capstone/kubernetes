@@ -91,6 +91,8 @@ run_probe np-incident-to-gateway "${AGENTIC_NAMESPACE}" incident-agent allow "${
   "curl --connect-timeout 3 --max-time 5 -fsS 'http://agent-tool-gateway.${AGENTIC_NAMESPACE}.svc.cluster.local:8094/healthz' >/dev/null"
 run_probe np-gateway-to-dataplane "${AGENTIC_NAMESPACE}" agent-tool-gateway allow "${PROBE_IMAGE}" 100 \
   "curl --connect-timeout 3 --max-time 5 -fsS 'http://proxy-dataplane.${SSH_NAMESPACE}.svc.cluster.local:8083/healthz' >/dev/null"
+run_probe np-invalid-websocket-origin "${AGENTIC_NAMESPACE}" agent-tool-gateway allow "${PROBE_IMAGE}" 100 \
+  "test \"\$(curl --connect-timeout 3 --max-time 5 -sS -o /dev/null -w '%{http_code}' -H 'Origin: https://invalid.example' 'http://proxy-dataplane.${SSH_NAMESPACE}.svc.cluster.local:8083/sessions/verification/ws?apiVersion=1')\" = 403"
 run_probe np-controlplane-to-dataplane "${AGENTIC_NAMESPACE}" agent-controlplane deny "${PROBE_IMAGE}" 100 \
   "curl --connect-timeout 3 --max-time 5 -fsS 'http://proxy-dataplane.${SSH_NAMESPACE}.svc.cluster.local:8083/healthz' >/dev/null"
 run_probe np-reasoning-to-controlplane "${AGENTIC_NAMESPACE}" incident-reasoning-agent deny "${PROBE_IMAGE}" 100 \
