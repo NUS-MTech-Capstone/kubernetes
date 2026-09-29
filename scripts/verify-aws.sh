@@ -19,6 +19,7 @@ done
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
 WORKSPACE_DIR=$(cd "${ROOT_DIR}/.." && pwd)
 AWS_TERRAFORM_DIR=${AWS_TERRAFORM_DIR:-"${WORKSPACE_DIR}/aws-terraform"}
+TARGET_TERRAFORM_DIR=${TARGET_TERRAFORM_DIR:-"${WORKSPACE_DIR}/target-hosts-setup"}
 CLUSTER_NAME=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw cluster_name)
 
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
@@ -28,6 +29,29 @@ if [[ "${AWS_ACCOUNT_ID}" != "${EXPECTED_AWS_ACCOUNT_ID}" ]]; then
 fi
 
 aws eks update-kubeconfig --region "${AWS_REGION}" --name "${CLUSTER_NAME}"
+
+if kubectl get deployment sts -n "${SSH_NAMESPACE}" -o json |
+  jq -e '.spec.template.spec.containers[] | select(.name == "sts") | .env[]? | select(.name == "SERVER_INVENTORY_URL")' >/dev/null; then
+  echo "STS still has SERVER_INVENTORY_URL; trusted target inventory must be static." >&2
+  exit 1
+fi
+
+TARGET_HOST_ID=$(terraform -chdir="${TARGET_TERRAFORM_DIR}" output -raw host_id)
+TARGET_ADDRESS=$(terraform -chdir="${TARGET_TERRAFORM_DIR}" output -raw private_address)
+STATIC_INVENTORY=$(kubectl get configmap dendenmushi-config -n "${SSH_NAMESPACE}" \
+  -o jsonpath='{.data.SERVER_INVENTORY_STATIC_JSON}')
+if ! jq -e --arg host_id "${TARGET_HOST_ID}" --arg address "${TARGET_ADDRESS}:22" \
+  '.[$host_id].address == $address' <<<"${STATIC_INVENTORY}" >/dev/null; then
+  echo "STS static target inventory does not match the Terraform target address." >&2
+  exit 1
+fi
+
+AWS_PROFILE=${AWS_PROFILE:-capstone} \
+SKIP_KUBECONFIG_UPDATE=true \
+AWS_TERRAFORM_DIR="${AWS_TERRAFORM_DIR}" \
+TARGET_TERRAFORM_DIR="${TARGET_TERRAFORM_DIR}" \
+EXPECTED_AWS_ACCOUNT_ID="${EXPECTED_AWS_ACCOUNT_ID}" \
+"${ROOT_DIR}/scripts/reconcile-webapp-target.sh" --verify-only
 
 if kubectl get application dendenmushi-dev -n argocd >/dev/null 2>&1; then
   kubectl get application dendenmushi-dev -n argocd

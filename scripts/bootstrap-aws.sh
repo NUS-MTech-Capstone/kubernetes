@@ -164,6 +164,13 @@ if ! kubectl wait \
 fi
 kubectl delete secret dendenmushi-webapp-bootstrap -n "${WEBAPP_NAMESPACE}"
 
+AWS_PROFILE=${AWS_PROFILE:-capstone} \
+SKIP_KUBECONFIG_UPDATE=true \
+AWS_TERRAFORM_DIR="${AWS_TERRAFORM_DIR}" \
+TARGET_TERRAFORM_DIR="${TARGET_TERRAFORM_DIR}" \
+EXPECTED_AWS_ACCOUNT_ID="${EXPECTED_AWS_ACCOUNT_ID}" \
+"${ROOT_DIR}/scripts/reconcile-webapp-target.sh"
+
 kubectl delete pod "${KEYSCAN_POD}" \
   -n "${SSH_NAMESPACE}" \
   --ignore-not-found \

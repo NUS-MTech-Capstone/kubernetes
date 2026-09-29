@@ -1,0 +1,182 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: webapp-target-reconcile
+  namespace: dendenmushi-webapp
+  labels:
+    app: dendenmushi
+    component: database-maintenance
+spec:
+  backoffLimit: 2
+  ttlSecondsAfterFinished: 600
+  template:
+    metadata:
+      labels:
+        app: dendenmushi
+        component: database-maintenance
+    spec:
+      automountServiceAccountToken: false
+      restartPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65534
+        runAsGroup: 65534
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: reconcile
+          image: postgres:16-alpine
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+            readOnlyRootFilesystem: true
+          env:
+            - name: HOME
+              value: /tmp
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: dendenmushi-webapp-database
+                  key: database-url
+            - name: RECONCILE_ENABLED
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-target-reconcile
+                  key: reconcile-enabled
+            - name: TARGET_HOST_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-target-reconcile
+                  key: host-id
+            - name: TARGET_ADDRESS
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-target-reconcile
+                  key: target-address
+            - name: SSH_USERNAME
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-target-reconcile
+                  key: ssh-username
+            - name: IMPLEMENTER_GROUP_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-target-reconcile
+                  key: implementer-group-name
+          command: ["/bin/sh", "-euc"]
+          args:
+            - |
+              PSQL_DATABASE_URL=$(printf '%s' "${DATABASE_URL}" |
+                sed 's/sslmode=no-verify/sslmode=require/')
+              if [ "${RECONCILE_ENABLED}" = "true" ]; then
+                psql "${PSQL_DATABASE_URL}" \
+                  -v ON_ERROR_STOP=1 \
+                  -v host_id="${TARGET_HOST_ID}" \
+                  -v target_address="${TARGET_ADDRESS}" \
+                  -v ssh_username="${SSH_USERNAME}" \
+                  -v group_name="${IMPLEMENTER_GROUP_NAME}" <<'SQL'
+              BEGIN;
+
+              WITH target AS (
+                INSERT INTO virtual_machines (
+                  id, hostname, "ipAddress", "assetStatus", "osVersion",
+                  "sshPort", tags, "createdAt", "updatedAt"
+                )
+                VALUES (
+                  gen_random_uuid(), :'host_id', :'target_address', 'Active',
+                  'Amazon Linux 2023', 22, '["demo", "terraform-managed"]'::jsonb,
+                  CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
+                )
+                ON CONFLICT (hostname) DO UPDATE SET
+                  "ipAddress" = EXCLUDED."ipAddress",
+                  "assetStatus" = 'Active',
+                  "sshPort" = 22,
+                  "updatedAt" = CURRENT_TIMESTAMP
+                RETURNING id
+              )
+              INSERT INTO implementer_groups (
+                id, name, description, "osUsers", "vmIds", "createdAt", "updatedAt"
+              )
+              SELECT
+                gen_random_uuid(),
+                :'group_name',
+                'Operators authorized for the Terraform-managed demo target.',
+                jsonb_build_array(:'ssh_username'),
+                jsonb_build_array(target.id::text),
+                CURRENT_TIMESTAMP,
+                CURRENT_TIMESTAMP
+              FROM target
+              ON CONFLICT (name) DO UPDATE SET
+                description = EXCLUDED.description,
+                "osUsers" = CASE
+                  WHEN COALESCE(implementer_groups."osUsers", '[]'::jsonb) @> EXCLUDED."osUsers"
+                    THEN COALESCE(implementer_groups."osUsers", '[]'::jsonb)
+                  ELSE COALESCE(implementer_groups."osUsers", '[]'::jsonb) || EXCLUDED."osUsers"
+                END,
+                "vmIds" = CASE
+                  WHEN COALESCE(implementer_groups."vmIds", '[]'::jsonb) @> EXCLUDED."vmIds"
+                    THEN COALESCE(implementer_groups."vmIds", '[]'::jsonb)
+                  ELSE COALESCE(implementer_groups."vmIds", '[]'::jsonb) || EXCLUDED."vmIds"
+                END,
+                "updatedAt" = CURRENT_TIMESTAMP;
+
+              COMMIT;
+              SQL
+              fi
+
+              psql "${PSQL_DATABASE_URL}" \
+                -v ON_ERROR_STOP=1 \
+                -v host_id="${TARGET_HOST_ID}" \
+                -v target_address="${TARGET_ADDRESS}" \
+                -v ssh_username="${SSH_USERNAME}" \
+                -v group_name="${IMPLEMENTER_GROUP_NAME}" <<'SQL'
+              SELECT EXISTS (
+                SELECT 1
+                FROM virtual_machines
+                WHERE hostname = :'host_id'
+                  AND "ipAddress" = :'target_address'
+                  AND "sshPort" = 22
+                  AND "assetStatus" = 'Active'
+              ) AS target_inventory_verified \gset
+
+              SELECT EXISTS (
+                SELECT 1
+                FROM implementer_groups AS groups
+                JOIN virtual_machines AS target ON target.hostname = :'host_id'
+                WHERE groups.name = :'group_name'
+                  AND groups."osUsers" @> jsonb_build_array(:'ssh_username')
+                  AND groups."vmIds" @> jsonb_build_array(target.id::text)
+              ) AS operator_group_verified \gset
+
+              \if :target_inventory_verified
+              \else
+                \echo 'Target inventory verification failed.'
+                \quit 1
+              \endif
+              \if :operator_group_verified
+              \else
+                \echo 'Operator group verification failed.'
+                \quit 1
+              \endif
+
+              SELECT
+                :'target_inventory_verified'::boolean AS target_inventory_verified,
+                :'operator_group_verified'::boolean AS operator_group_verified;
+              SQL
+
+              printf 'Verified web inventory host %s at %s:22 and operator group %s.\n' \
+                "${TARGET_HOST_ID}" "${TARGET_ADDRESS}" "${IMPLEMENTER_GROUP_NAME}"
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
