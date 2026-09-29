@@ -124,8 +124,9 @@ that should not happen inside every Argo sync:
 4. Reads the target details from Terraform outputs.
 5. Runs `ssh-keyscan` from an EKS pod.
 6. Builds trusted STS inventory in the dev overlay.
-7. Refreshes non-secret AWS, Cognito, IRSA, SNS, SQS, and Incident Agent
-   LangSmith identifiers in the dev overlay.
+7. Refreshes non-secret AWS, Cognito, IRSA, SNS, SQS, AgentCore gateway, and
+   Incident Agent LangSmith identifiers in the dev overlay. The OpenAI key is
+   never copied into Kubernetes.
 8. Applies the Argo CD Application manifest.
 
 ```bash
