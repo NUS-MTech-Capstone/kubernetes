@@ -74,11 +74,6 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: CHANGE_REQUEST_URL
-            - name: SERVER_INVENTORY_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: dendenmushi-config
-                  key: SERVER_INVENTORY_URL
             - name: SERVER_INVENTORY_STATIC_JSON
               valueFrom:
                 configMapKeyRef:
