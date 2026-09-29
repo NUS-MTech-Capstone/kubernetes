@@ -29,6 +29,10 @@ spec:
             - name: http
               containerPort: 8091
           env:
+            - name: INCIDENT_AGENT_COMPONENT
+              value: coordinator
+            - name: SERVICE_NAME
+              value: incident-agent
             - name: PORT
               value: "8091"
             - name: LOG_FORMAT
@@ -71,16 +75,6 @@ spec:
               value: "30"
             - name: DATABASE_SECRET_ID
               value: __INCIDENT_DATABASE_SECRET_ID__
-            - name: LANGSMITH_TRACING
-              value: "false"
-            - name: LANGSMITH_API_KEY_SECRET_ID
-              value: __INCIDENT_AGENT_LANGSMITH_API_KEY_SECRET_ID__
-            - name: LANGSMITH_PROJECT
-              value: __INCIDENT_AGENT_LANGSMITH_PROJECT__
-            - name: LANGSMITH_ENDPOINT
-              value: __INCIDENT_AGENT_LANGSMITH_ENDPOINT__
-            - name: LANGSMITH_WORKSPACE_ID
-              value: __INCIDENT_AGENT_LANGSMITH_WORKSPACE_ID__
             - name: PROXY_CONTROLPLANE_URL
               valueFrom:
                 configMapKeyRef:
@@ -88,14 +82,17 @@ spec:
                   key: PROXY_CONTROLPLANE_URL
             - name: AGENT_CONTROLPLANE_URL
               value: http://agent-controlplane.dendenmushi-agentic.svc.cluster.local:8092
-            - name: PLANNER_MODE
-              value: bedrock_with_fallback
-            - name: BEDROCK_REGION
-              value: us-east-1
+            - name: REASONING_AGENT_URL
+              value: http://incident-reasoning-agent.dendenmushi-agentic.svc.cluster.local:8093
+            - name: TOOL_GATEWAY_URL
+              value: http://agent-tool-gateway.dendenmushi-agentic.svc.cluster.local:8094/mcp
+            - name: STS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: dendenmushi-config
+                  key: STS_URL
             - name: BEDROCK_MODEL_ID
               value: global.amazon.nova-2-lite-v1:0
-            - name: BEDROCK_FALLBACK_ENABLED
-              value: "true"
             - name: WORKLOAD_TOKEN_FILE
               value: /var/run/secrets/tokens/incident-agent-token
             - name: TRANSIENT_RETRY_ATTEMPTS

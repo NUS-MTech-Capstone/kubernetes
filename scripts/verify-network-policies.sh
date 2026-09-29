@@ -84,6 +84,16 @@ run_probe np-proxy-to-session "${SSH_NAMESPACE}" proxy-controlplane allow "${PRO
   "curl --connect-timeout 3 --max-time 5 -fsS 'http://session-manager.${SSH_NAMESPACE}.svc.cluster.local:8081/healthz' >/dev/null"
 run_probe np-agent-to-sts "${AGENTIC_NAMESPACE}" agent-controlplane allow "${PROBE_IMAGE}" 100 \
   "curl --connect-timeout 3 --max-time 5 -fsS 'http://sts.${SSH_NAMESPACE}.svc.cluster.local:8082/healthz' >/dev/null"
+run_probe np-incident-to-reasoning "${AGENTIC_NAMESPACE}" incident-agent allow "${PROBE_IMAGE}" 100 \
+  "curl --connect-timeout 3 --max-time 5 -fsS 'http://incident-reasoning-agent.${AGENTIC_NAMESPACE}.svc.cluster.local:8093/healthz' >/dev/null"
+run_probe np-incident-to-gateway "${AGENTIC_NAMESPACE}" incident-agent allow "${PROBE_IMAGE}" 100 \
+  "curl --connect-timeout 3 --max-time 5 -fsS 'http://agent-tool-gateway.${AGENTIC_NAMESPACE}.svc.cluster.local:8094/healthz' >/dev/null"
+run_probe np-gateway-to-dataplane "${AGENTIC_NAMESPACE}" agent-tool-gateway allow "${PROBE_IMAGE}" 100 \
+  "curl --connect-timeout 3 --max-time 5 -fsS 'http://proxy-dataplane.${SSH_NAMESPACE}.svc.cluster.local:8083/healthz' >/dev/null"
+run_probe np-controlplane-to-dataplane "${AGENTIC_NAMESPACE}" agent-controlplane deny "${PROBE_IMAGE}" 100 \
+  "curl --connect-timeout 3 --max-time 5 -fsS 'http://proxy-dataplane.${SSH_NAMESPACE}.svc.cluster.local:8083/healthz' >/dev/null"
+run_probe np-reasoning-to-controlplane "${AGENTIC_NAMESPACE}" incident-reasoning-agent deny "${PROBE_IMAGE}" 100 \
+  "curl --connect-timeout 3 --max-time 5 -fsS 'http://agent-controlplane.${AGENTIC_NAMESPACE}.svc.cluster.local:8092/healthz' >/dev/null"
 run_probe np-nest-to-audit "${WEBAPP_NAMESPACE}" nest-backend allow "${PROBE_IMAGE}" 100 \
   "curl --connect-timeout 3 --max-time 5 -fsS 'http://audit-service.${SSH_NAMESPACE}.svc.cluster.local:8085/healthz' >/dev/null"
 run_probe np-angular-to-sts "${WEBAPP_NAMESPACE}" angular deny "${PROBE_IMAGE}" 100 \

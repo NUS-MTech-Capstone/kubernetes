@@ -2,6 +2,7 @@
 set -euo pipefail
 
 AWS_REGION=${AWS_REGION:-ap-southeast-1}
+EXPECTED_AWS_ACCOUNT_ID=${EXPECTED_AWS_ACCOUNT_ID:-891377133321}
 SSH_NAMESPACE=${SSH_NAMESPACE:-dendenmushi-ssh}
 AGENTIC_NAMESPACE=${AGENTIC_NAMESPACE:-dendenmushi-agentic}
 WEBAPP_NAMESPACE=${WEBAPP_NAMESPACE:-dendenmushi-webapp}
@@ -19,21 +20,39 @@ WORKSPACE_DIR=$(cd "${ROOT_DIR}/.." && pwd)
 AWS_TERRAFORM_DIR=${AWS_TERRAFORM_DIR:-"${WORKSPACE_DIR}/aws-terraform"}
 CLUSTER_NAME=$(terraform -chdir="${AWS_TERRAFORM_DIR}" output -raw cluster_name)
 
+AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+if [[ "${AWS_ACCOUNT_ID}" != "${EXPECTED_AWS_ACCOUNT_ID}" ]]; then
+  echo "Refusing to verify account ${AWS_ACCOUNT_ID}; expected ${EXPECTED_AWS_ACCOUNT_ID}." >&2
+  exit 1
+fi
+
 aws eks update-kubeconfig --region "${AWS_REGION}" --name "${CLUSTER_NAME}"
 
 if kubectl get application dendenmushi-dev -n argocd >/dev/null 2>&1; then
   kubectl get application dendenmushi-dev -n argocd
+  ARGO_SYNC=$(kubectl get application dendenmushi-dev -n argocd -o jsonpath='{.status.sync.status}')
+  ARGO_HEALTH=$(kubectl get application dendenmushi-dev -n argocd -o jsonpath='{.status.health.status}')
+  if [[ "${ARGO_SYNC}" != "Synced" || "${ARGO_HEALTH}" != "Healthy" ]]; then
+    echo "Argo CD is not ready: sync=${ARGO_SYNC:-unknown} health=${ARGO_HEALTH:-unknown}." >&2
+    exit 1
+  fi
 fi
 
 for deployment in session-manager audit-service sts proxy-dataplane proxy-controlplane; do
   kubectl rollout status "deployment/${deployment}" -n "${SSH_NAMESPACE}" --timeout=5m
 done
-for deployment in agent-controlplane incident-agent; do
+for deployment in agent-controlplane incident-agent incident-reasoning-agent agent-tool-gateway; do
   kubectl rollout status "deployment/${deployment}" -n "${AGENTIC_NAMESPACE}" --timeout=5m
 done
 for deployment in redis nest-backend angular; do
   kubectl rollout status "deployment/${deployment}" -n "${WEBAPP_NAMESPACE}" --timeout=5m
 done
+
+DEPLOYMENT_COUNT=$(kubectl get deployment --all-namespaces -l app=dendenmushi -o name | wc -l | tr -d ' ')
+if [[ "${DEPLOYMENT_COUNT}" != "12" ]]; then
+  echo "Expected 12 DenDenMushi deployments, found ${DEPLOYMENT_COUNT}." >&2
+  exit 1
+fi
 
 ALB_DNS_NAME=$(kubectl get ingress \
   --all-namespaces \
@@ -93,6 +112,47 @@ if [[ "${NETWORK_POLICY_AGENT}" != "aws-eks-nodeagent" || "${NETWORK_POLICY_MODE
 fi
 
 "${ROOT_DIR}/scripts/verify-network-policies.sh"
+
+kubectl exec -i -n "${AGENTIC_NAMESPACE}" deployment/incident-agent -- python - <<'PY'
+import asyncio
+import json
+import urllib.request
+
+import httpx2
+from mcp import Client
+from mcp.client.streamable_http import streamable_http_client
+
+token = open("/var/run/secrets/tokens/incident-agent-token", encoding="utf-8").read().strip()
+card_request = urllib.request.Request(
+    "http://incident-reasoning-agent.dendenmushi-agentic.svc.cluster.local:8093/.well-known/agent-card.json",
+    headers={"Authorization": f"Bearer {token}"},
+)
+with urllib.request.urlopen(card_request, timeout=5) as response:
+    card = json.load(response)
+if not any(skill.get("id") == "analyze_incident" for skill in card.get("skills", [])):
+    raise RuntimeError("A2A analyze_incident skill is unavailable")
+
+
+async def verify_mcp() -> None:
+    async with httpx2.AsyncClient(headers={"Authorization": f"Bearer {token}"}, timeout=10) as http_client:
+        transport = streamable_http_client(
+            "http://agent-tool-gateway.dendenmushi-agentic.svc.cluster.local:8094/mcp",
+            http_client=http_client,
+        )
+        async with Client(transport, read_timeout_seconds=10) as client:
+            tools = await client.list_tools()
+            names = {tool.name for tool in tools.tools}
+            if not {"service_status", "health_check"}.issubset(names):
+                raise RuntimeError("required diagnostic tools are unavailable")
+            if "restart_service" in names:
+                raise RuntimeError("coordinator can discover a remediation tool")
+            denied = await client.call_tool("restart_service", {"runId": "verification-only"})
+            if not denied.is_error:
+                raise RuntimeError("default-deny MCP policy did not reject remediation discovery bypass")
+
+
+asyncio.run(verify_mcp())
+PY
 
 echo "ALB DNS name: ${ALB_DNS_NAME}"
 echo "Create/update api.ddm.keiyam.me with:"
