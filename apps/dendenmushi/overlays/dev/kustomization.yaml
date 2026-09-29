@@ -77,6 +77,10 @@ replacements:
     targets:
       - select: { kind: ServiceAccount, name: incident-reasoning-agent }
         fieldPaths: ["metadata.annotations.[eks.amazonaws.com/role-arn]"]
+  - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.AGENTCORE_OPENAI_GATEWAY_URL }
+    targets:
+      - select: { kind: Deployment, name: incident-reasoning-agent }
+        fieldPaths: ["spec.template.spec.containers.[name=incident-reasoning-agent].env.[name=OPENAI_GATEWAY_URL].value"]
   - source: { kind: ConfigMap, name: dendenmushi-env, fieldPath: data.AGENT_CONTROLPLANE_ROLE_ARN }
     targets:
       - select: { kind: ServiceAccount, name: agent-controlplane }

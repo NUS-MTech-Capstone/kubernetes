@@ -91,8 +91,14 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: STS_URL
-            - name: BEDROCK_MODEL_ID
-              value: global.amazon.nova-2-lite-v1:0
+            - name: PLANNER_MODE
+              value: openai_with_fallback
+            - name: OPENAI_AUTH_MODE
+              value: aws_iam
+            - name: OPENAI_AWS_REGION
+              value: ap-southeast-1
+            - name: OPENAI_MODEL
+              value: gpt-5.4-2026-03-05
             - name: WORKLOAD_TOKEN_FILE
               value: /var/run/secrets/tokens/incident-agent-token
             - name: TRANSIENT_RETRY_ATTEMPTS
