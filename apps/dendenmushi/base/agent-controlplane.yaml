@@ -81,6 +81,8 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: INCIDENT_AGENT_URL
+            - name: TOOL_GATEWAY_URL
+              value: http://agent-tool-gateway.dendenmushi-agentic.svc.cluster.local:8094/mcp
             - name: WORKLOAD_TOKEN_FILE
               value: /var/run/secrets/tokens/agent-controlplane-token
             - name: ALB_ARN

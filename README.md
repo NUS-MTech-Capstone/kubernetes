@@ -11,6 +11,8 @@ The AWS deployment runs these services:
 - Proxy Dataplane
 - Agent Control Plane
 - Incident Agent
+- Incident Reasoning Agent
+- Agent Tool Gateway
 - Redis monitoring cache
 - Nest Backend
 - Angular
@@ -46,6 +48,8 @@ The first infrastructure apply creates:
 - Nest Backend IRSA role
 - STS, Proxy Control Plane, Session Manager, Audit Service, and Agent Control
   Plane event-lane IRSA permissions
+- Dedicated Incident Reasoning Agent IRSA permissions for Bedrock and the
+  optional tracing secret
 - SNS topic, Audit Service SQS queue, and audit event DLQ for sanitized
   lifecycle metadata
 - Cognito user pool/client
@@ -187,6 +191,8 @@ image tag, renders the dev overlay, and opens or updates a PR. Argo CD deploys
 only after that PR is merged.
 
 The incident-agent image also drives the `incident-agent-migrate` PreSync hook.
+The same immutable image runs the coordinator, private A2A Reasoning Agent, and
+private MCP Tool Gateway with different `INCIDENT_AGENT_COMPONENT` values.
 Argo CD uses the `DATABASE_URL` from the pre-bootstrapped
 `dendenmushi-database` Kubernetes Secret before rolling out the worker. Images
 that include `incident_agent.migrate` run Alembic. Older restorable images that
@@ -292,7 +298,7 @@ The AWS deployment is tuned for a low-cost school project:
   URLs. Authorization still comes only from ALB identity and STS tokens.
 - `OTEL_TRACES_EXPORTER=none`, `OTEL_METRICS_EXPORTER=none`, and
   `OTEL_LOGS_EXPORTER=none` are the default ConfigMap values.
-- The dev overlay sets `LANGSMITH_TRACING=true` for Incident Agent and passes
+- The dev overlay sets `LANGSMITH_TRACING=true` only for Incident Reasoning Agent and passes
   only the Terraform-created Secrets Manager secret ID plus optional project,
   endpoint, and workspace settings. The LangSmith API key itself is not written
   to Kubernetes YAML or ConfigMaps.
@@ -302,7 +308,8 @@ The AWS deployment is tuned for a low-cost school project:
   `ProxyPodCapacity`, `AvailableProxyPods`, `IncidentReceived`,
   `IncidentTriaged`, `EvidenceCollected`, `PlanProposed`, `PlanApproved`,
   `PlanRejected`, `RemediationExecuted`, `RemediationFailed`,
-  `BedrockRequestLatencyMs`, `BedrockErrors`, `SessionAuditAppendFailures`,
+  `AgentDelegated`, `ToolCallAllowed`, `ToolCallDenied`, `ToolCallCompleted`,
+  `ToolCallFailed`, `BedrockRequestLatencyMs`, `BedrockErrors`, `SessionAuditAppendFailures`,
   `SessionAuditDropped`, `SessionAuditTruncated`, `DDMOperationLatencyMs`,
   `DDMOperationErrors`, and `SQSMessageFailures`. Use low-cardinality
   dimensions only: `Service`, `Environment`, and optional component/reason
@@ -355,3 +362,10 @@ curl -fsS https://api.ddm.keiyam.me/healthz
 
 The root and Angular health endpoint are public. Data and control routes require
 the ALB Cognito session.
+
+The two agent protocol services are internal only. The Reasoning Agent exposes
+A2A discovery and JSON-RPC on port 8093. The Tool Gateway exposes MCP
+Streamable HTTP on port 8094 with a GitOps-managed default-deny policy. Neither
+has an Ingress, ALB route, public DNS record, or separate managed AWS service.
+`verify-aws.sh` requires all twelve deployments, A2A discovery, caller-filtered
+MCP discovery, a representative MCP denial, and the NetworkPolicy matrix.

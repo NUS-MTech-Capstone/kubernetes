@@ -11,6 +11,7 @@ resources:
   - audit-service.yaml
   - sts.yaml
   - agent-controlplane.yaml
+  - agent-services.yaml
   - proxy-controlplane.yaml
   - proxy-dataplane.yaml
   - incident-agent.yaml

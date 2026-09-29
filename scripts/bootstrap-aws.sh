@@ -6,6 +6,7 @@ WORKSPACE_DIR=$(cd "${ROOT_DIR}/.." && pwd)
 AWS_TERRAFORM_DIR=${AWS_TERRAFORM_DIR:-"${WORKSPACE_DIR}/aws-terraform"}
 TARGET_TERRAFORM_DIR=${TARGET_TERRAFORM_DIR:-"${WORKSPACE_DIR}/target-hosts-setup"}
 AWS_REGION=${AWS_REGION:-ap-southeast-1}
+EXPECTED_AWS_ACCOUNT_ID=${EXPECTED_AWS_ACCOUNT_ID:-891377133321}
 SSH_NAMESPACE=dendenmushi-ssh
 AGENTIC_NAMESPACE=dendenmushi-agentic
 WEBAPP_NAMESPACE=dendenmushi-webapp
@@ -29,6 +30,10 @@ tf_output() {
 }
 
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+if [[ "${AWS_ACCOUNT_ID}" != "${EXPECTED_AWS_ACCOUNT_ID}" ]]; then
+  echo "Refusing to bootstrap account ${AWS_ACCOUNT_ID}; expected ${EXPECTED_AWS_ACCOUNT_ID}." >&2
+  exit 1
+fi
 CLUSTER_NAME=$(tf_output "${AWS_TERRAFORM_DIR}" cluster_name)
 PROXY_DATAPLANE_ROLE_ARN=$(tf_output "${AWS_TERRAFORM_DIR}" proxy_dataplane_role_arn)
 STS_ROLE_ARN=$(tf_output "${AWS_TERRAFORM_DIR}" sts_role_arn)
@@ -36,6 +41,7 @@ PROXY_CONTROLPLANE_ROLE_ARN=$(tf_output "${AWS_TERRAFORM_DIR}" proxy_controlplan
 SESSION_MANAGER_ROLE_ARN=$(tf_output "${AWS_TERRAFORM_DIR}" session_manager_role_arn)
 AUDIT_SERVICE_ROLE_ARN=$(tf_output "${AWS_TERRAFORM_DIR}" audit_service_role_arn)
 INCIDENT_AGENT_ROLE_ARN=$(tf_output "${AWS_TERRAFORM_DIR}" incident_agent_role_arn)
+INCIDENT_REASONING_AGENT_ROLE_ARN=$(tf_output "${AWS_TERRAFORM_DIR}" incident_reasoning_agent_role_arn)
 AGENT_CONTROLPLANE_ROLE_ARN=$(tf_output "${AWS_TERRAFORM_DIR}" agent_controlplane_role_arn)
 INCIDENT_ALERTS_QUEUE_URL=$(tf_output "${AWS_TERRAFORM_DIR}" incident_alerts_queue_url)
 EVENTS_TOPIC_ARN=$(tf_output "${AWS_TERRAFORM_DIR}" events_topic_arn)
@@ -256,6 +262,7 @@ SESSION_MANAGER_ROLE_ARN=${SESSION_MANAGER_ROLE_ARN}
 AUDIT_SERVICE_ROLE_ARN=${AUDIT_SERVICE_ROLE_ARN}
 NEST_BACKEND_ROLE_ARN=${NEST_BACKEND_ROLE_ARN}
 INCIDENT_AGENT_ROLE_ARN=${INCIDENT_AGENT_ROLE_ARN}
+INCIDENT_REASONING_AGENT_ROLE_ARN=${INCIDENT_REASONING_AGENT_ROLE_ARN}
 AGENT_CONTROLPLANE_ROLE_ARN=${AGENT_CONTROLPLANE_ROLE_ARN}
 INCIDENT_ALERTS_QUEUE_URL=${INCIDENT_ALERTS_QUEUE_URL}
 EVENTS_TOPIC_ARN=${EVENTS_TOPIC_ARN}

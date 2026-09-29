@@ -154,7 +154,9 @@ spec:
             matchExpressions:
               - { key: component, operator: In, values: [proxy-controlplane, proxy-dataplane] }
         - namespaceSelector: { matchLabels: { dendenmushi.io/tier: agentic } }
-          podSelector: { matchLabels: { component: agent-controlplane } }
+          podSelector:
+            matchExpressions:
+              - { key: component, operator: In, values: [agent-controlplane, agent-tool-gateway, incident-reasoning-agent] }
       ports: [{ protocol: TCP, port: 8082 }]
 ---
 apiVersion: networking.k8s.io/v1
@@ -179,8 +181,6 @@ spec:
   policyTypes: [Ingress]
   ingress:
     - from:
-        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: agentic } }
-          podSelector: { matchLabels: { component: incident-agent } }
         - namespaceSelector: { matchLabels: { dendenmushi.io/tier: webapp } }
           podSelector: { matchLabels: { component: nest-backend } }
       ports: [{ protocol: TCP, port: 8080 }]
@@ -194,7 +194,7 @@ spec:
   ingress:
     - from:
         - namespaceSelector: { matchLabels: { dendenmushi.io/tier: agentic } }
-          podSelector: { matchLabels: { component: agent-controlplane } }
+          podSelector: { matchLabels: { component: agent-tool-gateway } }
       ports: [{ protocol: TCP, port: 8083 }]
 ---
 apiVersion: networking.k8s.io/v1
@@ -206,8 +206,34 @@ spec:
   ingress:
     - from:
         - namespaceSelector: { matchLabels: { dendenmushi.io/tier: agentic } }
-          podSelector: { matchLabels: { component: incident-agent } }
+          podSelector:
+            matchExpressions:
+              - { key: component, operator: In, values: [incident-agent, agent-tool-gateway] }
       ports: [{ protocol: TCP, port: 8092 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-reasoning-agent-ingress, namespace: dendenmushi-agentic }
+spec:
+  podSelector: { matchLabels: { component: incident-reasoning-agent } }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector: { matchLabels: { component: incident-agent } }
+      ports: [{ protocol: TCP, port: 8093 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: allow-tool-gateway-ingress, namespace: dendenmushi-agentic }
+spec:
+  podSelector: { matchLabels: { component: agent-tool-gateway } }
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchExpressions:
+              - { key: component, operator: In, values: [incident-agent, agent-controlplane] }
+      ports: [{ protocol: TCP, port: 8094 }]
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -320,13 +346,12 @@ spec:
           podSelector: { matchLabels: { component: session-manager } }
       ports: [{ protocol: TCP, port: 8081 }]
     - to:
-        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
-          podSelector: { matchLabels: { component: proxy-dataplane } }
-      ports: [{ protocol: TCP, port: 8083 }]
-    - to:
         - namespaceSelector: { matchLabels: { dendenmushi.io/tier: agentic } }
           podSelector: { matchLabels: { component: incident-agent } }
       ports: [{ protocol: TCP, port: 8091 }]
+    - to:
+        - podSelector: { matchLabels: { component: agent-tool-gateway } }
+      ports: [{ protocol: TCP, port: 8094 }]
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -340,9 +365,42 @@ spec:
           podSelector: { matchLabels: { component: agent-controlplane } }
       ports: [{ protocol: TCP, port: 8092 }]
     - to:
+        - podSelector: { matchLabels: { component: incident-reasoning-agent } }
+      ports: [{ protocol: TCP, port: 8093 }]
+    - to:
+        - podSelector: { matchLabels: { component: agent-tool-gateway } }
+      ports: [{ protocol: TCP, port: 8094 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: reasoning-agent-egress, namespace: dendenmushi-agentic }
+spec:
+  podSelector: { matchLabels: { component: incident-reasoning-agent } }
+  policyTypes: [Egress]
+  egress:
+    - to:
         - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
-          podSelector: { matchLabels: { component: proxy-controlplane } }
-      ports: [{ protocol: TCP, port: 8080 }]
+          podSelector: { matchLabels: { component: sts } }
+      ports: [{ protocol: TCP, port: 8082 }]
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata: { name: tool-gateway-egress, namespace: dendenmushi-agentic }
+spec:
+  podSelector: { matchLabels: { component: agent-tool-gateway } }
+  policyTypes: [Egress]
+  egress:
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector: { matchLabels: { component: sts } }
+      ports: [{ protocol: TCP, port: 8082 }]
+    - to:
+        - podSelector: { matchLabels: { component: agent-controlplane } }
+      ports: [{ protocol: TCP, port: 8092 }]
+    - to:
+        - namespaceSelector: { matchLabels: { dendenmushi.io/tier: ssh } }
+          podSelector: { matchLabels: { component: proxy-dataplane } }
+      ports: [{ protocol: TCP, port: 8083 }]
 ---
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
@@ -429,7 +487,7 @@ metadata: { name: allow-external-https, namespace: dendenmushi-agentic }
 spec:
   podSelector:
     matchExpressions:
-      - { key: component, operator: In, values: [agent-controlplane, incident-agent] }
+      - { key: component, operator: In, values: [agent-controlplane, incident-agent, incident-reasoning-agent] }
   policyTypes: [Egress]
   egress:
     - to: [{ ipBlock: { cidr: 0.0.0.0/0 } }]
