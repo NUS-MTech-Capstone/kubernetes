@@ -83,10 +83,11 @@ spec:
             - { name: SERVICE_NAME, value: incident-reasoning-agent }
             - { name: PORT, value: "8093" }
             - { name: AWS_REGION, value: ap-southeast-1 }
-            - { name: BEDROCK_REGION, value: us-east-1 }
-            - { name: BEDROCK_MODEL_ID, value: global.amazon.nova-2-lite-v1:0 }
-            - { name: PLANNER_MODE, value: bedrock_with_fallback }
-            - { name: BEDROCK_FALLBACK_ENABLED, value: "true" }
+            - { name: PLANNER_MODE, value: openai_with_fallback }
+            - { name: OPENAI_AUTH_MODE, value: aws_iam }
+            - { name: OPENAI_AWS_REGION, value: ap-southeast-1 }
+            - { name: OPENAI_GATEWAY_URL, value: __AGENTCORE_OPENAI_GATEWAY_URL__ }
+            - { name: OPENAI_MODEL, value: gpt-5.4-2026-03-05 }
             - { name: BEDROCK_MAX_PROMPT_BYTES, value: "131072" }
             - { name: TRANSIENT_RETRY_ATTEMPTS, value: "2" }
             - name: REASONING_AGENT_URL
