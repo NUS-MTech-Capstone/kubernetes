@@ -134,6 +134,23 @@ cd ../kubernetes
 ./scripts/bootstrap-aws.sh
 ```
 
+Bootstrap also reconciles the web-facing record for the Terraform-managed
+`host-dev-1` target and the `DenDenMushi Demo Operators` group. The job keeps
+the existing virtual-machine UUID, refreshes the address and SSH port from
+Terraform, and ensures the group includes the target and `ec2-user`. Run the
+same repair independently with:
+
+```bash
+AWS_PROFILE=capstone EXPECTED_AWS_ACCOUNT_ID=891377133321 \
+./scripts/reconcile-webapp-target.sh
+```
+
+STS deliberately does not use Nest Backend's server-inventory endpoint. Its
+trusted SSH address, credential secret, host key, and bounded automation
+catalog come only from the GitOps-generated `SERVER_INVENTORY_STATIC_JSON`.
+Nest Backend owns the Change Request and display inventory records, which the
+reconciliation job keeps aligned with that authoritative target.
+
 Review and commit the generated changes to these files when bootstrap discovers
 new environment values:
 
