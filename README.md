@@ -376,6 +376,9 @@ MCP discovery, a representative MCP denial, and the NetworkPolicy matrix.
 Protocol checks run in a short-lived pod with the coordinator image, service
 account, projected token, and network identity so verification cannot exhaust
 the live coordinator's bounded memory cgroup.
+The matrix also reaches Proxy Dataplane through the Tool Gateway's allowed
+network path and requires an invalid WebSocket origin to receive `403` before
+authentication.
 The probe pods wait briefly before opening connections because VPC CNI
 `standard` enforcement permits a newly created pod until its policy rules have
 been programmed. This tests the steady enforced state instead of that startup
