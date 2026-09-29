@@ -373,6 +373,9 @@ Streamable HTTP on port 8094 with a GitOps-managed default-deny policy. Neither
 has an Ingress, ALB route, public DNS record, or separate managed AWS service.
 `verify-aws.sh` requires all twelve deployments, A2A discovery, caller-filtered
 MCP discovery, a representative MCP denial, and the NetworkPolicy matrix.
+Protocol checks run in a short-lived pod with the coordinator image, service
+account, projected token, and network identity so verification cannot exhaust
+the live coordinator's bounded memory cgroup.
 The probe pods wait briefly before opening connections because VPC CNI
 `standard` enforcement permits a newly created pod until its policy rules have
 been programmed. This tests the steady enforced state instead of that startup

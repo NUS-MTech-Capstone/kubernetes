@@ -7,8 +7,9 @@ SSH_NAMESPACE=${SSH_NAMESPACE:-dendenmushi-ssh}
 AGENTIC_NAMESPACE=${AGENTIC_NAMESPACE:-dendenmushi-agentic}
 WEBAPP_NAMESPACE=${WEBAPP_NAMESPACE:-dendenmushi-webapp}
 APPLICATION_URL=${APPLICATION_URL:-https://api.ddm.keiyam.me}
+PROTOCOL_PROBE_NAME=${PROTOCOL_PROBE_NAME:-agent-protocol-verification}
 
-for command in aws terraform kubectl curl; do
+for command in aws terraform kubectl curl jq; do
   if ! command -v "${command}" >/dev/null 2>&1; then
     echo "Required command not found: ${command}" >&2
     exit 1
@@ -69,7 +70,12 @@ curl -fsS "${APPLICATION_URL}/readyz" >/dev/null
 
 ROOT_HEADERS=$(mktemp)
 AUTH_HEADERS=$(mktemp)
-trap 'rm -f -- "${ROOT_HEADERS}" "${AUTH_HEADERS}"' EXIT
+cleanup() {
+  rm -f -- "${ROOT_HEADERS}" "${AUTH_HEADERS}"
+  kubectl delete pod "${PROTOCOL_PROBE_NAME}" -n "${AGENTIC_NAMESPACE}" \
+    --ignore-not-found --wait=false >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
 
 assert_response_header() {
   local file=$1
@@ -113,7 +119,52 @@ fi
 
 "${ROOT_DIR}/scripts/verify-network-policies.sh"
 
-kubectl exec -i -n "${AGENTIC_NAMESPACE}" deployment/incident-agent -- python - <<'PY'
+PROTOCOL_IMAGE=$(kubectl get deployment incident-agent -n "${AGENTIC_NAMESPACE}" \
+  -o jsonpath='{.spec.template.spec.containers[?(@.name=="incident-agent")].image}')
+kubectl delete pod "${PROTOCOL_PROBE_NAME}" -n "${AGENTIC_NAMESPACE}" \
+  --ignore-not-found --wait=true >/dev/null
+kubectl run "${PROTOCOL_PROBE_NAME}" \
+  -n "${AGENTIC_NAMESPACE}" \
+  --restart=Never \
+  --image="${PROTOCOL_IMAGE}" \
+  --labels="app=dendenmushi,component=incident-agent,network-policy-probe=true" \
+  --dry-run=client \
+  -o json \
+  --command -- sleep 300 |
+  jq '
+    .spec.serviceAccountName = "incident-agent" |
+    .spec.automountServiceAccountToken = false |
+    .spec.securityContext.seccompProfile.type = "RuntimeDefault" |
+    .spec.containers[0].securityContext = {
+      "allowPrivilegeEscalation": false,
+      "capabilities": {"drop": ["ALL"]},
+      "runAsNonRoot": true
+    } |
+    .spec.containers[0].resources = {
+      "requests": {"cpu": "25m", "memory": "64Mi"},
+      "limits": {"cpu": "250m", "memory": "256Mi"}
+    } |
+    .spec.containers[0].volumeMounts = [{
+      "name": "workload-token",
+      "mountPath": "/var/run/secrets/tokens",
+      "readOnly": true
+    }] |
+    .spec.volumes = [{
+      "name": "workload-token",
+      "projected": {"sources": [{
+        "serviceAccountToken": {
+          "audience": "dendenmushi-incident-agent",
+          "expirationSeconds": 900,
+          "path": "incident-agent-token"
+        }
+      }]}
+    }]
+  ' |
+  kubectl apply -f - >/dev/null
+kubectl wait pod "${PROTOCOL_PROBE_NAME}" -n "${AGENTIC_NAMESPACE}" \
+  --for=condition=Ready --timeout=2m >/dev/null
+
+kubectl exec -i -n "${AGENTIC_NAMESPACE}" "${PROTOCOL_PROBE_NAME}" -- python - <<'PY'
 import asyncio
 import json
 import urllib.request
