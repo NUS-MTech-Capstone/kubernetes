@@ -6,6 +6,7 @@ AGENTIC_NAMESPACE=${AGENTIC_NAMESPACE:-dendenmushi-agentic}
 WEBAPP_NAMESPACE=${WEBAPP_NAMESPACE:-dendenmushi-webapp}
 PROBE_IMAGE=${PROBE_IMAGE:-curlimages/curl:8.12.1}
 REDIS_PROBE_IMAGE=${REDIS_PROBE_IMAGE:-redis:8-alpine@sha256:2d3814be5e9b06a30a0be54770b7e12052e7e79ec85271aefd34875c1f393b23}
+POLICY_SETTLE_SECONDS=${POLICY_SETTLE_SECONDS:-5}
 
 for command in kubectl jq; do
   if ! command -v "${command}" >/dev/null 2>&1; then
@@ -38,7 +39,7 @@ run_probe() {
     --labels="component=${component},network-policy-probe=true" \
     --dry-run=client \
     -o json \
-    --command -- sh -ec "${command}" |
+    --command -- sh -ec "sleep ${POLICY_SETTLE_SECONDS}; ${command}" |
     jq --argjson run_as_user "${run_as_user}" '
       .spec.securityContext.seccompProfile.type = "RuntimeDefault" |
       .spec.containers[0].securityContext = {
@@ -55,7 +56,7 @@ run_probe() {
     kubectl apply -f - >/dev/null
 
   local phase=""
-  for _ in $(seq 1 20); do
+  for _ in $(seq 1 40); do
     phase=$(kubectl get pod "${name}" -n "${namespace}" -o jsonpath='{.status.phase}' 2>/dev/null || true)
     if [[ "${phase}" == "Succeeded" || "${phase}" == "Failed" ]]; then
       break
