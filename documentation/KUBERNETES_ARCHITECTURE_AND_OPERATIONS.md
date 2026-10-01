@@ -174,6 +174,12 @@ and `64Mi` memory, limit defaults of `500m` CPU and `512Mi` memory, minimums of
 | Agentic | 1 CPU, 2Gi | 4 CPU, 4Gi | 15 | 5 | 10 | 5 | 8 | 5 |
 | Webapp | 1 CPU, 2Gi | 4 CPU, 4Gi | 15 | 5 | 10 | 5 | 10 | 5 |
 
+The auto-instrumented Incident Agent coordinator explicitly requests `128Mi`
+and is limited to `512Mi`. A `256Mi` limit proved insufficient during live
+incident handling and when an operator started a second instrumented Python
+process with `kubectl exec`. Prefer HTTP health and protocol probes over
+starting another Python runtime inside this pod.
+
 Inspect current usage with:
 
 ```bash
