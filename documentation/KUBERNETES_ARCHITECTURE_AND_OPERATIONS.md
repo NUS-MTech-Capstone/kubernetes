@@ -72,6 +72,10 @@ one public hostname, `api.ddm.keiyam.me`.
 
 The WebSocket route continues directly from the ALB to Proxy Dataplane. The
 namespace split does not introduce an intermediary in the live traffic path.
+The shared ALB uses a 1,200-second transport idle timeout. Angular sends empty
+terminal heartbeat packets every 30 seconds, while the application separately
+detaches an owner or observer after 15 minutes without terminal input, output,
+or resize activity. Heartbeats never reset that application idle timer.
 
 ## Workload Identity, RBAC, And Secrets
 
@@ -311,7 +315,7 @@ live discovery/authentication checks.
 | ALB has unhealthy targets | ALB CIDR ingress rule or health path/port mismatch | Check target health, ingress annotations, and the `10.0.0.0/16` policy |
 | Migration pod is pending or forbidden | Quota exhausted or secret absent in owning namespace | Describe the Job, ResourceQuota, and secret names |
 | Monitoring cache reports unavailable | Redis pod unavailable or Nest-to-Redis policy/DNS failure | Check the Redis rollout and service, then run the NetworkPolicy probes; Nest should continue reading CloudWatch |
-| A2A returns 401/403 | Coordinator projected token, STS allowlist, or TokenReview audience mismatch | Check the coordinator token projection, `WORKLOAD_IDENTITY_SERVICE_ACCOUNTS`, and STS logs without printing the token |
+| A2A returns 401/403 | Coordinator projected token, STS allowlist, TokenReview audience mismatch, or stale reviewer credentials | Check the coordinator token projection, `WORKLOAD_IDENTITY_SERVICE_ACCOUNTS`, and STS logs without printing either token; STS must reread its rotating reviewer token for each validation |
 | MCP tool list is empty | Caller is not in the default-deny policy or workload identity validation failed | Compare the normalized subject with `agent-tool-policy`; do not add wildcard callers |
 | MCP operation is denied after approval | Incident/run phase or exact plan hash changed | Read sanitized Agent Control Plane events and incident state; do not bypass the stale-state check |
 | Argo CD reports a forbidden cluster resource | AppProject whitelist is missing a required resource | Review the rendered kind before changing the project whitelist |
