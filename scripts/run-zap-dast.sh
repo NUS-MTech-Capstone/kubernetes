@@ -6,7 +6,7 @@ ROOT_DIR=$(cd "${SCRIPT_DIR}/.." && pwd)
 
 TARGET_URL=${TARGET_URL:-https://api.ddm.keiyam.me}
 TARGET_URL=${TARGET_URL%/}
-ZAP_IMAGE=${ZAP_IMAGE:-ghcr.io/zaproxy/zaproxy:stable}
+ZAP_IMAGE=${ZAP_IMAGE:-ghcr.io/zaproxy/zaproxy:2.17.0}
 REPORT_DIR=${REPORT_DIR:-"${ROOT_DIR}/dast-results"}
 ZAP_PLAN=${ZAP_PLAN:-"${ROOT_DIR}/security/zap-automation.yaml"}
 
