@@ -15,6 +15,7 @@ concurrency:
 env:
   TARGET_URL: https://api.ddm.keiyam.me
   REPORT_DIR: dast-results
+  ZAP_IMAGE: ghcr.io/zaproxy/zaproxy:2.17.0
 
 jobs:
   dast:
