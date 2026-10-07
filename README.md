@@ -254,6 +254,13 @@ Controller does not support listener attributes, do not upgrade it implicitly;
 retain the application-level headers and schedule a reviewed controller
 upgrade before relying on ALB-generated response coverage.
 
+`scripts/verify-csp.sh` checks the Angular document CSP independently: its
+per-response nonce must match the HTML `ngCspNonce`, change between requests,
+and accompany `Cache-Control: no-store`. Connections must use the explicit
+production WebSocket origin, without broad scheme or inline-style allowances.
+The Angular CSP remains application-owned. ALB listener CSP insertion would
+overwrite its dynamic nonce policy on all responses, so it is not enabled.
+
 ## Post-Deployment DAST
 
 The `ZAP DAST` GitHub Actions workflow performs a safe, unauthenticated passive
@@ -274,6 +281,13 @@ Each workflow run uploads `zap-report.html` in the
 `zap-dast-html-<run-id>` artifact for 30 days. Review high and medium findings,
 record false-positive reasoning, and rerun the workflow after remediating a
 confirmed issue.
+
+CI pins ZAP 2.17.0 to match the retained 7 October 2026 baseline. The CSP header
+finding on ALB-generated 401 denials is reviewed separately from the application
+findings: the fixed HTML error page contains no scripts, forms or reflected
+request data, and retains HSTS, `X-Frame-Options: DENY` and `nosniff`. Its missing
+CSP remains visible in the unfiltered scan report. Authentication is not relaxed
+and protected routes are not removed from scan scope to change this result.
 
 To run the same scan locally, start Docker and run:
 
