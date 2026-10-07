@@ -120,6 +120,7 @@ assert_response_header "${ROOT_HEADERS}" "X-Frame-Options" "DENY"
 assert_response_header "${ROOT_HEADERS}" "Referrer-Policy" "strict-origin-when-cross-origin"
 assert_response_header "${ROOT_HEADERS}" "Permissions-Policy" "camera=(), microphone=(), geolocation=()"
 assert_response_header "${ROOT_HEADERS}" "Content-Security-Policy" "default-src 'self'"
+APPLICATION_URL="${APPLICATION_URL}" bash "${ROOT_DIR}/scripts/verify-csp.sh"
 
 # This protected request is expected to be denied by Cognito at the ALB. Its
 # response still needs the listener-level headers even though no pod handles it.
