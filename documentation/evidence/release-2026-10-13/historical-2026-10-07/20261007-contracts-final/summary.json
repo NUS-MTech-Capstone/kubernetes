@@ -1,0 +1,16 @@
+{
+  "records": 52,
+  "verdicts": {
+    "pass": 52
+  },
+  "fallbackCount": 0,
+  "byModel": [
+    {
+      "model": "not applicable",
+      "verdict": "pass",
+      "count": 52
+    }
+  ],
+  "originalResultsSha256": "1636e3904669ef17ec9d615ea76d76e3d148b8f5767c484851d4b7c18790447c",
+  "sanitization": "Allowlisted metadata and assertion outcomes only; actual/expected bodies, provider requests and free-text failures excluded."
+}

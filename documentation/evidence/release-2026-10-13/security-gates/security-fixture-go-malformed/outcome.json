@@ -1,0 +1,5 @@
+{
+  "stack": "go",
+  "scenario": "malformed",
+  "exit_status": 1
+}

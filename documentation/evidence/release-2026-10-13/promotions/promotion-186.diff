@@ -1,0 +1,13 @@
+diff --git a/apps/dendenmushi/overlays/dev/kustomization.yaml b/apps/dendenmushi/overlays/dev/kustomization.yaml
+index 8560f03..9b6960d 100644
+--- a/apps/dendenmushi/overlays/dev/kustomization.yaml
++++ b/apps/dendenmushi/overlays/dev/kustomization.yaml
+@@ -33,7 +33,7 @@ images:
+     newTag: 10e7858594c4fd85aa803943d525f3883f53dea5
+   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
+     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
+-    newTag: fbacf19706948ca98490713631d441a2db1c532a
++    digest: sha256:519eea110ce4a4a8f091fef291e6ceb4b4d7ef97f62afd6fedc90643cfa48521
+   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent
+     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent
+     newTag: 5b21c73b0fdf2c173e071ba93b4441209b908305
