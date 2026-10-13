@@ -1,0 +1,24 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  manifests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Test image identity verification
+        run: ruby test/image_digests_test.rb
+      - name: Render deployment manifests
+        run: kubectl kustomize apps/dendenmushi/overlays/dev > rendered.yaml
+      - name: Validate migration image references
+        run: ruby scripts/verify-image-digests.rb --allow-tags rendered.yaml
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: rendered-manifests
+          path: rendered.yaml
+          retention-days: 90
