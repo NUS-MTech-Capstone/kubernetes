@@ -1,0 +1,7 @@
+{
+  "submitted_spans": 6,
+  "failed_spans": 0,
+  "dropped_spans": 0,
+  "worker_stopped": true,
+  "trace_scope": "R12-S01 triage and plan on GPT-5.4; two controlled replay roots"
+}

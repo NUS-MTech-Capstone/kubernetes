@@ -25,6 +25,10 @@ Workloads are isolated into `dendenmushi-ssh`, `dendenmushi-agentic`, and
 for ownership, service DNS, NetworkPolicy, quota, GitOps, rollback, and
 suspend/restore procedures.
 
+The [13 October 2026 release evidence index](documentation/evidence/release-2026-10-13/README.md)
+links committed source, passing CI, image digests, GitOps promotions, browser
+acceptance, bounded agent evaluations and rollback results.
+
 ## AWS Prerequisites
 
 Apply the main infrastructure and target host first:
@@ -33,7 +37,8 @@ Apply the main infrastructure and target host first:
 cd ../aws-terraform
 aws sts get-caller-identity
 terraform init -reconfigure
-terraform apply -var-file=secrets.tfvars
+terraform plan -var-file=secrets.tfvars -var-file=teammate-access.local.tfvars
+terraform apply -var-file=secrets.tfvars -var-file=teammate-access.local.tfvars
 
 cd ../target-hosts-setup
 ./scripts/bootstrap.sh -auto-approve
@@ -62,6 +67,7 @@ of creating another provider:
 ```bash
 terraform apply \
   -var-file=secrets.tfvars \
+  -var-file=teammate-access.local.tfvars \
   -var='github_oidc_provider_arn=arn:aws:iam::<account-id>:oidc-provider/token.actions.githubusercontent.com'
 ```
 
@@ -179,6 +185,7 @@ After verification prints the ALB DNS name, perform the second Terraform apply:
 cd ../aws-terraform
 terraform apply \
   -var-file=secrets.tfvars \
+  -var-file=teammate-access.local.tfvars \
   -var='application_alb_dns_name=<ALB DNS name>'
 ```
 
