@@ -447,3 +447,9 @@ Rollback uses a reviewed GitOps PR restoring a previously verified digest,
 followed by Argo health and SSH checks. Restore the final digest through another
 PR and repeat verification. Record both GitOps commits and runtime identities
 in the release evidence index; do not rely on retagging an ECR image.
+
+All nine project image callers now require the successful build digest. Manifest
+CI rejects tag-only Deployment and migration Job images. `verify-aws.sh` also
+compares the rendered declarations with ready pods and verifies ECR index/child
+relationships before accepting a release. The `--allow-tags` verifier option
+exists only for historical migration evidence and is not used by normal CI.
