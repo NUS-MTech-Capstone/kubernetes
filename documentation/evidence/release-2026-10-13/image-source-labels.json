@@ -1,0 +1,56 @@
+[
+  {
+    "service": "agent-controlplane",
+    "image": "891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/agent-controlplane@sha256:bfc9b2bf6d33099d5f084b7cf849e7b841f900387eaeb3756c9a7a31c8161939",
+    "revisionLabel": "7db45a38a69cd55b929e8523d8a26e272d7baf11",
+    "matchesMergedSource": true
+  },
+  {
+    "service": "incident-agent",
+    "image": "891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent@sha256:dd1d6b1197cdbf48aadb62fc7dd55a1b4ba7c6e26c7eef958ed4e537974c880b",
+    "revisionLabel": "a1791818c6d57e46de8825e3c56df7b0742c99a7",
+    "matchesMergedSource": true
+  },
+  {
+    "service": "audit-service",
+    "image": "891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/audit-service@sha256:0e17fc217812a8fe0877579a2ac5335ec520ef1cd74f7f6228c50bd8fdfda1a0",
+    "revisionLabel": "5790b111d85fbf413bd39177f25f22cc2b81033f",
+    "matchesMergedSource": true
+  },
+  {
+    "service": "proxy-controlplane",
+    "image": "891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-controlplane@sha256:55f717ba988bf86e9091cc14b4c196c56ea8f6d97f61daebf0f8f5798d421d5e",
+    "revisionLabel": "39159c3c56a2899291894275abc78ccd52820cbb",
+    "matchesMergedSource": true
+  },
+  {
+    "service": "proxy-dataplane",
+    "image": "891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane@sha256:519eea110ce4a4a8f091fef291e6ceb4b4d7ef97f62afd6fedc90643cfa48521",
+    "revisionLabel": "ae0e0a2841b8c91c12ef71118889158600d6a577",
+    "matchesMergedSource": true
+  },
+  {
+    "service": "session-manager",
+    "image": "891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/session-manager@sha256:744d259cd756e6584a5eb902d3be27e278f77e8d8f13c352d54dd3576edbb0b0",
+    "revisionLabel": "9948d1e1ddeda365b6da140d6928f2143c86ff2a",
+    "matchesMergedSource": true
+  },
+  {
+    "service": "sts",
+    "image": "891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts@sha256:da7a33090476e906d214101b0ea1375651f49d59f2c54ac4f99acfa898fb97d2",
+    "revisionLabel": "4298602090628793d72be806b19cbe64989f5562",
+    "matchesMergedSource": true
+  },
+  {
+    "service": "angular",
+    "image": "891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular@sha256:d7a39cd1372b8d3f69eb0db94bdcf70de6eaf116333aef2993375f4a84454a32",
+    "revisionLabel": "34e7f3fda050bc7b2f401570825fe2ed1b9cd742",
+    "matchesMergedSource": true
+  },
+  {
+    "service": "nest-backend",
+    "image": "891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend@sha256:ef36e4cb4579a9a656b093ee1f40a11c2ba072aea3eadf54a2d48aa91e31cec1",
+    "revisionLabel": "879a6b540cdcccff9c58f9fc0f52de9e35ad9fa6",
+    "matchesMergedSource": true
+  }
+]

@@ -1,0 +1,13 @@
+diff --git a/apps/dendenmushi/overlays/dev/kustomization.yaml b/apps/dendenmushi/overlays/dev/kustomization.yaml
+index 8560f03..6a5ac25 100644
+--- a/apps/dendenmushi/overlays/dev/kustomization.yaml
++++ b/apps/dendenmushi/overlays/dev/kustomization.yaml
+@@ -39,7 +39,7 @@ images:
+     newTag: 5b21c73b0fdf2c173e071ba93b4441209b908305
+   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
+     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
+-    newTag: d1b34592ece476edc111eab067eca82320b66adf
++    digest: sha256:ef36e4cb4579a9a656b093ee1f40a11c2ba072aea3eadf54a2d48aa91e31cec1
+   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular
+     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular
+     newTag: 69a9d2216feeceeb7ed707e0c00d429cdb6a6c63

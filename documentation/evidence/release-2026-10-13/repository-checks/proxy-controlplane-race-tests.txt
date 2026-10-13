@@ -1,0 +1,10 @@
+?   	github.com/NUS-MTech-Capstone/proxy-controlplane/api	[no test files]
+?   	github.com/NUS-MTech-Capstone/proxy-controlplane/cmd/server	[no test files]
+ok  	github.com/NUS-MTech-Capstone/proxy-controlplane/internal/config	1.910s
+ok  	github.com/NUS-MTech-Capstone/proxy-controlplane/internal/events	1.944s
+ok  	github.com/NUS-MTech-Capstone/proxy-controlplane/internal/httpapi	7.942s
+?   	github.com/NUS-MTech-Capstone/proxy-controlplane/internal/model	[no test files]
+ok  	github.com/NUS-MTech-Capstone/proxy-controlplane/internal/observability	5.301s
+ok  	github.com/NUS-MTech-Capstone/proxy-controlplane/internal/service	5.912s
+ok  	github.com/NUS-MTech-Capstone/proxy-controlplane/internal/session_manager	6.260s
+ok  	github.com/NUS-MTech-Capstone/proxy-controlplane/internal/sts	6.553s

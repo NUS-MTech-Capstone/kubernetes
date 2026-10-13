@@ -1,0 +1,46 @@
+
+> angular@0.0.0 build
+> ng build
+
+❯ Building...
+✔ Building...
+Initial chunk files | Names                    |  Raw size | Estimated transfer size
+styles-F4Y7SO62.css | styles                   | 642.21 kB |                59.18 kB
+chunk-XABF7PBF.js   | -                        | 355.78 kB |                97.51 kB
+chunk-LSI5NMVJ.js   | -                        | 161.82 kB |                33.54 kB
+chunk-OTJHQXHY.js   | -                        |  69.62 kB |                19.78 kB
+chunk-PJGQT55D.js   | -                        |  31.61 kB |                 7.19 kB
+main-36TLGE2C.js    | main                     |  18.52 kB |                 5.41 kB
+chunk-4DYWQVIR.js   | -                        |   4.73 kB |                 1.60 kB
+chunk-VQGUO633.js   | -                        |   4.12 kB |                 1.69 kB
+chunk-Q4OME44E.js   | -                        |   2.74 kB |                 1.14 kB
+chunk-IECWNKPZ.js   | -                        |   2.55 kB |               901 bytes
+chunk-LLPGJBUV.js   | -                        |   1.51 kB |               632 bytes
+
+                    | Initial total            |   1.30 MB |               228.56 kB
+
+Lazy chunk files    | Names                    |  Raw size | Estimated transfer size
+chunk-PGF3CPBG.js   | terminal-routes          | 368.49 kB |                80.65 kB
+chunk-ECOBBHRD.js   | change-management-routes | 159.09 kB |                29.34 kB
+chunk-3MJ67HDM.js   | -                        | 146.49 kB |                32.03 kB
+chunk-IVXWICBJ.js   | -                        |  92.23 kB |                18.50 kB
+chunk-BFXNBMMU.js   | -                        |  67.47 kB |                15.91 kB
+chunk-IBHDVYR5.js   | agentic-ai-routes        |  55.91 kB |                13.12 kB
+chunk-QR4R7UGP.js   | session-audit-routes     |  49.07 kB |                11.28 kB
+chunk-MW23ZKLW.js   | access-routes            |  41.31 kB |                10.43 kB
+chunk-XZ6EPU62.js   | -                        |  38.24 kB |                 9.71 kB
+chunk-SPAUIBO4.js   | identity-routes          |  38.05 kB |                 8.87 kB
+chunk-FP4FEHNG.js   | inventory-routes         |  32.16 kB |                 7.37 kB
+chunk-SECFKSIT.js   | -                        |  30.39 kB |                 7.74 kB
+chunk-GNGCJ6KN.js   | -                        |  16.76 kB |                 4.80 kB
+chunk-CJN5SIDZ.js   | -                        |  14.60 kB |                 4.10 kB
+chunk-R3VAT53U.js   | -                        |  13.50 kB |                 3.92 kB
+...and 15 more lazy chunks files. Use "--verbose" to show all the files.
+
+Application bundle generation complete. [8.274 seconds] - 2026-10-13T02:48:48.470Z
+
+▲ [WARNING] src/app/pages/session-audit/session-audit.css exceeded maximum budget. Budget 4.00 kB was not met by 1.37 kB with a total of 5.37 kB.
+
+
+Output location: <release-worktrees>/angular/dist/fe
+

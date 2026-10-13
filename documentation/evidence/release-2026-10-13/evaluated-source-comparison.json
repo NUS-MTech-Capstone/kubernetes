@@ -1,0 +1,99 @@
+[
+  {
+    "evaluation": "r12-gateway-committed",
+    "repository": "incident-agent",
+    "evaluatedCommit": "3c73fc077878986cba9c206f6a7b96f4178ef1cb",
+    "deployedCommit": "a1791818c6d57e46de8825e3c56df7b0742c99a7",
+    "changedRecordedFiles": [
+      {
+        "path": "src/incident_agent/api/web.py",
+        "evaluatedSha256": "418b406dea171fb8c25887f9f6d88882eef18a116d348649f282513c4e76c43b",
+        "deployedSha256": "e725ca93efd1b7ba92ba30f915e02ae6cb384a38006a40bd182acf8ee5da73ec"
+      },
+      {
+        "path": "tests/test_openapi_contract.py",
+        "evaluatedSha256": "41b6533deaba5aac1e22af58bc73e528e1b1afa0d90dd201e883aa6131a9248b",
+        "deployedSha256": "af93a04679d2cb9f46a2f7332cbd9b0268a4de551bcd1611fd14eceb1676787c"
+      },
+      {
+        "path": "pyproject.toml",
+        "evaluatedSha256": "a577d294da881858eca3e9f50abbe528e915172f8bccec7022b16d8d69643367",
+        "deployedSha256": "869dbd63057f74621b03175f8c8eadfa1d1ee30d5bb49ce55e3e3314fc695060"
+      }
+    ]
+  },
+  {
+    "evaluation": "r12-gateway-committed",
+    "repository": "agent-controlplane",
+    "evaluatedCommit": "321d6d4b142f3589fedaa5daa6f7c8aa5d193569",
+    "deployedCommit": "7db45a38a69cd55b929e8523d8a26e272d7baf11",
+    "changedRecordedFiles": []
+  },
+  {
+    "evaluation": "r12-gateway-committed",
+    "repository": "proxy-dataplane",
+    "evaluatedCommit": "6a98eda4d96f0d842dbf0a4628f5181d03772114",
+    "deployedCommit": "ae0e0a2841b8c91c12ef71118889158600d6a577",
+    "changedRecordedFiles": []
+  },
+  {
+    "evaluation": "r12-contracts-committed-02",
+    "repository": "incident-agent",
+    "evaluatedCommit": "aca8833d7e2bf37ad7706bb879a25a93cbfb9c8b",
+    "deployedCommit": "a1791818c6d57e46de8825e3c56df7b0742c99a7",
+    "changedRecordedFiles": [
+      {
+        "path": "src/incident_agent/api/web.py",
+        "evaluatedSha256": "418b406dea171fb8c25887f9f6d88882eef18a116d348649f282513c4e76c43b",
+        "deployedSha256": "e725ca93efd1b7ba92ba30f915e02ae6cb384a38006a40bd182acf8ee5da73ec"
+      },
+      {
+        "path": "tests/test_openapi_contract.py",
+        "evaluatedSha256": "41b6533deaba5aac1e22af58bc73e528e1b1afa0d90dd201e883aa6131a9248b",
+        "deployedSha256": "af93a04679d2cb9f46a2f7332cbd9b0268a4de551bcd1611fd14eceb1676787c"
+      },
+      {
+        "path": "pyproject.toml",
+        "evaluatedSha256": "a577d294da881858eca3e9f50abbe528e915172f8bccec7022b16d8d69643367",
+        "deployedSha256": "869dbd63057f74621b03175f8c8eadfa1d1ee30d5bb49ce55e3e3314fc695060"
+      }
+    ]
+  },
+  {
+    "evaluation": "r12-contracts-committed-02",
+    "repository": "agent-controlplane",
+    "evaluatedCommit": "321d6d4b142f3589fedaa5daa6f7c8aa5d193569",
+    "deployedCommit": "7db45a38a69cd55b929e8523d8a26e272d7baf11",
+    "changedRecordedFiles": []
+  },
+  {
+    "evaluation": "r12-contracts-committed-02",
+    "repository": "proxy-dataplane",
+    "evaluatedCommit": "6a98eda4d96f0d842dbf0a4628f5181d03772114",
+    "deployedCommit": "ae0e0a2841b8c91c12ef71118889158600d6a577",
+    "changedRecordedFiles": []
+  },
+  {
+    "evaluation": "r16-models-committed",
+    "repository": "incident-agent",
+    "evaluatedCommit": "aca8833d7e2bf37ad7706bb879a25a93cbfb9c8b",
+    "deployedCommit": "a1791818c6d57e46de8825e3c56df7b0742c99a7",
+    "changedRecordedFiles": [
+      {
+        "path": "src/incident_agent/api/web.py",
+        "evaluatedSha256": "418b406dea171fb8c25887f9f6d88882eef18a116d348649f282513c4e76c43b",
+        "deployedSha256": "e725ca93efd1b7ba92ba30f915e02ae6cb384a38006a40bd182acf8ee5da73ec"
+      },
+      {
+        "path": "tests/test_openapi_contract.py",
+        "evaluatedSha256": "41b6533deaba5aac1e22af58bc73e528e1b1afa0d90dd201e883aa6131a9248b",
+        "deployedSha256": "af93a04679d2cb9f46a2f7332cbd9b0268a4de551bcd1611fd14eceb1676787c"
+      },
+      {
+        "path": "pyproject.toml",
+        "evaluatedSha256": "a577d294da881858eca3e9f50abbe528e915172f8bccec7022b16d8d69643367",
+        "deployedSha256": "869dbd63057f74621b03175f8c8eadfa1d1ee30d5bb49ce55e3e3314fc695060"
+      }
+    ]
+  }
+]

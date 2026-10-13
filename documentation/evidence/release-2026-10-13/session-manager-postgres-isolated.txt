@@ -1,0 +1,9 @@
+?   	github.com/NUS-MTech-Capstone/session-manager/api	[no test files]
+ok  	github.com/NUS-MTech-Capstone/session-manager/cmd/server	(cached)
+ok  	github.com/NUS-MTech-Capstone/session-manager/internal/config	(cached)
+ok  	github.com/NUS-MTech-Capstone/session-manager/internal/events	(cached)
+ok  	github.com/NUS-MTech-Capstone/session-manager/internal/httpapi	(cached)
+?   	github.com/NUS-MTech-Capstone/session-manager/internal/model	[no test files]
+ok  	github.com/NUS-MTech-Capstone/session-manager/internal/observability	(cached)
+ok  	github.com/NUS-MTech-Capstone/session-manager/internal/service	(cached)
+ok  	github.com/NUS-MTech-Capstone/session-manager/internal/store	4.797s
