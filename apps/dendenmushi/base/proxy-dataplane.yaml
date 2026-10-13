@@ -110,6 +110,12 @@ spec:
                 configMapKeyRef:
                   name: dendenmushi-config
                   key: AWS_REGION
+            - name: ALB_ARN
+              value: __APPLICATION_ALB_ARN__
+            - name: COGNITO_USER_POOL_ID
+              value: __COGNITO_USER_POOL_ID__
+            - name: COGNITO_CLIENT_ID
+              value: __COGNITO_CLIENT_ID__
             - name: SSH_REJOIN_GRACE
               valueFrom:
                 configMapKeyRef:
