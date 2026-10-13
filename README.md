@@ -98,7 +98,7 @@ done
 ```
 
 Push each service’s `main` branch or run its `Image` workflow manually. Each
-workflow publishes both the immutable commit SHA and the `main` tag. Verify:
+workflow publishes the commit SHA tag and the `main` tag. Verify:
 
 ```bash
 aws ecr describe-images \
@@ -110,8 +110,9 @@ aws ecr describe-images \
 ## GitOps Deploy
 
 Argo CD owns normal workload reconciliation from this repository. Service
-repositories publish immutable ECR image tags, then open promotion PRs that
-update `apps/dendenmushi/overlays/dev/kustomization.yaml`. Merging a promotion
+repositories publish commit-tagged images, then open promotion PRs that
+write the successful build digest to `apps/dendenmushi/overlays/dev/kustomization.yaml`.
+Tags provide traceability; `image@sha256:...` provides deployment immutability. Merging a promotion
 PR to `main` is the deployment approval because the Argo CD Application tracks
 this repository and branch.
 
@@ -416,3 +417,33 @@ The probe pods wait briefly before opening connections because VPC CNI
 `standard` enforcement permits a newly created pod until its policy rules have
 been programmed. This tests the steady enforced state instead of that startup
 interval.
+
+## Digest and identity rollout verification
+
+Before the strict dataplane image is promoted, deploy `ALB_ARN`,
+`COGNITO_USER_POOL_ID`, and `COGNITO_CLIENT_ID` using the existing overlay
+replacements. `AWS_REGION` is already configured. Check active sessions and
+allow them to finish before either configuration or image changes trigger its
+`Recreate` rollout. The verified ALB identity must match the STS capability.
+
+Promotion callers require the build digest and update only their Kustomize
+image entry. Bootstrap refreshes environment/inventory files and leaves image
+references untouched. No ECR mutability change or Terraform apply is required.
+
+```bash
+ruby test/image_digests_test.rb
+ruby scripts/verify-image-digests.rb
+AWS_PROFILE=capstone ruby scripts/verify-image-digests.rb --live
+```
+
+The verifier checks Deployment and migration Job images. Live verification
+matches rendered GitOps images, ready pod declarations and runtime image IDs.
+When a runtime reports an architecture-specific digest, it verifies membership
+in the exact ECR image index pinned by GitOps. Sanitized JSON output records both
+identities without credentials or application logs. During the initial migration
+only, `--allow-tags` permits offline rendering checks of the old release.
+
+Rollback uses a reviewed GitOps PR restoring a previously verified digest,
+followed by Argo health and SSH checks. Restore the final digest through another
+PR and repeat verification. Record both GitOps commits and runtime identities
+in the release evidence index; do not rely on retagging an ECR image.
