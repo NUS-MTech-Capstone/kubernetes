@@ -9,7 +9,7 @@ WEBAPP_NAMESPACE=${WEBAPP_NAMESPACE:-dendenmushi-webapp}
 APPLICATION_URL=${APPLICATION_URL:-https://api.ddm.keiyam.me}
 PROTOCOL_PROBE_NAME=${PROTOCOL_PROBE_NAME:-agent-protocol-verification}
 
-for command in aws terraform kubectl curl jq; do
+for command in aws terraform kubectl curl jq ruby; do
   if ! command -v "${command}" >/dev/null 2>&1; then
     echo "Required command not found: ${command}" >&2
     exit 1
@@ -72,6 +72,8 @@ done
 for deployment in redis nest-backend angular; do
   kubectl rollout status "deployment/${deployment}" -n "${WEBAPP_NAMESPACE}" --timeout=5m
 done
+
+ruby "${ROOT_DIR}/scripts/verify-image-digests.rb" --live "${ROOT_DIR}/apps/dendenmushi/overlays/dev"
 
 DEPLOYMENT_COUNT=$(kubectl get deployment --all-namespaces -l app=dendenmushi -o name | wc -l | tr -d ' ')
 if [[ "${DEPLOYMENT_COUNT}" != "12" ]]; then
@@ -232,4 +234,4 @@ PY
 
 echo "ALB DNS name: ${ALB_DNS_NAME}"
 echo "Create/update api.ddm.keiyam.me with:"
-echo "terraform -chdir=${AWS_TERRAFORM_DIR} apply -var-file=secrets.tfvars -var application_alb_dns_name=${ALB_DNS_NAME}"
+echo "terraform -chdir=${AWS_TERRAFORM_DIR} apply -var-file=secrets.tfvars -var-file=teammate-access.local.tfvars -var application_alb_dns_name=${ALB_DNS_NAME}"
