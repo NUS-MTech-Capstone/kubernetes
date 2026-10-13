@@ -105,6 +105,8 @@ replacements:
     targets:
       - select: { kind: Deployment, name: proxy-controlplane }
         fieldPaths: ["spec.template.spec.containers.[name=proxy-controlplane].env.[name=ALB_ARN].value"]
+      - select: { kind: Deployment, name: proxy-dataplane }
+        fieldPaths: ["spec.template.spec.containers.[name=proxy-dataplane].env.[name=ALB_ARN].value"]
       - select: { kind: Deployment, name: agent-controlplane }
         fieldPaths: ["spec.template.spec.containers.[name=agent-controlplane].env.[name=ALB_ARN].value"]
       - select: { kind: Deployment, name: nest-backend }
@@ -115,6 +117,8 @@ replacements:
     targets:
       - select: { kind: Deployment, name: proxy-controlplane }
         fieldPaths: ["spec.template.spec.containers.[name=proxy-controlplane].env.[name=COGNITO_USER_POOL_ID].value"]
+      - select: { kind: Deployment, name: proxy-dataplane }
+        fieldPaths: ["spec.template.spec.containers.[name=proxy-dataplane].env.[name=COGNITO_USER_POOL_ID].value"]
       - select: { kind: Deployment, name: agent-controlplane }
         fieldPaths: ["spec.template.spec.containers.[name=agent-controlplane].env.[name=COGNITO_USER_POOL_ID].value"]
       - select: { kind: Deployment, name: nest-backend }
@@ -125,6 +129,8 @@ replacements:
     targets:
       - select: { kind: Deployment, name: proxy-controlplane }
         fieldPaths: ["spec.template.spec.containers.[name=proxy-controlplane].env.[name=COGNITO_CLIENT_ID].value"]
+      - select: { kind: Deployment, name: proxy-dataplane }
+        fieldPaths: ["spec.template.spec.containers.[name=proxy-dataplane].env.[name=COGNITO_CLIENT_ID].value"]
       - select: { kind: Deployment, name: agent-controlplane }
         fieldPaths: ["spec.template.spec.containers.[name=agent-controlplane].env.[name=COGNITO_CLIENT_ID].value"]
       - select: { kind: Deployment, name: nest-backend }
