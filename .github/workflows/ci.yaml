@@ -14,8 +14,8 @@ jobs:
         run: ruby test/image_digests_test.rb
       - name: Render deployment manifests
         run: kubectl kustomize apps/dendenmushi/overlays/dev > rendered.yaml
-      - name: Validate migration image references
-        run: ruby scripts/verify-image-digests.rb --allow-tags rendered.yaml
+      - name: Require immutable deployment image references
+        run: ruby scripts/verify-image-digests.rb rendered.yaml
       - uses: actions/upload-artifact@v7
         if: always()
         with:
