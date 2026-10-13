@@ -1,0 +1,1370 @@
+[
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S01",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 4141.19,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S01",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9814.51,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S02",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10078.89,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S02",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9287.49,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S03",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9886.61,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S03",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9714.14,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S04",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10415.34,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S04",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10481.14,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S05",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10266.58,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S05",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9346.34,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S06",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 11056.55,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S06",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 8922.74,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S07",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10942.04,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S07",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9817.38,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S08",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10923.2,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S08",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 8464.71,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S09",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10587.17,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S09",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9890.95,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S10",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 11199.13,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S10",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9262.06,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S11",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 11446.76,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S11",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 8689.23,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S12",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 11954.44,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S12",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 7841.63,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S01",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 11469.69,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S01",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 8930.6,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S02",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10080.04,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S02",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 11042.42,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S03",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9188.86,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S03",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10767.61,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S04",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10368.8,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S04",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9414.36,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S05",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 11218.12,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S05",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 8966.85,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S06",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10024.51,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S06",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9760.23,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S07",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 11082.63,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S07",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9587.82,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S08",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10105.94,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S08",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9246.92,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S09",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 12599.58,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S09",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 7952.99,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S10",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 11985.95,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S10",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 8750.97,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S11",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 11375.55,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S11",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 8325.29,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S12",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 12214.37,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S12",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 2,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 8605.83,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S01",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10011.29,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S01",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10544.87,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S02",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9479.87,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S02",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10765.42,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S03",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9865.64,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S03",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9312.97,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S04",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10563.3,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S04",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10029.61,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S05",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 11213.16,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S05",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 8437.33,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S06",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10455.45,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S06",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10177.28,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S07",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10016.29,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S07",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9897.07,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S08",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10427.03,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S08",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9754.46,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S09",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 11186.75,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S09",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10119.1,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S10",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 11217.11,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S10",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 8088.34,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S11",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 11267.54,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S11",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9599.11,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S12",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 10208.68,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S12",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 3,
+    "mode": "gateway",
+    "source": "model",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 9650.87,
+    "provider_attempts": 1,
+    "fallback_used": false,
+    "fallback_stage": ""
+  }
+]

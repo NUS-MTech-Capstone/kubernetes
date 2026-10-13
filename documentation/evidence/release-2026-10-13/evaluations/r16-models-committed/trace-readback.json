@@ -1,0 +1,112 @@
+[
+  {
+    "id": "cb55bcd4-216e-4042-88da-47ee49b62a76",
+    "name": "result_validation",
+    "parentId": "7dc2079c-3aac-459c-9b10-0323282a90ba",
+    "inputsEmpty": true,
+    "outputsEmpty": true,
+    "error": false,
+    "metadataKeys": [
+      "duration_ms",
+      "incident_id",
+      "ls_run_depth",
+      "model",
+      "outcome",
+      "prompt_hashes",
+      "stage"
+    ]
+  },
+  {
+    "id": "8bb59af9-38fc-440c-b700-0ec903de98db",
+    "name": "provider_attempt",
+    "parentId": "7dc2079c-3aac-459c-9b10-0323282a90ba",
+    "inputsEmpty": true,
+    "outputsEmpty": true,
+    "error": false,
+    "metadataKeys": [
+      "attempt",
+      "duration_ms",
+      "incident_id",
+      "input_tokens",
+      "ls_run_depth",
+      "model",
+      "outcome",
+      "output_tokens",
+      "prompt_hashes",
+      "returned_model",
+      "stage"
+    ]
+  },
+  {
+    "id": "7dc2079c-3aac-459c-9b10-0323282a90ba",
+    "name": "reasoning",
+    "parentId": null,
+    "inputsEmpty": true,
+    "outputsEmpty": true,
+    "error": false,
+    "metadataKeys": [
+      "duration_ms",
+      "incident_id",
+      "ls_run_depth",
+      "model",
+      "outcome",
+      "prompt_hashes",
+      "stage"
+    ]
+  },
+  {
+    "id": "727d07e8-9c0a-47c7-94b3-6d2cfda7b7ed",
+    "name": "result_validation",
+    "parentId": "558b0f8a-e4f8-4e7c-b754-8f0343f89bac",
+    "inputsEmpty": true,
+    "outputsEmpty": true,
+    "error": false,
+    "metadataKeys": [
+      "duration_ms",
+      "incident_id",
+      "ls_run_depth",
+      "model",
+      "outcome",
+      "prompt_hashes",
+      "stage"
+    ]
+  },
+  {
+    "id": "79ab79dd-661d-4653-8ee7-1f30cdfd66fa",
+    "name": "provider_attempt",
+    "parentId": "558b0f8a-e4f8-4e7c-b754-8f0343f89bac",
+    "inputsEmpty": true,
+    "outputsEmpty": true,
+    "error": false,
+    "metadataKeys": [
+      "attempt",
+      "duration_ms",
+      "incident_id",
+      "input_tokens",
+      "ls_run_depth",
+      "model",
+      "outcome",
+      "output_tokens",
+      "prompt_hashes",
+      "returned_model",
+      "stage"
+    ]
+  },
+  {
+    "id": "558b0f8a-e4f8-4e7c-b754-8f0343f89bac",
+    "name": "reasoning",
+    "parentId": null,
+    "inputsEmpty": true,
+    "outputsEmpty": true,
+    "error": false,
+    "metadataKeys": [
+      "duration_ms",
+      "incident_id",
+      "ls_run_depth",
+      "model",
+      "outcome",
+      "prompt_hashes",
+      "stage"
+    ]
+  }
+]

@@ -1,0 +1,13 @@
+diff --git a/apps/dendenmushi/overlays/dev/kustomization.yaml b/apps/dendenmushi/overlays/dev/kustomization.yaml
+index 8560f03..476658a 100644
+--- a/apps/dendenmushi/overlays/dev/kustomization.yaml
++++ b/apps/dendenmushi/overlays/dev/kustomization.yaml
+@@ -24,7 +24,7 @@ images:
+     newTag: 368bf3439fff02480b78a2de4caa0b9f5c599053
+   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/agent-controlplane
+     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/agent-controlplane
+-    newTag: f08e33dba9f75feab1397382d250ae19d0439caf
++    digest: sha256:bfc9b2bf6d33099d5f084b7cf849e7b841f900387eaeb3756c9a7a31c8161939
+   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
+     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/sts
+     newTag: d35e5c3662852c05b36f0fa54c2fc5b230f83caa

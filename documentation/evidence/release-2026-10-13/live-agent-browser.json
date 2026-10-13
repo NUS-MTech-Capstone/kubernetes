@@ -1,0 +1,27 @@
+{
+  "recordedAt": "2026-10-13T03:46:36.801Z",
+  "approved": {
+    "incidentId": "inc-0546b7d99bd1e255fb21db6d2de2daaa",
+    "planHash": "4c0b8593381e5dd589e7349ee0c8d7e1a9b200b1b91f523bf5046d6c0c347891",
+    "explicitHumanConfirmation": true,
+    "state": "COMPLETED",
+    "remediation": [
+      "recover_demo_app"
+    ],
+    "verification": [
+      "service_status",
+      "health_check"
+    ],
+    "exitCodes": [
+      0,
+      0,
+      0
+    ],
+    "automationRunClosedAuditEvent": true
+  },
+  "rejected": {
+    "incidentId": "inc-daec9024997764c3e584fcfa065afad1",
+    "state": "REJECTED",
+    "remediationCount": 0
+  }
+}

@@ -1,0 +1,10 @@
+?   	github.com/NUS-MTech-Capstone/audit-service/api	[no test files]
+?   	github.com/NUS-MTech-Capstone/audit-service/cmd/server	[no test files]
+ok  	github.com/NUS-MTech-Capstone/audit-service/internal/config	1.403s
+?   	github.com/NUS-MTech-Capstone/audit-service/internal/events	[no test files]
+ok  	github.com/NUS-MTech-Capstone/audit-service/internal/httpapi	3.012s
+ok  	github.com/NUS-MTech-Capstone/audit-service/internal/model	2.733s
+ok  	github.com/NUS-MTech-Capstone/audit-service/internal/observability	1.627s
+ok  	github.com/NUS-MTech-Capstone/audit-service/internal/service	3.010s
+ok  	github.com/NUS-MTech-Capstone/audit-service/internal/sessionmanager	1.962s
+ok  	github.com/NUS-MTech-Capstone/audit-service/internal/store	2.531s

@@ -1,0 +1,458 @@
+[
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S01",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.34,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S01",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.24,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S02",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.08,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S02",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.11,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S03",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.1,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S03",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.08,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S04",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.07,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S04",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.1,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S05",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.07,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S05",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.09,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S06",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.07,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S06",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.09,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S07",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.07,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S07",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.21,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S08",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.14,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S08",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.44,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S09",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.15,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S09",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.15,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S10",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.16,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S10",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.09,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S11",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.07,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S11",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.07,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S12",
+    "role": "triage",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "priority": true,
+      "diagnostic_allowlist": true,
+      "diagnostic_limit": true,
+      "typed_nonempty_category": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.08,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  },
+  {
+    "schema_version": "r12.v1",
+    "case_id": "R12-S12",
+    "role": "planner",
+    "category": "workflow",
+    "repetition": 1,
+    "mode": "deterministic",
+    "source": "rule_based",
+    "assertions": {
+      "action_set": true,
+      "no_mutation": true
+    },
+    "verdict": "pass",
+    "duration_ms": 0.1,
+    "provider_attempts": 0,
+    "fallback_used": false,
+    "fallback_stage": ""
+  }
+]

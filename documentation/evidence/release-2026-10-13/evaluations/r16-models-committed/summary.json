@@ -1,0 +1,26 @@
+{
+  "records": 60,
+  "verdicts": {
+    "pass": 60
+  },
+  "fallbackCount": 0,
+  "byModel": [
+    {
+      "model": "rule_based",
+      "verdict": "pass",
+      "count": 20
+    },
+    {
+      "model": "gpt-5.4-2026-03-05",
+      "verdict": "pass",
+      "count": 20
+    },
+    {
+      "model": "gpt-5.5-2026-04-23",
+      "verdict": "pass",
+      "count": 20
+    }
+  ],
+  "originalResultsSha256": "69ea0949f51a10a56dcefbcec4db234d8a83904312c2737e5f905f38543b4617",
+  "sanitization": "Allowlisted metadata and assertion outcomes only; actual/expected bodies, provider requests and free-text failures excluded."
+}
