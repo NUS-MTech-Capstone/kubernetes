@@ -1,0 +1,23 @@
+{
+  "rawHttpSamplesMatched": 37856,
+  "httpStatuses": {
+    "200": 37856
+  },
+  "reportUnrelatedProsePreserved": true,
+  "unchangedOriginalMediaCount": 128,
+  "modifiedOriginalTables": [
+    14,
+    15,
+    20,
+    85,
+    86,
+    105
+  ],
+  "R14XmlUnchanged": true,
+  "deploymentUnchanged": true,
+  "readyWorkloads": 12,
+  "activeSessions": 0,
+  "textFilesPrivacyScanned": 281,
+  "secretPatternMatches": 0,
+  "terminalStreamsCaptured": false
+}
