@@ -1,9 +1,0 @@
-?   	github.com/NUS-MTech-Capstone/ddm-agent/api	[no test files]
-?   	github.com/NUS-MTech-Capstone/ddm-agent/cmd/server	[no test files]
-ok  	github.com/NUS-MTech-Capstone/ddm-agent/internal/config	1.444s
-ok  	github.com/NUS-MTech-Capstone/ddm-agent/internal/execution	1.739s
-ok  	github.com/NUS-MTech-Capstone/ddm-agent/internal/httpapi	2.384s
-?   	github.com/NUS-MTech-Capstone/ddm-agent/internal/model	[no test files]
-ok  	github.com/NUS-MTech-Capstone/ddm-agent/internal/observability	3.152s
-ok  	github.com/NUS-MTech-Capstone/ddm-agent/internal/service	2.880s
-ok  	github.com/NUS-MTech-Capstone/ddm-agent/internal/sts	4.005s

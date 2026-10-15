@@ -1,9 +1,0 @@
-{
-  "offlineDerivation": "PASS: retained JSON excluding generatedAt and both chart PNGs reproduce",
-  "historicalFiles": "PASS: seven files byte-identical to 7 October originals",
-  "markdownLocalLinks": "PASS",
-  "secretPatternScan": "PASS: no private keys, JWT values, AWS access keys or ALB session cookie values found in text artifacts",
-  "screenshotReview": "PASS: access inventory only; no terminal streams or credentials",
-  "kubernetesChecks": "PASS: 3 image verifier tests / 11 assertions, Kustomize render, immutable image verifier",
-  "reportQA": "PASS: all 179 pages visually reviewed; 164 contents entries verified"
-}
