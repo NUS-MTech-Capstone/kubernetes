@@ -1,0 +1,70 @@
+{
+  "startedAt": "2026-10-07T11:24:34.376971+00:00",
+  "account": "891377133321",
+  "region": "ap-southeast-1",
+  "origin": "https://api.ddm.keiyam.me",
+  "hostId": "host-dev-1",
+  "crId": "",
+  "ceiling": 40,
+  "generator": {
+    "platform": "Darwin",
+    "machine": "arm64",
+    "k6": "k6 v2.1.0 (commit/devel, go1.26.4, darwin/arm64)"
+  },
+  "revisions": {
+    "k6-load-tests": {
+      "sha": "79bd7546d09e996b67317414b5ede1e352a86fa4",
+      "dirty": true
+    },
+    "kubernetes": {
+      "sha": "7c587643a4fae2e4d1d6048fa612e17b29b403a6",
+      "dirty": false
+    },
+    "proxy-dataplane": {
+      "sha": "5ae22d7a65f0e3c8c274b5b0e963c126560d4a1f",
+      "dirty": false
+    },
+    "proxy-controlplane": {
+      "sha": "f7a78b5052c656ae36a0e92b7ef804824397cfa9",
+      "dirty": false
+    },
+    "session-manager": {
+      "sha": "5465fca7a93aef862c6767586c7440c3a240f0ba",
+      "dirty": false
+    },
+    "audit-service": {
+      "sha": "ca937ec501294845db7aa4a4e3f3af4debf1df85",
+      "dirty": false
+    },
+    "sts": {
+      "sha": "84dc5d4b62efcb79921a802fa186d159094b0cfb",
+      "dirty": false
+    },
+    "nest-backend": {
+      "sha": "83ae27fe2ca0529b8edd7b5a49d0c4d7c327ae6e",
+      "dirty": false
+    },
+    "angular": {
+      "sha": "c305a9b74b6a0854f7d3fa48803e231df9584222",
+      "dirty": false
+    }
+  },
+  "runs": [
+    {
+      "name": "agentic_ai_reads-r1",
+      "script": "agentic_ai_reads",
+      "vus": 10,
+      "measureSeconds": 300,
+      "rampSeconds": 0,
+      "startedAt": "2026-10-07T11:24:37.202502+00:00",
+      "baselineActiveSessions": 0,
+      "endedAt": "2026-10-07T11:29:54.629291+00:00",
+      "maxClientConnected": 0,
+      "status": "PASSED",
+      "exitCode": 0,
+      "abortReason": null,
+      "failedThresholds": []
+    }
+  ],
+  "endedAt": "2026-10-07T11:31:03.128429+00:00"
+}

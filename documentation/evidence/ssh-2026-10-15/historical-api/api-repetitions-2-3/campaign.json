@@ -1,0 +1,127 @@
+{
+  "startedAt": "2026-10-07T11:49:43.468552+00:00",
+  "account": "891377133321",
+  "region": "ap-southeast-1",
+  "origin": "https://api.ddm.keiyam.me",
+  "hostId": "host-dev-1",
+  "crId": "",
+  "ceiling": 40,
+  "generator": {
+    "platform": "Darwin",
+    "machine": "arm64",
+    "k6": "k6 v2.1.0 (commit/devel, go1.26.4, darwin/arm64)"
+  },
+  "sourceHashes": {
+    "lib/auth.js": "3ca6f2e802c8a32523135f65412297a0bee647e93eb799616f563980b8021077",
+    "lib/thresholds.js": "282a83e85607839b5e12c6192bad03e3abdc5c43fb7eeb9b4fdd07cef01feed7",
+    "lib/config.js": "845031989bb5712f06e365ce45b76e3571d5a43dd0e7e0456d88d2e8ea3b52dd",
+    "lib/summary.js": "07c7f310cf4e489c1007ae47b4e81281ceef85d286cd80e1e4f7faaaca5d2d1b",
+    "lib/campaign.js": "c083d3bcc0d624130b7bf680ad8553a4a4efdaa6017cfb4721a1a454eccd8bf0",
+    "lib/ws.js": "7da8450c398a698c91e1b78f1365c70aad4967e7a89c7fe76cf0a847fbe55dda",
+    "lib/echo.mjs": "41091110f2bc9f689d7e3e7755f52bfac0c1d1112586560af22d3d13e92935ac",
+    "lib/http.js": "7cc4b6b9844fe52952c0df43dbbebd70bcd2e1e549b9294334c185d828e11a00",
+    "scripts/stress_session_start.js": "1d5bca632166f526cec724e005e4931f258da5dd35885d423b41e59fd62265c5",
+    "scripts/terminal_capacity.js": "f5a279f3420821de4da6d837ce071f42246d88cd2dcef27550964eafd80154de",
+    "scripts/audit_reads.js": "4a99f542b59736a2496332313b469f9beb9e85a6f8bf58dbfc6b73e02f21f8f2",
+    "scripts/session_lifecycle.js": "1e07d96e5899276cb68ede0657e6116888bb897bf40cdfe79d62ceb02daac77d",
+    "scripts/agentic_ai_reads.js": "12422cc4c682e20a6e00a7dd176a10482b933cd4d7facbcc87653c15c6fcadfd",
+    "scripts/smoke.js": "1f668571a4e2fc68bd4a55a0c85fea50b1da33f2c3ed268ae7c48d2eb02c1db3",
+    "scripts/terminal_soak.js": "e1afe8d7ac934368dd050cde971b31d1ffe94e08eb6f9bb5b41c78bbc3d5ee9b",
+    "tools/aws_support.py": "289fd61996f94c40195b645b77771cca4f41075476a43f0ed1b3b1adcf4bc6d6",
+    "tools/run-k6-artifacts.mjs": "e79a287c3356be6bbdc1090cf06f65940cbfe61ae0a49c6eb7c43700935684f4",
+    "tools/campaign.py": "319df50cb9bfab7c24d0126c648f7ff138ac63ea1532f8cc4965f4983fe01e24",
+    "tools/finalize-report.mjs": "82c5a25e7ccaf7867d045cf805e816b0d1bcb87f301eabe55d30cc5a49009622",
+    "tools/build_evidence.py": "04c4f6768b359749e44a3b2487d756f66474a111c2b0bdb6bead70f82e1dcd29",
+    "tools/export_cloudwatch.py": "811489f98485fd4ddd21544ecdb6ee6ee828aae9dbad9a88c9ccbf572ce5aa29"
+  },
+  "revisions": {
+    "k6-load-tests": {
+      "sha": "79bd7546d09e996b67317414b5ede1e352a86fa4",
+      "dirty": true
+    },
+    "kubernetes": {
+      "sha": "7c587643a4fae2e4d1d6048fa612e17b29b403a6",
+      "dirty": false
+    },
+    "proxy-dataplane": {
+      "sha": "5ae22d7a65f0e3c8c274b5b0e963c126560d4a1f",
+      "dirty": false
+    },
+    "proxy-controlplane": {
+      "sha": "f7a78b5052c656ae36a0e92b7ef804824397cfa9",
+      "dirty": false
+    },
+    "session-manager": {
+      "sha": "5465fca7a93aef862c6767586c7440c3a240f0ba",
+      "dirty": false
+    },
+    "audit-service": {
+      "sha": "ca937ec501294845db7aa4a4e3f3af4debf1df85",
+      "dirty": false
+    },
+    "sts": {
+      "sha": "84dc5d4b62efcb79921a802fa186d159094b0cfb",
+      "dirty": false
+    },
+    "nest-backend": {
+      "sha": "83ae27fe2ca0529b8edd7b5a49d0c4d7c327ae6e",
+      "dirty": false
+    },
+    "angular": {
+      "sha": "c305a9b74b6a0854f7d3fa48803e231df9584222",
+      "dirty": false
+    }
+  },
+  "runs": [
+    {
+      "name": "audit_reads-r2",
+      "script": "audit_reads",
+      "vus": 10,
+      "measureSeconds": 300,
+      "rampSeconds": 0,
+      "sourceHashes": {
+        "lib/auth.js": "3ca6f2e802c8a32523135f65412297a0bee647e93eb799616f563980b8021077",
+        "lib/thresholds.js": "282a83e85607839b5e12c6192bad03e3abdc5c43fb7eeb9b4fdd07cef01feed7",
+        "lib/config.js": "845031989bb5712f06e365ce45b76e3571d5a43dd0e7e0456d88d2e8ea3b52dd",
+        "lib/summary.js": "07c7f310cf4e489c1007ae47b4e81281ceef85d286cd80e1e4f7faaaca5d2d1b",
+        "lib/campaign.js": "c083d3bcc0d624130b7bf680ad8553a4a4efdaa6017cfb4721a1a454eccd8bf0",
+        "lib/ws.js": "7da8450c398a698c91e1b78f1365c70aad4967e7a89c7fe76cf0a847fbe55dda",
+        "lib/echo.mjs": "41091110f2bc9f689d7e3e7755f52bfac0c1d1112586560af22d3d13e92935ac",
+        "lib/http.js": "7cc4b6b9844fe52952c0df43dbbebd70bcd2e1e549b9294334c185d828e11a00",
+        "scripts/stress_session_start.js": "1d5bca632166f526cec724e005e4931f258da5dd35885d423b41e59fd62265c5",
+        "scripts/terminal_capacity.js": "f5a279f3420821de4da6d837ce071f42246d88cd2dcef27550964eafd80154de",
+        "scripts/audit_reads.js": "4a99f542b59736a2496332313b469f9beb9e85a6f8bf58dbfc6b73e02f21f8f2",
+        "scripts/session_lifecycle.js": "1e07d96e5899276cb68ede0657e6116888bb897bf40cdfe79d62ceb02daac77d",
+        "scripts/agentic_ai_reads.js": "12422cc4c682e20a6e00a7dd176a10482b933cd4d7facbcc87653c15c6fcadfd",
+        "scripts/smoke.js": "1f668571a4e2fc68bd4a55a0c85fea50b1da33f2c3ed268ae7c48d2eb02c1db3",
+        "scripts/terminal_soak.js": "e1afe8d7ac934368dd050cde971b31d1ffe94e08eb6f9bb5b41c78bbc3d5ee9b",
+        "tools/aws_support.py": "289fd61996f94c40195b645b77771cca4f41075476a43f0ed1b3b1adcf4bc6d6",
+        "tools/run-k6-artifacts.mjs": "e79a287c3356be6bbdc1090cf06f65940cbfe61ae0a49c6eb7c43700935684f4",
+        "tools/campaign.py": "319df50cb9bfab7c24d0126c648f7ff138ac63ea1532f8cc4965f4983fe01e24",
+        "tools/finalize-report.mjs": "82c5a25e7ccaf7867d045cf805e816b0d1bcb87f301eabe55d30cc5a49009622",
+        "tools/build_evidence.py": "04c4f6768b359749e44a3b2487d756f66474a111c2b0bdb6bead70f82e1dcd29",
+        "tools/export_cloudwatch.py": "811489f98485fd4ddd21544ecdb6ee6ee828aae9dbad9a88c9ccbf572ce5aa29"
+      },
+      "executableCeiling": 40,
+      "stages": [
+        {
+          "name": "ramp",
+          "durationSeconds": 0
+        },
+        {
+          "name": "measurement",
+          "durationSeconds": 300
+        }
+      ],
+      "startedAt": "2026-10-07T11:49:46.341562+00:00",
+      "baselineActiveSessions": 0,
+      "endedAt": "2026-10-07T11:54:54.948072+00:00",
+      "maxClientConnected": 0,
+      "status": "PASSED",
+      "exitCode": 0,
+      "abortReason": null,
+      "failedThresholds": []
+    }
+  ],
+  "endedAt": "2026-10-07T11:56:00.225740+00:00"
+}

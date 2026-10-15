@@ -29,6 +29,11 @@ The [13 October 2026 release evidence index](documentation/evidence/release-2026
 links committed source, passing CI, image digests, GitOps promotions, browser
 acceptance, bounded agent evaluations and rollback results.
 
+The [15 October SSH performance attempt](documentation/evidence/ssh-2026-10-15/README.md)
+records a failed preflight capacity-recovery check. No timed SSH load completed;
+40-session capacity and terminal latency remain unmeasured. See the
+[submitted evidence index](documentation/evidence/README.md) for both bundles.
+
 ## AWS Prerequisites
 
 Apply the main infrastructure and target host first:
