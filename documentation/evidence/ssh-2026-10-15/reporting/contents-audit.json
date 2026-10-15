@@ -1,0 +1,661 @@
+{
+  "pageCount": 179,
+  "validatedEntries": [
+    {
+      "heading": "Executive summary",
+      "page": 6
+    },
+    {
+      "heading": "1 Introduction and Project Context",
+      "page": 6
+    },
+    {
+      "heading": "1.1 Background",
+      "page": 6
+    },
+    {
+      "heading": "1.2 Business Needs",
+      "page": 6
+    },
+    {
+      "heading": "1.3 Stakeholders",
+      "page": 7
+    },
+    {
+      "heading": "1.4 Common Vocabulary",
+      "page": 8
+    },
+    {
+      "heading": "1.5 System Context",
+      "page": 9
+    },
+    {
+      "heading": "1.6 Tech Stack",
+      "page": 10
+    },
+    {
+      "heading": "1.7 Project journey",
+      "page": 12
+    },
+    {
+      "heading": "2 Requirements and Scope",
+      "page": 13
+    },
+    {
+      "heading": "2.1 Functional Requirements",
+      "page": 13
+    },
+    {
+      "heading": "2.2 Use Cases",
+      "page": 15
+    },
+    {
+      "heading": "2.3 Non-Functional Requirements",
+      "page": 18
+    },
+    {
+      "heading": "2.4 Detail Requirements",
+      "page": 21
+    },
+    {
+      "heading": "3 Sprint Conduct and Project Management",
+      "page": 22
+    },
+    {
+      "heading": "3.1 Project Plan and Status",
+      "page": 22
+    },
+    {
+      "heading": "3.2 Individual Members Activity Contribution Summary",
+      "page": 24
+    },
+    {
+      "heading": "3.3 Ownership",
+      "page": 24
+    },
+    {
+      "heading": "3.4 JIRA Stories Export",
+      "page": 26
+    },
+    {
+      "heading": "3.5 Management issues and mitigation",
+      "page": 28
+    },
+    {
+      "heading": "4 Feature Showcase",
+      "page": 29
+    },
+    {
+      "heading": "4.1 Demonstration scope",
+      "page": 29
+    },
+    {
+      "heading": "4.2 Governed access and change approval",
+      "page": 29
+    },
+    {
+      "heading": "4.3 Inventory identity and implementer governance",
+      "page": 30
+    },
+    {
+      "heading": "4.4 Terminal lifecycle",
+      "page": 33
+    },
+    {
+      "heading": "4.5 Incident investigation and stage inspection",
+      "page": 36
+    },
+    {
+      "heading": "4.6 Exact plan approval",
+      "page": 38
+    },
+    {
+      "heading": "4.7 Bounded remediation verification and audit",
+      "page": 38
+    },
+    {
+      "heading": "5 Logical Architecture & Design",
+      "page": 43
+    },
+    {
+      "heading": "5.1 Logical Architecture Diagram",
+      "page": 43
+    },
+    {
+      "heading": "5.2 Tiers and Layers",
+      "page": 44
+    },
+    {
+      "heading": "5.3 Subsystems",
+      "page": 44
+    },
+    {
+      "heading": "5.4 Logical roles and deployed services",
+      "page": 45
+    },
+    {
+      "heading": "6 Physical Architecture & Deployment Design",
+      "page": 48
+    },
+    {
+      "heading": "6.1 Physical Architecture Diagram",
+      "page": 48
+    },
+    {
+      "heading": "6.2 AWS Architecture Diagram",
+      "page": 49
+    },
+    {
+      "heading": "6.3 Detail Deployment",
+      "page": 50
+    },
+    {
+      "heading": "6.4 Technology and Services",
+      "page": 53
+    },
+    {
+      "heading": "6.5 Kubernetes Namespaces",
+      "page": 54
+    },
+    {
+      "heading": "6.6 Architecture Decisions and Limitations",
+      "page": 56
+    },
+    {
+      "heading": "7 Persistence Design",
+      "page": 61
+    },
+    {
+      "heading": "7.1 Entity Relationship Diagram",
+      "page": 61
+    },
+    {
+      "heading": "7.2 Tables",
+      "page": 64
+    },
+    {
+      "heading": "7.3 Indexes",
+      "page": 65
+    },
+    {
+      "heading": "7.4 Why atomic claims are needed",
+      "page": 66
+    },
+    {
+      "heading": "7.5 Lease renewal and fencing",
+      "page": 66
+    },
+    {
+      "heading": "7.6 Migrations and recovery",
+      "page": 67
+    },
+    {
+      "heading": "8 Domain-Driven Design",
+      "page": 68
+    },
+    {
+      "heading": "8.1 Aggregates",
+      "page": 70
+    },
+    {
+      "heading": "8.2 Domain Events",
+      "page": 72
+    },
+    {
+      "heading": "9 Analysis to Design Transition",
+      "page": 73
+    },
+    {
+      "heading": "9.1 Use Case: Start SSH Session",
+      "page": 73
+    },
+    {
+      "heading": "9.2 Use Case: Detach and Rejoin Session",
+      "page": 80
+    },
+    {
+      "heading": "9.3 Incident workflow analysis and design traceability",
+      "page": 81
+    },
+    {
+      "heading": "10 Design Patterns",
+      "page": 88
+    },
+    {
+      "heading": "10.1 Strategy for SSH Credentials",
+      "page": 88
+    },
+    {
+      "heading": "10.2 Facade for Session Control",
+      "page": 88
+    },
+    {
+      "heading": "10.3 Planner Strategy",
+      "page": 89
+    },
+    {
+      "heading": "10.4 A2A Adapter",
+      "page": 90
+    },
+    {
+      "heading": "11 Session Access Deep Dive",
+      "page": 92
+    },
+    {
+      "heading": "11.1 Connection Establishment Overview",
+      "page": 92
+    },
+    {
+      "heading": "11.2 STS Token",
+      "page": 94
+    },
+    {
+      "heading": "11.3 Session States",
+      "page": 94
+    },
+    {
+      "heading": "11.4 Component Responsibilities",
+      "page": 96
+    },
+    {
+      "heading": "11.5 WebSocket and Runtime Protocol",
+      "page": 97
+    },
+    {
+      "heading": "11.6 Session Failure Modes",
+      "page": 98
+    },
+    {
+      "heading": "12 Agent Workflow Model Integration and Explainability",
+      "page": 100
+    },
+    {
+      "heading": "12.1 Incident Manager Agent",
+      "page": 101
+    },
+    {
+      "heading": "12.2 Triage Agent",
+      "page": 101
+    },
+    {
+      "heading": "12.3 Evidence Collector Agent",
+      "page": 101
+    },
+    {
+      "heading": "12.4 Action Plan Agent",
+      "page": 101
+    },
+    {
+      "heading": "12.5 Action Plan Reviewer Agent",
+      "page": 101
+    },
+    {
+      "heading": "12.6 Human approval and Remediation Executor Agent",
+      "page": 102
+    },
+    {
+      "heading": "12.7 A2A reasoning boundary",
+      "page": 104
+    },
+    {
+      "heading": "12.8 Model gateway and configured provider",
+      "page": 104
+    },
+    {
+      "heading": "12.9 Prompt and output reproducibility",
+      "page": 105
+    },
+    {
+      "heading": "12.10 MCP operation boundary",
+      "page": 105
+    },
+    {
+      "heading": "12.11 Explanation as a reviewable product feature",
+      "page": 105
+    },
+    {
+      "heading": "12.12 Incident workspace and stage inspector",
+      "page": 105
+    },
+    {
+      "heading": "12.13 Persisted action trace and audit",
+      "page": 106
+    },
+    {
+      "heading": "13 API Design and Versioning",
+      "page": 107
+    },
+    {
+      "heading": "13.1 Representative interfaces",
+      "page": 107
+    },
+    {
+      "heading": "13.2 Compatibility and rollout implications",
+      "page": 108
+    },
+    {
+      "heading": "14 Event-Driven Processing and Caching",
+      "page": 110
+    },
+    {
+      "heading": "14.1 Two separate event lanes",
+      "page": 110
+    },
+    {
+      "heading": "14.2 Delivery and failure behavior",
+      "page": 111
+    },
+    {
+      "heading": "14.3 Monitoring cache",
+      "page": 111
+    },
+    {
+      "heading": "15 Audit LangSmith and Operational Observability",
+      "page": 111
+    },
+    {
+      "heading": "15.1 Purpose and Boundary",
+      "page": 111
+    },
+    {
+      "heading": "15.2 Audit Record Model",
+      "page": 112
+    },
+    {
+      "heading": "15.3 Retention, Limits and Query Behavior",
+      "page": 112
+    },
+    {
+      "heading": "15.4 Audit Failure Modes",
+      "page": 112
+    },
+    {
+      "heading": "15.5 Retained audit and application usability",
+      "page": 113
+    },
+    {
+      "heading": "15.6 LangSmith tracing",
+      "page": 113
+    },
+    {
+      "heading": "15.7 Operational signals",
+      "page": 113
+    },
+    {
+      "heading": "16 Security Architecture",
+      "page": 117
+    },
+    {
+      "heading": "16.1 Threats",
+      "page": 117
+    },
+    {
+      "heading": "16.2 Crown Jewels",
+      "page": 117
+    },
+    {
+      "heading": "16.3 Human identity and application authorization",
+      "page": 118
+    },
+    {
+      "heading": "16.4 Workload identity and capability separation",
+      "page": 119
+    },
+    {
+      "heading": "16.5 Approval integrity and injection resistance",
+      "page": 119
+    },
+    {
+      "heading": "16.6 Browser and HTTP controls",
+      "page": 119
+    },
+    {
+      "heading": "16.7 Infrastructure and secrets",
+      "page": 120
+    },
+    {
+      "heading": "16.8 Timeouts and resource limits",
+      "page": 120
+    },
+    {
+      "heading": "16.9 Audit content and privacy",
+      "page": 121
+    },
+    {
+      "heading": "16.10 Responsible AI and residual risk",
+      "page": 121
+    },
+    {
+      "heading": "16.11 Governance Enforcement and Verification",
+      "page": 121
+    },
+    {
+      "heading": "16.12 Illustrative SOC 2 Security mapping",
+      "page": 121
+    },
+    {
+      "heading": "16.13 OWASP Top 10 for LLM Applications 2026",
+      "page": 123
+    },
+    {
+      "heading": "16.14 OWASP Top 10 for Agentic Applications 2026",
+      "page": 124
+    },
+    {
+      "heading": "17 Testing and Evidence",
+      "page": 125
+    },
+    {
+      "heading": "17.1 Unit Tests",
+      "page": 125
+    },
+    {
+      "heading": "17.2 Test strategy and current evidence",
+      "page": 126
+    },
+    {
+      "heading": "17.3 Recorded Integration Verification",
+      "page": 126
+    },
+    {
+      "heading": "17.4 Test Coverage Screenshots",
+      "page": 128
+    },
+    {
+      "heading": "17.5 Coverage Improvements",
+      "page": 129
+    },
+    {
+      "heading": "17.6 Angular CI Results",
+      "page": 129
+    },
+    {
+      "heading": "17.7 E2E Testing with Selenium",
+      "page": 130
+    },
+    {
+      "heading": "17.8 Integration concurrency and fault scenarios",
+      "page": 131
+    },
+    {
+      "heading": "17.9 Per role behavioral evaluation",
+      "page": 131
+    },
+    {
+      "heading": "17.10 Incident Manager Agent",
+      "page": 132
+    },
+    {
+      "heading": "17.11 Triage Agent",
+      "page": 132
+    },
+    {
+      "heading": "17.12 Evidence Collector Agent",
+      "page": 133
+    },
+    {
+      "heading": "17.13 Action Plan Agent",
+      "page": 134
+    },
+    {
+      "heading": "17.14 Action Plan Reviewer Agent",
+      "page": 134
+    },
+    {
+      "heading": "17.15 Remediation Executor Agent",
+      "page": 135
+    },
+    {
+      "heading": "17.16 What the existing evaluation baseline demonstrates",
+      "page": 136
+    },
+    {
+      "heading": "17.17 Evaluation procedure",
+      "page": 136
+    },
+    {
+      "heading": "17.18 Load and stress testing design",
+      "page": 136
+    },
+    {
+      "heading": "17.19 Performance evaluation and result capture",
+      "page": 137
+    },
+    {
+      "heading": "17.20 LLM as a judge evaluation framework",
+      "page": 142
+    },
+    {
+      "heading": "17.21 Base model comparison framework",
+      "page": 142
+    },
+    {
+      "heading": "18 DevSecOps",
+      "page": 143
+    },
+    {
+      "heading": "18.1 Source Control",
+      "page": 143
+    },
+    {
+      "heading": "18.2 CI/CD",
+      "page": 146
+    },
+    {
+      "heading": "18.3 Security scan gates and limitations",
+      "page": 149
+    },
+    {
+      "heading": "18.4 Post deployment DAST",
+      "page": 150
+    },
+    {
+      "heading": "18.5 Target and release readiness",
+      "page": 152
+    },
+    {
+      "heading": "18.6 Rollback and Release Control",
+      "page": 154
+    },
+    {
+      "heading": "18.7 DevSecOps Artifacts",
+      "page": 154
+    },
+    {
+      "heading": "18.8 Testing \u2013 What the pipeline caught",
+      "page": 156
+    },
+    {
+      "heading": "19 Live Infrastructure Evidence",
+      "page": 158
+    },
+    {
+      "heading": "19.1 AWS / Terraform",
+      "page": 158
+    },
+    {
+      "heading": "19.2 Kubernetes",
+      "page": 159
+    },
+    {
+      "heading": "20 Risks and Mitigations",
+      "page": 161
+    },
+    {
+      "heading": "21 Concerns",
+      "page": 162
+    },
+    {
+      "heading": "21.1 Management Concerns",
+      "page": 162
+    },
+    {
+      "heading": "21.2 Technical Concerns",
+      "page": 162
+    },
+    {
+      "heading": "21.3 Security Concerns",
+      "page": 163
+    },
+    {
+      "heading": "22 Lessons and Conclusion",
+      "page": 163
+    },
+    {
+      "heading": "22.1 Lessons",
+      "page": 163
+    },
+    {
+      "heading": "22.2 Conclusion",
+      "page": 164
+    },
+    {
+      "heading": "23 Appendix",
+      "page": 164
+    },
+    {
+      "heading": "23.1 AWS",
+      "page": 164
+    },
+    {
+      "heading": "23.2 Cloudwatch Logs",
+      "page": 164
+    },
+    {
+      "heading": "23.3 Wireframes (from phase 0)",
+      "page": 165
+    },
+    {
+      "heading": "23.4 Feasibility Study (from phase 0)",
+      "page": 165
+    },
+    {
+      "heading": "23.5 Evidence coverage summary",
+      "page": 167
+    },
+    {
+      "heading": "23.6 Repository evidence references",
+      "page": 168
+    },
+    {
+      "heading": "23.7 API and event contract index",
+      "page": 168
+    },
+    {
+      "heading": "23.8 Analysis and design source mapping",
+      "page": 170
+    },
+    {
+      "heading": "23.9 Detach and rejoin diagrams",
+      "page": 171
+    },
+    {
+      "heading": "23.10 Supplementary DDD views",
+      "page": 174
+    },
+    {
+      "heading": "23.11 Supporting screenshots",
+      "page": 176
+    }
+  ]
+}

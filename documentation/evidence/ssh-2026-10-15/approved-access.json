@@ -1,0 +1,16 @@
+{
+  "id": "eaf23a8f-ade6-4b3a-bcbc-1a5f609319a7",
+  "title": "Capstone SSH performance campaign 2026-10-15",
+  "status": "Approved",
+  "allowedRoles": [
+    "Admin"
+  ],
+  "vmIds": [
+    "f287e072-e75d-422c-a5e7-ad22ff0fd223"
+  ],
+  "implementerGroupIds": [
+    "321f0731-4c07-4dfe-86ee-136806b2d8da"
+  ],
+  "implementationStartAt": "2026-10-15T07:20:00.000Z",
+  "implementationEndAt": "2026-10-15T11:20:00.000Z"
+}
