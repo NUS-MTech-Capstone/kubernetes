@@ -1,0 +1,7 @@
+{
+  "sourceSHA": "9948d1e1ddeda365b6da140d6928f2143c86ff2a",
+  "compile": "PASS: go test ./internal/store -run ^$",
+  "postgresExecution": "BLOCKED: docker run failed before container creation: no space left on device",
+  "observedRaceInterleaving": "INFERRED from source and live state, not proven by a completed PostgreSQL regression run",
+  "productionChanges": false
+}
