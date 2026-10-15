@@ -1,9 +1,0 @@
-?   	github.com/NUS-MTech-Capstone/session-manager/api	[no test files]
-ok  	github.com/NUS-MTech-Capstone/session-manager/cmd/server	2.341s
-ok  	github.com/NUS-MTech-Capstone/session-manager/internal/config	2.878s
-ok  	github.com/NUS-MTech-Capstone/session-manager/internal/events	3.164s
-ok  	github.com/NUS-MTech-Capstone/session-manager/internal/httpapi	4.205s
-?   	github.com/NUS-MTech-Capstone/session-manager/internal/model	[no test files]
-ok  	github.com/NUS-MTech-Capstone/session-manager/internal/observability	2.608s
-ok  	github.com/NUS-MTech-Capstone/session-manager/internal/service	3.410s
-ok  	github.com/NUS-MTech-Capstone/session-manager/internal/store	4.008s

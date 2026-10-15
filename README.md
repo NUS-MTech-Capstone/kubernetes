@@ -20,19 +20,14 @@ The AWS deployment runs these services:
 DDM Agent remains reserved and is not deployed in the SSH-only path.
 
 Workloads are isolated into `dendenmushi-ssh`, `dendenmushi-agentic`, and
-`dendenmushi-webapp`. See
-[`KUBERNETES_ARCHITECTURE_AND_OPERATIONS.md`](documentation/KUBERNETES_ARCHITECTURE_AND_OPERATIONS.md)
-for ownership, service DNS, NetworkPolicy, quota, GitOps, rollback, and
-suspend/restore procedures.
+`dendenmushi-webapp`.
 
-The [13 October 2026 release evidence index](documentation/evidence/release-2026-10-13/README.md)
-links committed source, passing CI, image digests, GitOps promotions, browser
-acceptance, bounded agent evaluations and rollback results.
-
-The [15 October SSH performance attempt](documentation/evidence/ssh-2026-10-15/README.md)
-records a failed preflight capacity-recovery check. No timed SSH load completed;
-40-session capacity and terminal latency remain unmeasured. See the
-[submitted evidence index](documentation/evidence/README.md) for both bundles.
+Project-wide documentation and submission evidence live in the workspace-level
+`capstone/documentation/` directory beside the repositories. That directory is
+untracked by Git and is supplied separately with the capstone submission. It
+contains `KUBERNETES_ARCHITECTURE_AND_OPERATIONS.md`, `AGENTIC_AI_FEATURES.md`,
+the API load-testing guide and the release evidence index. This repository
+retains its operational instructions below, manifests and deployment tooling.
 
 ## AWS Prerequisites
 

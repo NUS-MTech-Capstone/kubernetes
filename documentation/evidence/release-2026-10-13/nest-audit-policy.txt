@@ -1,5 +1,0 @@
-
-> nest-backend@0.0.1 audit:prod
-> node scripts/audit-production.mjs npm-audit.json
-
-Production audit passed; 4 reviewed Umzug CLI-chain findings remain visible in the published report.
