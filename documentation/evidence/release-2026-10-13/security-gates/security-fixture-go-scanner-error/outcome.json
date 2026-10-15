@@ -1,5 +1,0 @@
-{
-  "stack": "go",
-  "scenario": "scanner-error",
-  "exit_status": 2
-}

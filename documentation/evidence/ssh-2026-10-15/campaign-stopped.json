@@ -1,8 +1,0 @@
-{
-  "timestamp": "2026-10-15T07:38:52.472359+00:00",
-  "status": "BLOCKED_BEFORE_LOAD",
-  "reason": "Preflight cleanup left one accounted capacity slot despite zero active session metadata; unresolved beyond five minutes.",
-  "harnessSHA": "80f8244016bdfe2dcdebcf7bee4739c7c73ecd5b",
-  "measuredRuns": 0,
-  "scope": "No k6 workload was started; no infrastructure or deployment changes."
-}
