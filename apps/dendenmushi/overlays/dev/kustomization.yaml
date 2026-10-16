@@ -39,7 +39,7 @@ images:
     digest: sha256:dd1d6b1197cdbf48aadb62fc7dd55a1b4ba7c6e26c7eef958ed4e537974c880b
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/nest-backend
-    digest: sha256:ef36e4cb4579a9a656b093ee1f40a11c2ba072aea3eadf54a2d48aa91e31cec1
+    digest: sha256:8f93171d548c14b57e6adcdd02e6e299952a54b118fcb22d9e6387b8c01eb699
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/angular
     digest: sha256:d7a39cd1372b8d3f69eb0db94bdcf70de6eaf116333aef2993375f4a84454a32
