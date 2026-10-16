@@ -33,7 +33,7 @@ images:
     digest: sha256:55f717ba988bf86e9091cc14b4c196c56ea8f6d97f61daebf0f8f5798d421d5e
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/proxy-dataplane
-    digest: sha256:519eea110ce4a4a8f091fef291e6ceb4b4d7ef97f62afd6fedc90643cfa48521
+    digest: sha256:84a5c80140f04f975be46050b02d85663fa705f6e6a44f779c14488e5b98bf96
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/incident-agent
     digest: sha256:dd1d6b1197cdbf48aadb62fc7dd55a1b4ba7c6e26c7eef958ed4e537974c880b
