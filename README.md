@@ -17,7 +17,8 @@ The AWS deployment runs these services:
 - Nest Backend
 - Angular
 
-DDM Agent remains reserved and is not deployed in the SSH-only path.
+Interactive SSH runs through Proxy Dataplane; DDM Agent has a separate
+target-host binary distribution.
 
 Workloads are isolated into `dendenmushi-ssh`, `dendenmushi-agentic`, and
 `dendenmushi-webapp`.
@@ -35,6 +36,7 @@ Apply the main infrastructure and target host first:
 
 ```bash
 cd ../aws-terraform
+export AWS_PROFILE=capstone
 aws sts get-caller-identity
 terraform init -reconfigure
 terraform plan -var-file=secrets.tfvars -var-file=teammate-access.local.tfvars
@@ -103,8 +105,9 @@ for repo in sts proxy-controlplane session-manager audit-service proxy-dataplane
 done
 ```
 
-Push each service’s `main` branch or run its `Image` workflow manually. Each
-workflow publishes the commit SHA tag and the `main` tag. Verify:
+A successful CI run for a service's `main` push triggers its Image workflow.
+The workflow builds the tested SHA and publishes its digest plus commit and
+`main` tags. Rerun CI for the same commit to retry image publication. Verify:
 
 ```bash
 aws ecr describe-images \
@@ -213,7 +216,7 @@ angular
 Set `GITOPS_TOKEN` in each of those repositories to a fine-scoped GitHub App
 token or equivalent credential that can push a branch and open a PR in
 `NUS-MTech-Capstone/kubernetes`. The promotion workflow updates exactly one
-image tag, renders the dev overlay, and opens or updates a PR. Argo CD deploys
+image digest, renders the dev overlay, and opens or updates a PR. Argo CD deploys
 only after that PR is merged.
 
 The incident-agent image also drives the `incident-agent-migrate` PreSync hook.
@@ -271,63 +274,30 @@ overwrite its dynamic nonce policy on all responses, so it is not enabled.
 
 ## Post-Deployment DAST
 
-The `ZAP DAST` GitHub Actions workflow performs a safe, unauthenticated passive
-scan of the deployed public ingress after every merge to `main`. A manual
-`workflow_dispatch` trigger is also available for reruns. Push-triggered scans
-wait three minutes for the normal Argo CD reconciliation window, then require
-the public `/healthz` and `/readyz` endpoints to respond before starting ZAP.
+The `ZAP DAST` workflow runs a passive, unauthenticated scan of the public
+ingress after a `main` push, with a manual trigger for reruns. It waits three
+minutes and checks public health endpoints before scanning. Coverage includes
+Angular content and the ALB/Cognito authentication boundary.
 
-The scan uses the ZAP client spider for the Angular application and seeds only
-`GET` requests for the externally reachable Nest Backend, Proxy Control Plane,
-Proxy Dataplane WebSocket route, and Agent Control Plane boundaries. It does
-not perform an active scan, submit forms, create test data, or use AWS or
-Cognito credentials. Findings are evidence for manual review and do not fail
-the workflow; target unavailability, a ZAP execution error, or a missing report
-does fail it.
+The scan uses ZAP 2.17.0, a client spider and seeded GET requests. It retains
+`zap-report.html` for 30 days for finding review. Execution errors, target
+unavailability and missing reports fail the workflow. The scan uses no AWS or
+Cognito credentials and performs no active attacks or form submissions.
 
-Each workflow run uploads `zap-report.html` in the
-`zap-dast-html-<run-id>` artifact for 30 days. Review high and medium findings,
-record false-positive reasoning, and rerun the workflow after remediating a
-confirmed issue.
-
-CI pins ZAP 2.17.0 to match the retained 7 October 2026 baseline. The CSP header
-finding on ALB-generated 401 denials is reviewed separately from the application
-findings: the fixed HTML error page contains no scripts, forms or reflected
-request data, and retains HSTS, `X-Frame-Options: DENY` and `nosniff`. Its missing
-CSP remains visible in the unfiltered scan report. Authentication is not relaxed
-and protected routes are not removed from scan scope to change this result.
-
-To run the same scan locally, start Docker and run:
+Run the same scan locally with Docker:
 
 ```bash
 ./scripts/run-zap-dast.sh
 ```
 
-The default report is `dast-results/zap-report.html`. The origin, image, and
-output directory can be overridden without changing the checked-in plan:
-
-```bash
-TARGET_URL=https://api.ddm.keiyam.me \
-ZAP_IMAGE=ghcr.io/zaproxy/zaproxy:stable \
-REPORT_DIR=/tmp/dendenmushi-zap \
-./scripts/run-zap-dast.sh
-```
-
-This public scan validates Angular content and the external ALB/Cognito denial
-boundary for protected routes. It does not exercise authenticated behavior
-behind Cognito. STS, Session Manager, Audit Service, and Incident Agent remain
-internal-only and are intentionally not exposed or scanned through the public
-ingress. An authenticated or active DAST stage would require a dedicated test
-identity, isolated test data, and additional safety controls.
-
-The three-minute delay is pragmatic rather than an exact deployment
-attestation: the report describes the revision live at scan time. If Argo CD
-takes longer to reconcile, verify the rollout and use the manual trigger to
-produce a report for the final revision.
+The default output is `dast-results/zap-report.html`. `TARGET_URL`, `ZAP_IMAGE`
+and `REPORT_DIR` override the origin, image and output directory. Reports
+describe the revision live at scan time; use a manual rerun after confirming
+Argo reconciliation when collecting release evidence.
 
 ## Observability Defaults
 
-The AWS deployment is tuned for a low-cost school project:
+The AWS dev overlay configures:
 
 - Application containers emit JSON logs to stdout.
 - `LOG_FORMAT=json` is set for services that support it.
@@ -340,9 +310,7 @@ The AWS deployment is tuned for a low-cost school project:
   `OTEL_LOGS_EXPORTER=none` are the default ConfigMap values.
 - The CloudWatch add-on excludes the metadata-only Agent Tool Gateway from
   Application Signals auto-instrumentation. Container Insights and structured
-  logs still cover it without injecting four unused language runtimes. Its
-  Python MCP runtime is capped at `256Mi` after live discovery probes showed
-  that `128Mi` could be OOM-killed during request handling.
+  logs cover it. Its Python MCP runtime has a `256Mi` memory limit.
 - The dev overlay sets `LANGSMITH_TRACING=true` only for Incident Reasoning Agent and passes
   only the Terraform-created Secrets Manager secret ID plus optional project,
   endpoint, and workspace settings. The LangSmith API key itself is not written
@@ -425,17 +393,16 @@ The probe pods wait briefly before opening connections because VPC CNI
 been programmed. This tests the steady enforced state instead of that startup
 interval.
 
-## Digest and identity rollout verification
+## Digest and identity verification
 
-Before the strict dataplane image is promoted, deploy `ALB_ARN`,
-`COGNITO_USER_POOL_ID`, and `COGNITO_CLIENT_ID` using the existing overlay
-replacements. `AWS_REGION` is already configured. Check active sessions and
-allow them to finish before either configuration or image changes trigger its
-`Recreate` rollout. The verified ALB identity must match the STS capability.
+The overlay supplies `AWS_REGION`, `ALB_ARN`, `COGNITO_USER_POOL_ID` and
+`COGNITO_CLIENT_ID` for verified dataplane identity. The ALB identity must match
+the STS capability. Allow active sessions to finish before configuration or
+image changes trigger a dataplane `Recreate` rollout.
 
 Promotion callers require the build digest and update only their Kustomize
 image entry. Bootstrap refreshes environment/inventory files and leaves image
-references untouched. No ECR mutability change or Terraform apply is required.
+references untouched.
 
 ```bash
 ruby test/image_digests_test.rb
@@ -447,8 +414,7 @@ The verifier checks Deployment and migration Job images. Live verification
 matches rendered GitOps images, ready pod declarations and runtime image IDs.
 When a runtime reports an architecture-specific digest, it verifies membership
 in the exact ECR image index pinned by GitOps. Sanitized JSON output records both
-identities without credentials or application logs. During the initial migration
-only, `--allow-tags` permits offline rendering checks of the old release.
+identities without credentials or application logs.
 
 Rollback uses a reviewed GitOps PR restoring a previously verified digest,
 followed by Argo health and SSH checks. Restore the final digest through another
@@ -458,5 +424,4 @@ in the release evidence index; do not rely on retagging an ECR image.
 All nine project image callers now require the successful build digest. Manifest
 CI rejects tag-only Deployment and migration Job images. `verify-aws.sh` also
 compares the rendered declarations with ready pods and verifies ECR index/child
-relationships before accepting a release. The `--allow-tags` verifier option
-exists only for historical migration evidence and is not used by normal CI.
+relationships before accepting a release.
