@@ -21,7 +21,7 @@ images:
     digest: sha256:744d259cd756e6584a5eb902d3be27e278f77e8d8f13c352d54dd3576edbb0b0
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/audit-service
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/audit-service
-    digest: sha256:0e17fc217812a8fe0877579a2ac5335ec520ef1cd74f7f6228c50bd8fdfda1a0
+    digest: sha256:e6352e603a1763e9517704b07026b3d8b60daa070c8b8ed3a68f8733741effd3
   - name: 000000000000.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/agent-controlplane
     newName: 891377133321.dkr.ecr.ap-southeast-1.amazonaws.com/dendenmushi/agent-controlplane
     digest: sha256:bfc9b2bf6d33099d5f084b7cf849e7b841f900387eaeb3756c9a7a31c8161939
